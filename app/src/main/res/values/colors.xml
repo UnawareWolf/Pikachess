@@ -5,4 +5,5 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="colourRectangle">#455A64</color>
     <color name="colourBackground">#FFFFD600</color>
+    <color name="chessBrown">#794b25</color>
 </resources>
