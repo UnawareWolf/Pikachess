@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChessView extends View {
 
@@ -30,18 +32,42 @@ public class ChessView extends View {
     float xTouch, yTouch;
     private Rect selectRect = new Rect();
     private ChessSquare selectedSquare;
-    private Bitmap pawnImage;
     boolean secondTouched = false;
     private ChessSquare secondSelectedSquare;
     boolean greyedOut = true;
     private SquareBounds confirmMoveButtonBounds = new SquareBounds();
     boolean boardSetup = true;
+    private Map<String, Bitmap> chessPieceImages = new HashMap<>();
+    private Bitmap whitePawnImage;
+    private Bitmap whiteRookImage;
+    private Bitmap whiteKnightImage;
+    private Bitmap whiteBishopImage;
+    private Bitmap whiteKingImage;
+    private Bitmap whiteQueenImage;
+    private Bitmap blackPawnImage;
+    private Bitmap blackRookImage;
+    private Bitmap blackKnightImage;
+    private Bitmap blackBishopImage;
+    private Bitmap blackKingImage;
+    private Bitmap blackQueenImage;
+
 
     public ChessView(Context context) {
         //this(context, null);
         super(context);
         totodileBackground = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
-        pawnImage = BitmapFactory.decodeResource(getResources(), R.drawable.pawn);
+        blackPawnImage = BitmapFactory.decodeResource(getResources(), R.drawable.pawn);
+        blackRookImage = BitmapFactory.decodeResource(getResources(), R.drawable.rook);
+        blackKnightImage = BitmapFactory.decodeResource(getResources(), R.drawable.knight);
+        blackBishopImage = BitmapFactory.decodeResource(getResources(), R.drawable.bishop);
+        blackKingImage = BitmapFactory.decodeResource(getResources(), R.drawable.king);
+        blackQueenImage = BitmapFactory.decodeResource(getResources(), R.drawable.queen);
+        whitePawnImage = BitmapFactory.decodeResource(getResources(), R.drawable.whitePawn);
+        whiteRookImage = BitmapFactory.decodeResource(getResources(), R.drawable.whiteRook);
+        whiteKnightImage = BitmapFactory.decodeResource(getResources(), R.drawable.whiteKnight);
+        whiteBishopImage = BitmapFactory.decodeResource(getResources(), R.drawable.whiteBishop);
+        whiteKingImage = BitmapFactory.decodeResource(getResources(), R.drawable.whiteKing);
+        whiteQueenImage = BitmapFactory.decodeResource(getResources(), R.drawable.whiteQueen);
     }
 /*
     public ChessView(Context context, AttributeSet attrs) {
@@ -53,12 +79,16 @@ public class ChessView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(totodileBackground, 0, 0, null);
-        //mRect.set(1000, 1000, 1000, 1000);
+        int width = getWidth();
+        int height = getHeight();
+        if (boardSetup) {
+            initialisePieceBitmaps(width);
+        }
+
         mPaint.setColor(getResources().getColor(R.color.chessBrown));
         mPaint.setStrokeWidth(BORDER_WIDTH);
         mPaint.setStyle(Paint.Style.STROKE);
-        int width = getWidth();
-        int height = getHeight();
+
         int boardSize = width - 2*OFFSET - 2*BORDER_WIDTH;
         int squareSize = boardSize/8;
         mRect.set(OFFSET + BORDER_WIDTH/2, OFFSET + BORDER_WIDTH/2, width - OFFSET - BORDER_WIDTH/2, width - OFFSET - BORDER_WIDTH/2);
@@ -107,12 +137,27 @@ public class ChessView extends View {
 
         for (ChessSquare chessSquare : ChessView.allChessSquares){
             if (chessSquare.getPiece() == ChessPieceId.BlackPawn){
-                pawnImage = Bitmap.createScaledBitmap(pawnImage, squareSize, squareSize, true);
-                canvas.drawBitmap(pawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                blackPawnImage = Bitmap.createScaledBitmap(blackPawnImage, squareSize, squareSize, true);
+                canvas.drawBitmap(blackPawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
 
             }
         }
 
+    }
+
+    private void initialisePieceBitmaps(int canvasWidth) {
+        whitePawnImage = Bitmap.createScaledBitmap(whitePawnImage, canvasWidth, canvasWidth, true);
+        whiteRookImage = Bitmap.createScaledBitmap(whiteRookImage, canvasWidth, canvasWidth, true);
+        whiteKnightImage = Bitmap.createScaledBitmap(whiteKnightImage, canvasWidth, canvasWidth, true);
+        whiteBishopImage = Bitmap.createScaledBitmap(whiteBishopImage, canvasWidth, canvasWidth, true);
+        whiteKingImage = Bitmap.createScaledBitmap(whiteKingImage, canvasWidth, canvasWidth, true);
+        whiteQueenImage = Bitmap.createScaledBitmap(whiteQueenImage, canvasWidth, canvasWidth, true);
+        blackPawnImage = Bitmap.createScaledBitmap(blackPawnImage, canvasWidth, canvasWidth, true);
+        blackRookImage = Bitmap.createScaledBitmap(blackRookImage, canvasWidth, canvasWidth, true);
+        blackKnightImage = Bitmap.createScaledBitmap(blackKnightImage, canvasWidth, canvasWidth, true);
+        blackBishopImage = Bitmap.createScaledBitmap(blackBishopImage, canvasWidth, canvasWidth, true);
+        blackKingImage = Bitmap.createScaledBitmap(blackKingImage, canvasWidth, canvasWidth, true);
+        blackQueenImage = Bitmap.createScaledBitmap(blackQueenImage, canvasWidth, canvasWidth, true);
     }
 
     private void drawConfirmMoveButton(Canvas canvas, int canvasWidth) {
@@ -132,7 +177,6 @@ public class ChessView extends View {
             mPaint.setAlpha(255);
         }
         mPaint.setStyle(Paint.Style.FILL);
-        //canvas.dr
         canvas.drawRect(mRect, mPaint);
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -189,7 +233,7 @@ public class ChessView extends View {
                     invalidate();
                 }
             }
-            if(confirmMoveButtonBounds.squareContainsCoordinates(confirmMoveButtonBounds, xTouch, yTouch)) {
+            if(secondTouched && confirmMoveButtonBounds.squareContainsCoordinates(confirmMoveButtonBounds, xTouch, yTouch)) {
                 secondSelectedSquare.setPiece(selectedSquare.getPiece());
                 selectedSquare.setPiece(ChessPieceId.NoPiece);
                 touched = false;
