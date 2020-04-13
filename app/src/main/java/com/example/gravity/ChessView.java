@@ -28,11 +28,14 @@ public class ChessView extends View {
     float xTouch, yTouch;
     private Rect selectRect = new Rect();
     private ChessSquare selectedSquare;
+    private Bitmap pawnImage;
+    boolean secondTouched = false;
+    private ChessSquare secondSelectedSquare;
 
     public ChessView(Context context) {
         super(context);
-
         totodileBackground = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
+        pawnImage = BitmapFactory.decodeResource(getResources(), R.drawable.pawn);
     }
     @Override
     protected void onDraw(Canvas canvas) {
@@ -57,7 +60,8 @@ public class ChessView extends View {
 
                 squareBounds = new SquareBounds(squareLeft, squareTop, squareRight, squareBottom);
                 squareBoardLocation = getSquareBoardLocation(i, j);
-                mSquare = new ChessSquare(squareBounds, ChessPieceId.NoPiece, squareBoardLocation);
+                ChessPieceId pieceId = getChessPieceIdFromBoardLocation(squareBoardLocation);
+                mSquare = new ChessSquare(squareBounds, pieceId, squareBoardLocation);
                 allChessSquares.add(mSquare);
                 if (fillSquare){
 
@@ -76,23 +80,64 @@ public class ChessView extends View {
         }
 
         if (touched) {
-            mRect.set(selectedSquare.getBoundary().getLeft(), selectedSquare.getBoundary().getTop(), selectedSquare.getBoundary().getRight(), selectedSquare.getBoundary().getBottom());
-            mPaint.setStyle(Paint.Style.FILL);
-            mPaint.setColor(getResources().getColor(R.color.selectedSquareColour));
-            canvas.drawRect(mRect, mPaint);
+            highlightChessSquare(canvas, selectedSquare);
         }
+        if (secondTouched) {
+            highlightChessSquare(canvas, secondSelectedSquare);
+        }
+
+        for (ChessSquare chessSquare : ChessView.allChessSquares){
+            if (chessSquare.getPiece() == ChessPieceId.BlackPawn){
+                pawnImage = Bitmap.createScaledBitmap(pawnImage, squareSize, squareSize, true);
+                canvas.drawBitmap(pawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+
+            }
+        }
+
+    }
+
+    private void highlightChessSquare(Canvas canvas, ChessSquare squareToHighlight) {
+        mRect.set(squareToHighlight.getBoundary().getLeft(), squareToHighlight.getBoundary().getTop(), squareToHighlight.getBoundary().getRight(), squareToHighlight.getBoundary().getBottom());
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setColor(getResources().getColor(R.color.selectedSquareColour));
+        canvas.drawRect(mRect, mPaint);
+    }
+
+
+    private ChessPieceId getChessPieceIdFromBoardLocation(String squareBoardLocation) {
+        ChessPieceId pieceId;
+        if (squareBoardLocation.charAt(1) == '2') {
+            pieceId = ChessPieceId.WhitePawn;
+        }
+        else if(squareBoardLocation.charAt(1) == '7') {
+            pieceId = ChessPieceId.BlackPawn;
+        }
+        else {
+            pieceId = ChessPieceId.NoPiece;
+        }
+        /*switch(squareBoardLocation) {
+            //case
+        }
+        */
+        return pieceId;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int index = event.getActionIndex();
         if (event.getAction() == MotionEvent.ACTION_DOWN){
             xTouch = event.getX();
             yTouch = event.getY();
             for (ChessSquare chessSquare : ChessView.allChessSquares) {
                 if (chessSquare.getBoundary().chessSquareContainsCoordinates(chessSquare.getBoundary(), xTouch, yTouch)){
-                    selectedSquare = chessSquare;
-                    touched = true;
+                    if (chessSquare.getPiece() != ChessPieceId.NoPiece) {
+                        selectedSquare = chessSquare;
+                        secondTouched = false;
+                        touched = true;
+                    }
+                    if(touched && chessSquare.getPiece() == ChessPieceId.NoPiece) {
+                        secondSelectedSquare = chessSquare;
+                        secondTouched = true;
+                    }
                     invalidate();
                 }
             }
@@ -104,28 +149,28 @@ public class ChessView extends View {
         String loc;
         switch(xNum) {
             case 0:
-                loc = "a" + Integer.toString(yNum + 1);
+                loc = "a" + Integer.toString(8 - yNum);
                 break;
             case 1:
-                loc = "b" + Integer.toString(yNum + 1);
+                loc = "b" + Integer.toString(8 - yNum);
                 break;
             case 2:
-                loc = "c" + Integer.toString(yNum + 1);
+                loc = "c" + Integer.toString(8 - yNum);
                 break;
             case 3:
-                loc = "d" + Integer.toString(yNum + 1);
+                loc = "d" + Integer.toString(8 - yNum);
                 break;
             case 4:
-                loc = "e" + Integer.toString(yNum + 1);
+                loc = "e" + Integer.toString(8 - yNum);
                 break;
             case 5:
-                loc = "f" + Integer.toString(yNum + 1);
+                loc = "f" + Integer.toString(8 - yNum);
                 break;
             case 6:
-                loc = "g" + Integer.toString(yNum + 1);
+                loc = "g" + Integer.toString(8 - yNum);
                 break;
             case 7:
-                loc = "h" + Integer.toString(yNum + 1);
+                loc = "h" + Integer.toString(8 - yNum);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + xNum);
