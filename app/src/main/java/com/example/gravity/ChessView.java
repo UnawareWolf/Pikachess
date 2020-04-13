@@ -50,6 +50,9 @@ public class ChessView extends View {
     private Bitmap blackBishopImage;
     private Bitmap blackKingImage;
     private Bitmap blackQueenImage;
+    int canvasWidth;
+    int canvasHeight;
+    int squareSize;
 
 
     public ChessView(Context context) {
@@ -62,12 +65,13 @@ public class ChessView extends View {
         blackBishopImage = BitmapFactory.decodeResource(getResources(), R.drawable.bishop);
         blackKingImage = BitmapFactory.decodeResource(getResources(), R.drawable.king);
         blackQueenImage = BitmapFactory.decodeResource(getResources(), R.drawable.queen);
-        whitePawnImage = BitmapFactory.decodeResource(getResources(), R.drawable.whitePawn);
-        whiteRookImage = BitmapFactory.decodeResource(getResources(), R.drawable.whiteRook);
-        whiteKnightImage = BitmapFactory.decodeResource(getResources(), R.drawable.whiteKnight);
-        whiteBishopImage = BitmapFactory.decodeResource(getResources(), R.drawable.whiteBishop);
-        whiteKingImage = BitmapFactory.decodeResource(getResources(), R.drawable.whiteKing);
-        whiteQueenImage = BitmapFactory.decodeResource(getResources(), R.drawable.whiteQueen);
+        whitePawnImage = BitmapFactory.decodeResource(getResources(), R.drawable.white_pawn);
+        whiteRookImage = BitmapFactory.decodeResource(getResources(), R.drawable.white_rook);
+        whiteKnightImage = BitmapFactory.decodeResource(getResources(), R.drawable.white_knight);
+        whiteBishopImage = BitmapFactory.decodeResource(getResources(), R.drawable.white_bishop);
+        whiteKingImage = BitmapFactory.decodeResource(getResources(), R.drawable.white_king);
+        whiteQueenImage = BitmapFactory.decodeResource(getResources(), R.drawable.white_queen);
+
     }
 /*
     public ChessView(Context context, AttributeSet attrs) {
@@ -79,19 +83,20 @@ public class ChessView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(totodileBackground, 0, 0, null);
-        int width = getWidth();
-        int height = getHeight();
+        canvasWidth = getWidth();
+        canvasHeight = getHeight();
+        int boardSize = canvasWidth - 2*OFFSET - 2*BORDER_WIDTH;
+        squareSize = boardSize/8;
         if (boardSetup) {
-            initialisePieceBitmaps(width);
+            initialisePieceBitmaps();
         }
 
         mPaint.setColor(getResources().getColor(R.color.chessBrown));
         mPaint.setStrokeWidth(BORDER_WIDTH);
         mPaint.setStyle(Paint.Style.STROKE);
 
-        int boardSize = width - 2*OFFSET - 2*BORDER_WIDTH;
-        int squareSize = boardSize/8;
-        mRect.set(OFFSET + BORDER_WIDTH/2, OFFSET + BORDER_WIDTH/2, width - OFFSET - BORDER_WIDTH/2, width - OFFSET - BORDER_WIDTH/2);
+
+        mRect.set(OFFSET + BORDER_WIDTH/2, OFFSET + BORDER_WIDTH/2, canvasWidth - OFFSET - BORDER_WIDTH/2, canvasWidth - OFFSET - BORDER_WIDTH/2);
         canvas.drawRect(mRect, mPaint);
         boolean fillSquare = true;
         for (int i = 0; i < 8 ; i++){
@@ -133,34 +138,89 @@ public class ChessView extends View {
             //confirmMove.setVisibility(View.VISIBLE);
         }
 
-        drawConfirmMoveButton(canvas, width);
+        drawConfirmMoveButton(canvas);
 
-        for (ChessSquare chessSquare : ChessView.allChessSquares){
-            if (chessSquare.getPiece() == ChessPieceId.BlackPawn){
-                blackPawnImage = Bitmap.createScaledBitmap(blackPawnImage, squareSize, squareSize, true);
-                canvas.drawBitmap(blackPawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+        drawAllChessPieces(canvas, ChessView.allChessSquares);
 
+//        for (ChessSquare chessSquare : ChessView.allChessSquares){
+//            if (chessSquare.getPiece() == ChessPieceId.BlackPawn){
+//                blackPawnImage = Bitmap.createScaledBitmap(blackPawnImage, squareSize, squareSize, true);
+//                canvas.drawBitmap(blackPawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+//            }
+//
+//        }
+
+    }
+
+    private void drawAllChessPieces(Canvas canvas, List<ChessSquare> chessSquares) {
+        for (ChessSquare chessSquare : chessSquares){
+
+            switch(chessSquare.getPiece()) {
+                case BlackPawn:
+                    canvas.drawBitmap(blackPawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case BlackRook:
+                    canvas.drawBitmap(blackRookImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case BlackKnight:
+                    canvas.drawBitmap(blackKnightImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case BlackBishop:
+                    canvas.drawBitmap(blackBishopImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case BlackQueen:
+                    canvas.drawBitmap(blackQueenImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case BlackKing:
+                    canvas.drawBitmap(blackKingImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case WhitePawn:
+                    canvas.drawBitmap(whitePawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case WhiteRook:
+                    canvas.drawBitmap(whiteRookImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case WhiteKnight:
+                    canvas.drawBitmap(whiteKnightImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case WhiteBishop:
+                    canvas.drawBitmap(whiteBishopImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case WhiteQueen:
+                    canvas.drawBitmap(whiteQueenImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case WhiteKing:
+                    canvas.drawBitmap(whiteKingImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+                    break;
+                case NoPiece:
+                    break;
             }
+//
+//            if (chessSquare.getPiece() == ChessPieceId.BlackPawn){
+//                blackPawnImage = Bitmap.createScaledBitmap(blackPawnImage, squareSize, squareSize, true);
+//                canvas.drawBitmap(blackPawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
+//
+//            }
+
         }
-
     }
 
-    private void initialisePieceBitmaps(int canvasWidth) {
-        whitePawnImage = Bitmap.createScaledBitmap(whitePawnImage, canvasWidth, canvasWidth, true);
-        whiteRookImage = Bitmap.createScaledBitmap(whiteRookImage, canvasWidth, canvasWidth, true);
-        whiteKnightImage = Bitmap.createScaledBitmap(whiteKnightImage, canvasWidth, canvasWidth, true);
-        whiteBishopImage = Bitmap.createScaledBitmap(whiteBishopImage, canvasWidth, canvasWidth, true);
-        whiteKingImage = Bitmap.createScaledBitmap(whiteKingImage, canvasWidth, canvasWidth, true);
-        whiteQueenImage = Bitmap.createScaledBitmap(whiteQueenImage, canvasWidth, canvasWidth, true);
-        blackPawnImage = Bitmap.createScaledBitmap(blackPawnImage, canvasWidth, canvasWidth, true);
-        blackRookImage = Bitmap.createScaledBitmap(blackRookImage, canvasWidth, canvasWidth, true);
-        blackKnightImage = Bitmap.createScaledBitmap(blackKnightImage, canvasWidth, canvasWidth, true);
-        blackBishopImage = Bitmap.createScaledBitmap(blackBishopImage, canvasWidth, canvasWidth, true);
-        blackKingImage = Bitmap.createScaledBitmap(blackKingImage, canvasWidth, canvasWidth, true);
-        blackQueenImage = Bitmap.createScaledBitmap(blackQueenImage, canvasWidth, canvasWidth, true);
+    private void initialisePieceBitmaps() {
+        whitePawnImage = Bitmap.createScaledBitmap(whitePawnImage, squareSize, squareSize, true);
+        whiteRookImage = Bitmap.createScaledBitmap(whiteRookImage, squareSize, squareSize, true);
+        whiteKnightImage = Bitmap.createScaledBitmap(whiteKnightImage, squareSize, squareSize, true);
+        whiteBishopImage = Bitmap.createScaledBitmap(whiteBishopImage, squareSize, squareSize, true);
+        whiteKingImage = Bitmap.createScaledBitmap(whiteKingImage, squareSize, squareSize, true);
+        whiteQueenImage = Bitmap.createScaledBitmap(whiteQueenImage, squareSize, squareSize, true);
+        blackPawnImage = Bitmap.createScaledBitmap(blackPawnImage, squareSize, squareSize, true);
+        blackRookImage = Bitmap.createScaledBitmap(blackRookImage, squareSize, squareSize, true);
+        blackKnightImage = Bitmap.createScaledBitmap(blackKnightImage, squareSize, squareSize, true);
+        blackBishopImage = Bitmap.createScaledBitmap(blackBishopImage, squareSize, squareSize, true);
+        blackKingImage = Bitmap.createScaledBitmap(blackKingImage, squareSize, squareSize, true);
+        blackQueenImage = Bitmap.createScaledBitmap(blackQueenImage, squareSize, squareSize, true);
     }
 
-    private void drawConfirmMoveButton(Canvas canvas, int canvasWidth) {
+    private void drawConfirmMoveButton(Canvas canvas) {
         int buttonWidth = canvasWidth/4;
         int buttonHeight = buttonWidth/3;
         int buttonLeft = OFFSET + BORDER_WIDTH/2;
@@ -197,12 +257,46 @@ public class ChessView extends View {
 
 
     private ChessPieceId getChessPieceIdFromBoardLocation(String squareBoardLocation) {
-        ChessPieceId pieceId;
+        ChessPieceId pieceId = null;
         if (squareBoardLocation.charAt(1) == '2') {
             pieceId = ChessPieceId.WhitePawn;
         }
         else if(squareBoardLocation.charAt(1) == '7') {
             pieceId = ChessPieceId.BlackPawn;
+        }
+        else if(squareBoardLocation.charAt(1) == '1') {
+            if (squareBoardLocation.charAt(0) == 'a' || squareBoardLocation.charAt(0) == 'h') {
+                pieceId = ChessPieceId.WhitePawn;
+            }
+            if (squareBoardLocation.charAt(0) == 'b' || squareBoardLocation.charAt(0) == 'g') {
+                pieceId = ChessPieceId.WhiteKnight;
+            }
+            if (squareBoardLocation.charAt(0) == 'c' || squareBoardLocation.charAt(0) == 'f') {
+                pieceId = ChessPieceId.WhiteBishop;
+            }
+            if (squareBoardLocation.charAt(0) == 'd') {
+                pieceId = ChessPieceId.WhiteQueen;
+            }
+            if (squareBoardLocation.charAt(0) == 'e') {
+                pieceId = ChessPieceId.WhiteKing;
+            }
+        }
+        else if(squareBoardLocation.charAt(1) == '8') {
+            if (squareBoardLocation.charAt(0) == 'a' || squareBoardLocation.charAt(0) == 'h') {
+                pieceId = ChessPieceId.BlackPawn;
+            }
+            if (squareBoardLocation.charAt(0) == 'b' || squareBoardLocation.charAt(0) == 'g') {
+                pieceId = ChessPieceId.BlackKnight;
+            }
+            if (squareBoardLocation.charAt(0) == 'c' || squareBoardLocation.charAt(0) == 'f') {
+                pieceId = ChessPieceId.BlackBishop;
+            }
+            if (squareBoardLocation.charAt(0) == 'd') {
+                pieceId = ChessPieceId.BlackQueen;
+            }
+            if (squareBoardLocation.charAt(0) == 'e') {
+                pieceId = ChessPieceId.BlackKing;
+            }
         }
         else {
             pieceId = ChessPieceId.NoPiece;
@@ -238,6 +332,7 @@ public class ChessView extends View {
                 selectedSquare.setPiece(ChessPieceId.NoPiece);
                 touched = false;
                 secondTouched = false;
+                greyedOut = true;
                 invalidate();
             }
         }
