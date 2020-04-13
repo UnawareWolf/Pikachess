@@ -19,6 +19,10 @@ public class ChessSquare {
         return piece;
     }
 
+    public void setPiece(ChessPieceId piece) {
+        this.piece = piece;
+    }
+
     public SquareBounds getBoundary() {
         return boundary;
     }

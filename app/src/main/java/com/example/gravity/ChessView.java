@@ -7,8 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,16 +33,27 @@ public class ChessView extends View {
     private Bitmap pawnImage;
     boolean secondTouched = false;
     private ChessSquare secondSelectedSquare;
+    boolean greyedOut = true;
+    private SquareBounds confirmMoveButtonBounds = new SquareBounds();
+    boolean boardSetup = true;
 
     public ChessView(Context context) {
+        //this(context, null);
         super(context);
         totodileBackground = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
         pawnImage = BitmapFactory.decodeResource(getResources(), R.drawable.pawn);
     }
+/*
+    public ChessView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+ */
+
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(totodileBackground, 0, 0, null);
-        mRect.set(1000, 1000, 1000, 1000);
+        //mRect.set(1000, 1000, 1000, 1000);
         mPaint.setColor(getResources().getColor(R.color.chessBrown));
         mPaint.setStrokeWidth(BORDER_WIDTH);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -57,12 +70,13 @@ public class ChessView extends View {
                 int squareRight = OFFSET + BORDER_WIDTH + (i + 1)*squareSize;
                 int squareTop = OFFSET + BORDER_WIDTH + j*squareSize;
                 int squareBottom = OFFSET + BORDER_WIDTH + (j + 1)*squareSize;
-
-                squareBounds = new SquareBounds(squareLeft, squareTop, squareRight, squareBottom);
-                squareBoardLocation = getSquareBoardLocation(i, j);
-                ChessPieceId pieceId = getChessPieceIdFromBoardLocation(squareBoardLocation);
-                mSquare = new ChessSquare(squareBounds, pieceId, squareBoardLocation);
-                allChessSquares.add(mSquare);
+                if (boardSetup){
+                    squareBounds = new SquareBounds(squareLeft, squareTop, squareRight, squareBottom);
+                    squareBoardLocation = getSquareBoardLocation(i, j);
+                    ChessPieceId pieceId = getChessPieceIdFromBoardLocation(squareBoardLocation);
+                    mSquare = new ChessSquare(squareBounds, pieceId, squareBoardLocation);
+                    allChessSquares.add(mSquare);
+                }
                 if (fillSquare){
 
                     mRect.set(squareLeft, squareTop, squareRight, squareBottom);
@@ -78,13 +92,18 @@ public class ChessView extends View {
             }
             fillSquare = !fillSquare;
         }
-
+        boardSetup = false;
         if (touched) {
             highlightChessSquare(canvas, selectedSquare);
         }
         if (secondTouched) {
             highlightChessSquare(canvas, secondSelectedSquare);
+            greyedOut = false;
+            //Button confirmMove = (Button) findViewById(R.id.confirmMove);
+            //confirmMove.setVisibility(View.VISIBLE);
         }
+
+        drawConfirmMoveButton(canvas, width);
 
         for (ChessSquare chessSquare : ChessView.allChessSquares){
             if (chessSquare.getPiece() == ChessPieceId.BlackPawn){
@@ -93,6 +112,35 @@ public class ChessView extends View {
 
             }
         }
+
+    }
+
+    private void drawConfirmMoveButton(Canvas canvas, int canvasWidth) {
+        int buttonWidth = canvasWidth/4;
+        int buttonHeight = buttonWidth/3;
+        int buttonLeft = OFFSET + BORDER_WIDTH/2;
+        int buttonTop = canvasWidth - BORDER_WIDTH/2;
+        int buttonRight = buttonLeft + buttonWidth;
+        int buttonBottom = buttonTop + buttonHeight;
+        confirmMoveButtonBounds.set(buttonLeft, buttonTop, buttonRight, buttonBottom);
+        mRect.set(buttonLeft, buttonTop, buttonRight, buttonBottom);
+        mPaint.setColor(getResources().getColor(R.color.buttonGrey));
+        if (greyedOut) {
+            mPaint.setAlpha(40);
+        }
+        else {
+            mPaint.setAlpha(255);
+        }
+        mPaint.setStyle(Paint.Style.FILL);
+        //canvas.dr
+        canvas.drawRect(mRect, mPaint);
+        mPaint.setColor(Color.BLACK);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(BORDER_WIDTH);
+        canvas.drawRect(mRect, mPaint);
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setTextSize(80 - 2*BORDER_WIDTH);
+        canvas.drawText("Confirm", buttonLeft + BORDER_WIDTH, buttonBottom - 2*BORDER_WIDTH, mPaint);
 
     }
 
@@ -128,7 +176,7 @@ public class ChessView extends View {
             xTouch = event.getX();
             yTouch = event.getY();
             for (ChessSquare chessSquare : ChessView.allChessSquares) {
-                if (chessSquare.getBoundary().chessSquareContainsCoordinates(chessSquare.getBoundary(), xTouch, yTouch)){
+                if (chessSquare.getBoundary().squareContainsCoordinates(chessSquare.getBoundary(), xTouch, yTouch)){
                     if (chessSquare.getPiece() != ChessPieceId.NoPiece) {
                         selectedSquare = chessSquare;
                         secondTouched = false;
@@ -141,7 +189,15 @@ public class ChessView extends View {
                     invalidate();
                 }
             }
+            if(confirmMoveButtonBounds.squareContainsCoordinates(confirmMoveButtonBounds, xTouch, yTouch)) {
+                secondSelectedSquare.setPiece(selectedSquare.getPiece());
+                selectedSquare.setPiece(ChessPieceId.NoPiece);
+                touched = false;
+                secondTouched = false;
+                invalidate();
+            }
         }
+
         return true;
     }
 

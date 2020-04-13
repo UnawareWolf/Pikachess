@@ -7,4 +7,5 @@
     <color name="colourBackground">#FFFFD600</color>
     <color name="chessBrown">#794b25</color>
     <color name="selectedSquareColour">#6dbf3b</color>
+    <color name="buttonGrey">#c8c8c8</color>
 </resources>

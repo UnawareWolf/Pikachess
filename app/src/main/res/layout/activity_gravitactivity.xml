@@ -6,9 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".Gravitactivity">
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/myimageview"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"/>-->
+    <com.example.gravity.ChessView
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:onClick="drawSomething"/>
+        android:id="@+id/chess_view"
+        />
+
+    <Button
+        android:id="@+id/confirmMove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm_move"
+        app:layout_constraintBottom_toBottomOf="@+id/chess_view"
+        app:layout_constraintEnd_toEndOf="@+id/chess_view"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/chess_view"
+        app:layout_constraintTop_toTopOf="@+id/chess_view"
+        app:layout_constraintVertical_bias="0.446" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
