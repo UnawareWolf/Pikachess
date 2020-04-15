@@ -1,4 +1,4 @@
-package com.example.gravity;
+package com.example.gravity.chess;
 
 public class SquareBounds {
 

@@ -10,7 +10,7 @@
         android:id="@+id/myimageview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>-->
-    <com.example.gravity.ChessView
+    <com.example.gravity.chess.ChessView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/chess_view"

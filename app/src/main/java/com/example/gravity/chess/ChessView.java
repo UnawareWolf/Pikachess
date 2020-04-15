@@ -1,4 +1,4 @@
-package com.example.gravity;
+package com.example.gravity.chess;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,13 +7,21 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+
+import com.example.gravity.R;
+import com.example.gravity.chess.pieces.Bishop;
+import com.example.gravity.chess.pieces.Empty;
+import com.example.gravity.chess.pieces.King;
+import com.example.gravity.chess.pieces.Knight;
+import com.example.gravity.chess.pieces.Pawn;
+import com.example.gravity.chess.pieces.Queen;
+import com.example.gravity.chess.pieces.Rook;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,9 +32,9 @@ public class ChessView extends View {
     private Bitmap totodileBackground;
     public static final int OFFSET = 60;
     public static final int BORDER_WIDTH = 8;
-    private SquareBounds squareBounds;
+    private SquareBounds squareBounds = new SquareBounds();
     private ChessSquare mSquare;
-    public static List<ChessSquare> allChessSquares = new ArrayList<>();
+    public static List<ChessSquare> allChessSquares = new ArrayList<>(); // dont think this should be static. pretty sure
     private String squareBoardLocation;
     boolean touched = false;
     float xTouch, yTouch;
@@ -37,7 +45,7 @@ public class ChessView extends View {
     boolean greyedOut = true;
     private SquareBounds confirmMoveButtonBounds = new SquareBounds();
     boolean boardSetup = true;
-    private Map<String, Bitmap> chessPieceImages = new HashMap<>();
+    //private Map<String, Bitmap> chessPieceImages = new HashMap<>();
     private Bitmap whitePawnImage;
     private Bitmap whiteRookImage;
     private Bitmap whiteKnightImage;
@@ -53,10 +61,10 @@ public class ChessView extends View {
     int canvasWidth;
     int canvasHeight;
     int squareSize;
+    private Canvas canvas;
 
 
     public ChessView(Context context) {
-        //this(context, null);
         super(context);
         totodileBackground = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
         blackPawnImage = BitmapFactory.decodeResource(getResources(), R.drawable.pawn);
@@ -73,15 +81,10 @@ public class ChessView extends View {
         whiteQueenImage = BitmapFactory.decodeResource(getResources(), R.drawable.white_queen);
 
     }
-/*
-    public ChessView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
- */
 
     @Override
     protected void onDraw(Canvas canvas) {
+        this.canvas = canvas;
         canvas.drawBitmap(totodileBackground, 0, 0, null);
         canvasWidth = getWidth();
         canvasHeight = getHeight();
@@ -108,8 +111,9 @@ public class ChessView extends View {
                 if (boardSetup){
                     squareBounds = new SquareBounds(squareLeft, squareTop, squareRight, squareBottom);
                     squareBoardLocation = getSquareBoardLocation(i, j);
-                    ChessPieceId pieceId = getChessPieceIdFromBoardLocation(squareBoardLocation);
-                    mSquare = new ChessSquare(squareBounds, pieceId, squareBoardLocation);
+                    //ChessPieceId pieceId = getChessPieceIdFromBoardLocation(squareBoardLocation);
+                    ChessPiece piece = getChessPieceFromBoardLocation(squareBoardLocation);
+                    mSquare = new ChessSquare(squareBounds, piece, squareBoardLocation);
                     allChessSquares.add(mSquare);
                 }
                 if (fillSquare){
@@ -134,74 +138,57 @@ public class ChessView extends View {
         if (secondTouched) {
             highlightChessSquare(canvas, secondSelectedSquare);
             greyedOut = false;
-            //Button confirmMove = (Button) findViewById(R.id.confirmMove);
-            //confirmMove.setVisibility(View.VISIBLE);
         }
+
+        /*
+        Pawn pawn = new Pawn();
+        ChessSquare hi = new ChessSquare();
+        hi.setPiece(pawn);
+        */
 
         drawConfirmMoveButton(canvas);
 
         drawAllChessPieces(canvas, ChessView.allChessSquares);
 
-//        for (ChessSquare chessSquare : ChessView.allChessSquares){
-//            if (chessSquare.getPiece() == ChessPieceId.BlackPawn){
-//                blackPawnImage = Bitmap.createScaledBitmap(blackPawnImage, squareSize, squareSize, true);
-//                canvas.drawBitmap(blackPawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-//            }
-//
-//        }
+    }
 
+    private LinkedList<ChessSquare> assembleSquares() {
+        boolean fillSquare = true;
+        for (int i = 0; i < 8 ; i++){
+            for (int j = 0; j < 8; j++){
+                int squareLeft = OFFSET + BORDER_WIDTH + i*squareSize;
+                int squareRight = OFFSET + BORDER_WIDTH + (i + 1)*squareSize;
+                int squareTop = OFFSET + BORDER_WIDTH + j*squareSize;
+                int squareBottom = OFFSET + BORDER_WIDTH + (j + 1)*squareSize;
+                if (boardSetup){
+                    squareBounds = new SquareBounds(squareLeft, squareTop, squareRight, squareBottom);
+                    squareBoardLocation = getSquareBoardLocation(i, j);
+                    ChessPiece piece = getChessPieceFromBoardLocation(squareBoardLocation);
+                    mSquare = new ChessSquare(squareBounds, piece, squareBoardLocation);
+                    allChessSquares.add(mSquare);
+                }
+                if (fillSquare){
+
+                    mRect.set(squareLeft, squareTop, squareRight, squareBottom);
+                    mPaint.setStyle(Paint.Style.FILL);
+                    mPaint.setColor(getResources().getColor(R.color.chessBrown));
+                    mPaint.setAlpha(140);
+                    canvas.drawRect(mRect, mPaint);
+
+                    fillSquare = false;
+                } else {
+                    fillSquare = true;
+                }
+            }
+            fillSquare = !fillSquare;
+        }
     }
 
     private void drawAllChessPieces(Canvas canvas, List<ChessSquare> chessSquares) {
         for (ChessSquare chessSquare : chessSquares){
-
-            switch(chessSquare.getPiece()) {
-                case BlackPawn:
-                    canvas.drawBitmap(blackPawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case BlackRook:
-                    canvas.drawBitmap(blackRookImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case BlackKnight:
-                    canvas.drawBitmap(blackKnightImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case BlackBishop:
-                    canvas.drawBitmap(blackBishopImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case BlackQueen:
-                    canvas.drawBitmap(blackQueenImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case BlackKing:
-                    canvas.drawBitmap(blackKingImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case WhitePawn:
-                    canvas.drawBitmap(whitePawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case WhiteRook:
-                    canvas.drawBitmap(whiteRookImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case WhiteKnight:
-                    canvas.drawBitmap(whiteKnightImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case WhiteBishop:
-                    canvas.drawBitmap(whiteBishopImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case WhiteQueen:
-                    canvas.drawBitmap(whiteQueenImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case WhiteKing:
-                    canvas.drawBitmap(whiteKingImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-                    break;
-                case NoPiece:
-                    break;
+            if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece){
+                chessSquare.getPiece().drawPiece(canvas);
             }
-//
-//            if (chessSquare.getPiece() == ChessPieceId.BlackPawn){
-//                blackPawnImage = Bitmap.createScaledBitmap(blackPawnImage, squareSize, squareSize, true);
-//                canvas.drawBitmap(blackPawnImage, chessSquare.getBoundary().getLeft(), chessSquare.getBoundary().getTop(), null);
-//
-//            }
-
         }
     }
 
@@ -245,7 +232,6 @@ public class ChessView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setTextSize(80 - 2*BORDER_WIDTH);
         canvas.drawText("Confirm", buttonLeft + BORDER_WIDTH, buttonBottom - 2*BORDER_WIDTH, mPaint);
-
     }
 
     private void highlightChessSquare(Canvas canvas, ChessSquare squareToHighlight) {
@@ -255,8 +241,8 @@ public class ChessView extends View {
         canvas.drawRect(mRect, mPaint);
     }
 
-
-    private ChessPieceId getChessPieceIdFromBoardLocation(String squareBoardLocation) {
+    /*
+    private ChessPieceId getChessPieceIDFromBoardLocation(String squareBoardLocation) {
         ChessPieceId pieceId = null;
         if (squareBoardLocation.charAt(1) == '2') {
             pieceId = ChessPieceId.WhitePawn;
@@ -266,7 +252,7 @@ public class ChessView extends View {
         }
         else if(squareBoardLocation.charAt(1) == '1') {
             if (squareBoardLocation.charAt(0) == 'a' || squareBoardLocation.charAt(0) == 'h') {
-                pieceId = ChessPieceId.WhitePawn;
+                pieceId = ChessPieceId.WhiteRook;
             }
             if (squareBoardLocation.charAt(0) == 'b' || squareBoardLocation.charAt(0) == 'g') {
                 pieceId = ChessPieceId.WhiteKnight;
@@ -283,7 +269,7 @@ public class ChessView extends View {
         }
         else if(squareBoardLocation.charAt(1) == '8') {
             if (squareBoardLocation.charAt(0) == 'a' || squareBoardLocation.charAt(0) == 'h') {
-                pieceId = ChessPieceId.BlackPawn;
+                pieceId = ChessPieceId.BlackRook;
             }
             if (squareBoardLocation.charAt(0) == 'b' || squareBoardLocation.charAt(0) == 'g') {
                 pieceId = ChessPieceId.BlackKnight;
@@ -301,11 +287,44 @@ public class ChessView extends View {
         else {
             pieceId = ChessPieceId.NoPiece;
         }
-        /*switch(squareBoardLocation) {
-            //case
-        }
-        */
         return pieceId;
+    }
+    */
+
+    private ChessPiece getChessPieceFromBoardLocation(String squareBoardLocation) {
+        ChessPiece piece = null;
+        if (squareBoardLocation.charAt(1) == '2' || squareBoardLocation.charAt(1) == '7') {
+            piece = new Pawn();
+        }
+        else if(squareBoardLocation.charAt(1) == '1' || squareBoardLocation.charAt(1) == '8') {
+            if (squareBoardLocation.charAt(0) == 'a' || squareBoardLocation.charAt(0) == 'h') {
+                piece = new Rook();
+            }
+            if (squareBoardLocation.charAt(0) == 'b' || squareBoardLocation.charAt(0) == 'g') {
+                piece = new Knight();
+            }
+            if (squareBoardLocation.charAt(0) == 'c' || squareBoardLocation.charAt(0) == 'f') {
+                piece = new Bishop();
+            }
+            if (squareBoardLocation.charAt(0) == 'd') {
+                piece = new Queen();
+            }
+            if (squareBoardLocation.charAt(0) == 'e') {
+                piece = new King();
+            }
+        }
+        else {
+            piece = new Empty();
+        }
+        if (squareBoardLocation.charAt(1) == '1' || squareBoardLocation.charAt(1) == '2'){
+            assert piece != null;
+            piece.setColour(PieceColour.White);
+        }
+        else if (squareBoardLocation.charAt(1) == '7' || squareBoardLocation.charAt(1) == '8') {
+            assert piece != null;
+            piece.setColour(PieceColour.White);
+        }
+        return piece;
     }
 
     @Override
@@ -315,12 +334,12 @@ public class ChessView extends View {
             yTouch = event.getY();
             for (ChessSquare chessSquare : ChessView.allChessSquares) {
                 if (chessSquare.getBoundary().squareContainsCoordinates(chessSquare.getBoundary(), xTouch, yTouch)){
-                    if (chessSquare.getPiece() != ChessPieceId.NoPiece) {
+                    if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
                         selectedSquare = chessSquare;
                         secondTouched = false;
                         touched = true;
                     }
-                    if(touched && chessSquare.getPiece() == ChessPieceId.NoPiece) {
+                    if(touched && chessSquare.getPiece().getId() == ChessPieceId.NoPiece) {
                         secondSelectedSquare = chessSquare;
                         secondTouched = true;
                     }
@@ -329,7 +348,7 @@ public class ChessView extends View {
             }
             if(secondTouched && confirmMoveButtonBounds.squareContainsCoordinates(confirmMoveButtonBounds, xTouch, yTouch)) {
                 secondSelectedSquare.setPiece(selectedSquare.getPiece());
-                selectedSquare.setPiece(ChessPieceId.NoPiece);
+                selectedSquare.setPiece(new Empty());
                 touched = false;
                 secondTouched = false;
                 greyedOut = true;
