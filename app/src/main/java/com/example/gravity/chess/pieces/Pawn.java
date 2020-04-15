@@ -41,11 +41,6 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    public void resizePieceImage(int width) {
-
-    }
-
-    @Override
     public SquareBounds getLocation() {
         return null;
     }

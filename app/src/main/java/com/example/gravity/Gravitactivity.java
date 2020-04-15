@@ -12,11 +12,5 @@ public class Gravitactivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(new ChessView(this));
-        //setContentView(R.layout.activity_gravitactivity);
     }
-    /*
-    public void drawSomething(View view) {
-        view.invalidate();
-    }
-    */
 }

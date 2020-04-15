@@ -12,11 +12,6 @@ import java.util.List;
 
 public class Empty extends ChessPiece {
     @Override
-    public void drawPiece() {
-
-    }
-
-    @Override
     public SquareBounds getLocation() {
         return null;
     }

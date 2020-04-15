@@ -15,12 +15,6 @@ import java.util.List;
 
 public class Bishop extends ChessPiece {
 
-
-    @Override
-    public void drawPiece() {
-
-    }
-
     @Override
     public SquareBounds getLocation() {
         return null;

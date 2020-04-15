@@ -14,10 +14,6 @@ import com.example.gravity.chess.SquareBounds;
 import java.util.List;
 
 public class King extends ChessPiece {
-    @Override
-    public void drawPiece() {
-
-    }
 
     @Override
     public SquareBounds getLocation() {

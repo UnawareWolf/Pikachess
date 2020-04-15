@@ -19,13 +19,15 @@ public abstract class ChessPiece {
     public abstract void setPieceImage(Context context);
     public abstract Bitmap getPieceImage();
     public abstract ChessPieceId getId();
-    public abstract void resizePieceImage(int width);
+    void resizePieceImage(int squareSize) {
+        this.pieceImage = Bitmap.createScaledBitmap(pieceImage, squareSize, squareSize, true);
+    }
 
-    public void drawPiece(Canvas canvas) {
+    void drawPiece(Canvas canvas) {
         canvas.drawBitmap(this.pieceImage, location.getLeft(), location.getTop(), null);
     }
 
-    public void setColour(PieceColour colour){
+    void setColour(PieceColour colour){
         this.colour = colour;
     }
 
