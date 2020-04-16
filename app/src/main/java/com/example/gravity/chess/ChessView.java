@@ -1,5 +1,6 @@
 package com.example.gravity.chess;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -47,9 +48,9 @@ public class ChessView extends View {
     boolean newBoard = true;
     int canvasWidth;
     int squareSize;
-    private Canvas canvas;
+    //private Canvas canvas;
     int boardSize;
-    private Context context;// only make variables private if they will be get or set by other classes. Otherwise package private (ie nothing) is good.
+    private Context context;// only make variables private if they will be get or set by other classes. Otherwise package private (ie nothing) is good. wrong
 
     public ChessView(Context context) {
         super(context);
@@ -60,7 +61,7 @@ public class ChessView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         if (newBoard) {
-            this.canvas = canvas;
+            //this.canvas = canvas;
             canvasWidth = getWidth();
             boardSize = canvasWidth - 2*OFFSET - 2*BORDER_WIDTH;
             squareSize = boardSize/8;
@@ -70,32 +71,36 @@ public class ChessView extends View {
             newBoard = false;
         }
         canvas.drawBitmap(totodileBackground, 0, 0, null);
-        drawBoardBorder();
-        drawBoard(allChessSquares);
+        drawBoardBorder(canvas);
+        drawBoard(canvas, allChessSquares);
 
         if (touched) {
-            highlightChessSquare(selectedSquare);
+            highlightChessSquare(canvas, selectedSquare);
         }
         if (secondTouched) {
-            highlightChessSquare(secondSelectedSquare);
+            highlightChessSquare(canvas, secondSelectedSquare);
             greyedOut = false;
         }
 
-        drawConfirmMoveButton();
+        drawConfirmMoveButton(canvas);
+        /*Pawn pawn = new Pawn();
+        ChessPieceId id = pawn.getId();*/
 
-        drawAllChessPieces(allChessSquares);
+        drawAllChessPieces(allChessSquares, canvas);
 
     }
 
     private void resizePieceBitmaps() {
         for (ChessSquare chessSquare : allChessSquares) {
+            ChessPiece newPiece = chessSquare.getPiece();
+            ChessPieceId newID = chessSquare.getPiece().getId();
             if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
                 chessSquare.getPiece().resizePieceImage(squareSize); //not ideal because if there are multiple instances of each piece, there will be multiple images stored.
             } // maybe do something like a set of pieces to avoid duplicates.
         }
     }
 
-    private void drawBoardBorder() {
+    private void drawBoardBorder(Canvas canvas) {
         mPaint.setColor(getResources().getColor(R.color.chessBrown));
         mPaint.setStrokeWidth(BORDER_WIDTH);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -129,16 +134,16 @@ public class ChessView extends View {
         return boardSquares;
     }
 
-    private void drawBoard(List<ChessSquare> allChessSquares) {
+    private void drawBoard(Canvas canvas, List<ChessSquare> allChessSquares) {
         for (ChessSquare chessSquare : allChessSquares) {
             chessSquare.drawSquare(context, canvas, mRect, mPaint);
         }
     }
 
-    private void drawAllChessPieces(List<ChessSquare> chessSquares) {
+    private void drawAllChessPieces(List<ChessSquare> chessSquares, Canvas canvas) {
         for (ChessSquare chessSquare : chessSquares){
             if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece){
-                chessSquare.getPiece().drawPiece(canvas);
+                chessSquare.getPiece().drawPiece(canvas, chessSquare.getBoundary()); // maybe actually set location in piece
             }
         }
     }
@@ -147,11 +152,12 @@ public class ChessView extends View {
         for (ChessSquare chessSquare : allChessSquares) {
             if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
                 chessSquare.getPiece().setPieceImage(context); //not ideal because if there are multiple instances of each piece, there will be multiple images stored.
+                int x = 0;
             } // maybe do something like a set of pieces to avoid duplicates.
         }
     }
 
-    private void drawConfirmMoveButton() {
+    private void drawConfirmMoveButton(Canvas canvas) {
         int buttonWidth = canvasWidth/4;
         int buttonHeight = buttonWidth/3;
         int buttonLeft = OFFSET + BORDER_WIDTH/2;
@@ -178,7 +184,7 @@ public class ChessView extends View {
         canvas.drawText("Confirm", buttonLeft + BORDER_WIDTH, buttonBottom - 2*BORDER_WIDTH, mPaint);
     }
 
-    private void highlightChessSquare(ChessSquare squareToHighlight) {
+    private void highlightChessSquare(Canvas canvas, ChessSquare squareToHighlight) {
         mRect.set(squareToHighlight.getBoundary().getLeft(), squareToHighlight.getBoundary().getTop(), squareToHighlight.getBoundary().getRight(), squareToHighlight.getBoundary().getBottom());
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(getResources().getColor(R.color.selectedSquareColour));
@@ -216,7 +222,7 @@ public class ChessView extends View {
         }
         else if (squareBoardLocation.charAt(1) == '7' || squareBoardLocation.charAt(1) == '8') {
             assert piece != null;
-            piece.setColour(PieceColour.White);
+            piece.setColour(PieceColour.Black);
         }
         return piece;
     }

@@ -15,10 +15,7 @@ import java.util.List;
 
 public class King extends ChessPiece {
 
-    @Override
-    public SquareBounds getLocation() {
-        return null;
-    }
+    ChessPieceId id = ChessPieceId.King;
 
     @Override
     public List<ChessSquare> getLegalMoves() {
@@ -26,27 +23,17 @@ public class King extends ChessPiece {
     }
 
     @Override
-    public void movePiece() {
-
-    }
-
-    @Override
     public void setPieceImage(Context context) {
         if (this.colour == PieceColour.White) {
-            this.pieceImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.white_queen);
+            this.pieceImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.white_king);
         }
         else if (this.colour == PieceColour.Black) {
-            this.pieceImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.queen);
+            this.pieceImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.king);
         }
-    }
-
-    @Override
-    public Bitmap getPieceImage() {
-        return null;
     }
 
     @Override
     public ChessPieceId getId() {
-        return null;
+        return this.id;
     }
 }

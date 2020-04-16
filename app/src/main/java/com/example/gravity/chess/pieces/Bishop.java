@@ -15,10 +15,7 @@ import java.util.List;
 
 public class Bishop extends ChessPiece {
 
-    @Override
-    public SquareBounds getLocation() {
-        return null;
-    }
+    ChessPieceId id = ChessPieceId.Bishop;
 
     @Override
     public List<ChessSquare> getLegalMoves() {
@@ -26,27 +23,18 @@ public class Bishop extends ChessPiece {
     }
 
     @Override
-    public void movePiece() {
-
-    }
-
-    @Override
     public void setPieceImage(Context context) {
         if (super.colour == PieceColour.White) {
-            this.pieceImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.white_rook);
+            this.pieceImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.white_bishop);
         }
         else if (super.colour == PieceColour.Black) {
-            this.pieceImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.rook);
+            this.pieceImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.bishop);
         }
-    }
-
-    @Override
-    public Bitmap getPieceImage() {
-        return null;
     }
 
     @Override
     public ChessPieceId getId() {
-        return null;
+        return this.id;
     }
+
 }

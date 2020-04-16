@@ -15,19 +15,11 @@ import java.util.List;
 
 public class Queen extends ChessPiece {
 
-    @Override
-    public SquareBounds getLocation() {
-        return null;
-    }
+    ChessPieceId id = ChessPieceId.Queen;
 
     @Override
     public List<ChessSquare> getLegalMoves() {
         return null;
-    }
-
-    @Override
-    public void movePiece() {
-
     }
 
     @Override
@@ -41,12 +33,7 @@ public class Queen extends ChessPiece {
     }
 
     @Override
-    public Bitmap getPieceImage() {
-        return null;
-    }
-
-    @Override
     public ChessPieceId getId() {
-        return null;
+        return this.id;
     }
 }

@@ -11,10 +11,8 @@ import com.example.gravity.chess.SquareBounds;
 import java.util.List;
 
 public class Empty extends ChessPiece {
-    @Override
-    public SquareBounds getLocation() {
-        return null;
-    }
+
+    ChessPieceId id = ChessPieceId.NoPiece;
 
     @Override
     public List<ChessSquare> getLegalMoves() {
@@ -22,22 +20,11 @@ public class Empty extends ChessPiece {
     }
 
     @Override
-    public void movePiece() {
-
-    }
-
-    @Override
     public void setPieceImage(Context context) {
-
-    }
-
-    @Override
-    public Bitmap getPieceImage() {
-        return null;
     }
 
     @Override
     public ChessPieceId getId() {
-        return null;
+        return this.id;
     }
 }

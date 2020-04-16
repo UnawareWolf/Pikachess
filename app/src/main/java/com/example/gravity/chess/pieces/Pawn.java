@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Pawn extends ChessPiece {
 
-    public static final ChessPieceId ID = ChessPieceId.Pawn;
+    ChessPieceId id = ChessPieceId.Pawn;
     //private Bitmap pieceImage;// = BitmapFactory.decodeResource(getResources(), R.drawable.pawn);
     //private Bitmap blackPieceImage;
 
@@ -31,18 +31,8 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    public Bitmap getPieceImage() {
-        return this.pieceImage;
-    }
-
-    @Override
     public ChessPieceId getId() {
-        return ID;
-    }
-
-    @Override
-    public SquareBounds getLocation() {
-        return null;
+        return this.id;
     }
 
     @Override
@@ -50,8 +40,4 @@ public class Pawn extends ChessPiece {
         return null;
     }
 
-    @Override
-    public void movePiece() {
-
-    }
 }
