@@ -51,6 +51,7 @@ public class ChessView extends View {
     //private Canvas canvas;
     int boardSize;
     private Context context;// only make variables private if they will be get or set by other classes. Otherwise package private (ie nothing) is good. wrong
+    private PieceColour turnToPlay = PieceColour.White;
 
     public ChessView(Context context) {
         super(context);
@@ -234,12 +235,13 @@ public class ChessView extends View {
             yTouch = event.getY();
             for (ChessSquare chessSquare : allChessSquares) {
                 if (chessSquare.getBoundary().squareContainsCoordinates(chessSquare.getBoundary(), xTouch, yTouch)){
-                    if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
+                    if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece && chessSquare.getPiece().getColour() == turnToPlay) {
                         selectedSquare = chessSquare;
                         secondTouched = false;
                         touched = true;
+                        greyedOut = true;
                     }
-                    if(touched && chessSquare.getPiece().getId() == ChessPieceId.NoPiece) {
+                    if(touched && (chessSquare.getPiece().getId() == ChessPieceId.NoPiece || chessSquare.getPiece().getColour() != turnToPlay)) {
                         secondSelectedSquare = chessSquare;
                         secondTouched = true;
                     }
@@ -249,6 +251,7 @@ public class ChessView extends View {
             if(secondTouched && confirmMoveButtonBounds.squareContainsCoordinates(confirmMoveButtonBounds, xTouch, yTouch)) {
                 secondSelectedSquare.setPiece(selectedSquare.getPiece());
                 selectedSquare.setPiece(new Empty());
+                changeTurn();
                 touched = false;
                 secondTouched = false;
                 greyedOut = true;
@@ -290,5 +293,13 @@ public class ChessView extends View {
                 throw new IllegalStateException("Unexpected value: " + xNum);
         }
         return loc;
+    }
+    private void changeTurn() {
+        if (this.turnToPlay == PieceColour.Black){
+            this.turnToPlay = PieceColour.White;
+        }
+        else {
+            this.turnToPlay = PieceColour.Black;
+        }
     }
 }
