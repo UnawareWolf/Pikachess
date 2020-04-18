@@ -11,6 +11,7 @@ import com.example.gravity.chess.ChessSquare;
 import com.example.gravity.chess.PieceColour;
 import com.example.gravity.chess.SquareBounds;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Knight extends ChessPiece {
@@ -36,5 +37,27 @@ public class Knight extends ChessPiece {
     public ChessPieceId getId() {
         return this.id;
     }
+
+    @Override
+    public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
+        List<ChessSquare> legalMoves = new ArrayList<>();
+        for (ChessSquare chessSquare : allChessSquares) {
+
+        }
+        return null;
+    }
+
+    public List<ChessSquare> getHorizontalSquares(List<ChessSquare> allChessSquares, ChessSquare currentSquare) {
+        List<ChessSquare> horizontalSquares = new ArrayList<>();
+//        int positionNumber = currentSquare.getBoardLocation().charAt(1);
+//        char currentLetter = currentSquare.getBoardLocation().charAt(0);
+//        for (ChessSquare chessSquare : allChessSquares) {
+//            if (positionNumber == chessSquare.getBoardLocation().charAt(1)) {
+//
+//            }
+//        }
+        return horizontalSquares;
+    }
+
 
 }

@@ -11,6 +11,8 @@ public abstract class ChessPiece {
     protected PieceColour colour;
     protected Bitmap pieceImage;
     protected SquareBounds location;
+    protected ChessSquare parentSquare;
+    protected boolean hasMoved;
     //ChessPieceId id;
 
     //public abstract void drawPiece();
@@ -19,8 +21,18 @@ public abstract class ChessPiece {
     //public abstract void movePiece();
     public abstract void setPieceImage(Context context);
     public abstract ChessPieceId getId();
+    public abstract List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares);
+    public void setParentSquare(ChessSquare chessSquare) {
+        this.parentSquare = chessSquare;
+    }
+    public ChessSquare getParentSquare() {
+        return this.parentSquare;
+    }
     public Bitmap getPieceImage() {
         return this.pieceImage;
+    }
+    public void setHasMoved() {
+        this.hasMoved = true;
     }
 
     //public abstract void setId(ChessPieceId id);
@@ -47,8 +59,26 @@ public abstract class ChessPiece {
     void setColour(PieceColour colour){
         this.colour = colour;
     }
+    protected char getNextChar(char letter) {
+        return (char) ((int) letter + 1);
+    }
 
     public PieceColour getColour() {
         return colour;
+    }
+
+    protected int howFarInFront(int positionNumber, int targetNumber) {
+        int relativeRow;
+        if (this.colour == PieceColour.White){
+            relativeRow = targetNumber - positionNumber;
+        }
+        else {
+            relativeRow = positionNumber - targetNumber;
+        }
+        return relativeRow;
+    }
+
+    protected int howFarToTheRight(char positionLetter, char targetLetter) {
+        return positionLetter - targetLetter;
     }
 }

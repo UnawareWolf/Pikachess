@@ -37,4 +37,10 @@ public class Bishop extends ChessPiece {
         return this.id;
     }
 
+    @Override
+    public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
+        return null;
+    }
+
+
 }

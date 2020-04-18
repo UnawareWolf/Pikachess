@@ -52,11 +52,14 @@ public class ChessView extends View {
     int boardSize;
     private Context context;// only make variables private if they will be get or set by other classes. Otherwise package private (ie nothing) is good. wrong
     private PieceColour turnToPlay = PieceColour.White;
+    public static Map<Character, LinkedList<ChessSquare>> boardGroups = new HashMap<>();
+    //public static Map<Character, Integer> letterIndexMap = new HashMap<>();
 
     public ChessView(Context context) {
         super(context);
         this.context = context;
         totodileBackground = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
+        //fillLetterIndexMap();
     }
 
     @Override
@@ -67,6 +70,7 @@ public class ChessView extends View {
             boardSize = canvasWidth - 2*OFFSET - 2*BORDER_WIDTH;
             squareSize = boardSize/8;
             this.allChessSquares = assembleSquares();
+            assembleBoardGroups();
             initialisePieceBitmaps();
             resizePieceBitmaps();
             newBoard = false;
@@ -118,10 +122,13 @@ public class ChessView extends View {
                 int squareRight = OFFSET + BORDER_WIDTH + (i + 1)*squareSize;
                 int squareTop = OFFSET + BORDER_WIDTH + j*squareSize;
                 int squareBottom = OFFSET + BORDER_WIDTH + (j + 1)*squareSize;
+                int xCoordinate = i + 1;
+                int yCoordinate = 8 - j;
                 squareBounds = new SquareBounds(squareLeft, squareTop, squareRight, squareBottom);
-                squareBoardLocation = getSquareBoardLocation(i, j);
-                ChessPiece piece = getChessPieceFromBoardLocation(squareBoardLocation);
-                mSquare = new ChessSquare(squareBounds, piece, squareBoardLocation);
+                //squareBoardLocation = getSquareBoardLocation(i, j);
+                ChessPiece piece = getPieceFromCoordinates(xCoordinate, yCoordinate);
+                //ChessPiece piece = getChessPieceFromBoardLocation(squareBoardLocation);
+                mSquare = new ChessSquare(squareBounds, piece, xCoordinate, yCoordinate);
                 if (fillSquare){
                     mSquare.setColour(PieceColour.Black);
                 } else {
@@ -133,6 +140,84 @@ public class ChessView extends View {
             fillSquare = !fillSquare;
         }
         return boardSquares;
+    }
+
+    private ChessPiece getPieceFromCoordinates(int xCoordinate, int yCoordinate) {
+        ChessPiece piece = null;
+        if (yCoordinate == 2 || yCoordinate == 7) {
+            piece = new Pawn();
+        }
+        else if(yCoordinate == 1 || yCoordinate == 8) {
+            switch (xCoordinate) {
+                case 1:
+                case 8:
+                    piece = new Rook();
+                    break;
+                case 2:
+                case 7:
+                    piece = new Knight();
+                    break;
+                case 3:
+                case 6:
+                    piece = new Bishop();
+                    break;
+                case 4: piece = new Queen();
+                    break;
+                case 5: piece = new King();
+                    break;
+            }
+        }
+        else {
+            piece = new Empty();
+        }
+        if (yCoordinate == 1 || yCoordinate == 2){
+            piece.setColour(PieceColour.White);
+        }
+        else if (yCoordinate == 7 || yCoordinate == 8) {
+            piece.setColour(PieceColour.Black);
+        }
+        return piece;
+    }
+
+//    private void assembleBoardGroups() {
+//        for (char letter = 'a'; letter < 'i'; letter++) {
+//            LinkedList<ChessSquare> newBoardGroup = new LinkedList<>();
+//            for (ChessSquare chessSquare : allChessSquares) {
+//                if (chessSquare.getBoardLocation().charAt(0) == letter) {
+//                    newBoardGroup.add(0, chessSquare);
+//                }
+//            }
+//            boardGroups.put(letter, newBoardGroup);
+//        }
+//        for (int num = 1; num < 9; num++) {
+//            LinkedList<ChessSquare> newBoardGroup = new LinkedList<>();
+//            for (ChessSquare chessSquare : allChessSquares) {
+//                int testChar = Character.getNumericValue(chessSquare.getBoardLocation().charAt(1));
+//                //char currentChar = (char) num;
+//                if (testChar == num) {
+//                    newBoardGroup.add(chessSquare);
+//                }
+//            }
+//            boardGroups.put((char) (num + '0'), newBoardGroup);
+//        }
+//    }
+
+    private void assembleBoardGroups() {
+        for (int num = 1; num < 9; num++) {
+            LinkedList<ChessSquare> verticalBoardGroup = new LinkedList<>();
+            for (ChessSquare chessSquare : allChessSquares) {
+                if (Character.getNumericValue(chessSquare.getYCoordinate()) == num) {
+                    verticalBoardGroup.add(chessSquare);
+                }
+            }
+            LinkedList<ChessSquare> horizontalBoardGroup = new LinkedList<>();
+            for (ChessSquare chessSquare : allChessSquares) {
+                if (Character.getNumericValue(chessSquare.getYCoordinate()) == num) {
+                    horizontalBoardGroup.add(chessSquare);
+                }
+            }
+            boardGroups.put((char) (num + '0'), verticalBoardGroup);
+        }
     }
 
     private void drawBoard(Canvas canvas, List<ChessSquare> allChessSquares) {
@@ -192,41 +277,41 @@ public class ChessView extends View {
         canvas.drawRect(mRect, mPaint);
     }
 
-    private ChessPiece getChessPieceFromBoardLocation(String squareBoardLocation) {
-        ChessPiece piece = null;
-        if (squareBoardLocation.charAt(1) == '2' || squareBoardLocation.charAt(1) == '7') {
-            piece = new Pawn();
-        }
-        else if(squareBoardLocation.charAt(1) == '1' || squareBoardLocation.charAt(1) == '8') {
-            if (squareBoardLocation.charAt(0) == 'a' || squareBoardLocation.charAt(0) == 'h') {
-                piece = new Rook();
-            }
-            if (squareBoardLocation.charAt(0) == 'b' || squareBoardLocation.charAt(0) == 'g') {
-                piece = new Knight();
-            }
-            if (squareBoardLocation.charAt(0) == 'c' || squareBoardLocation.charAt(0) == 'f') {
-                piece = new Bishop();
-            }
-            if (squareBoardLocation.charAt(0) == 'd') {
-                piece = new Queen();
-            }
-            if (squareBoardLocation.charAt(0) == 'e') {
-                piece = new King();
-            }
-        }
-        else {
-            piece = new Empty();
-        }
-        if (squareBoardLocation.charAt(1) == '1' || squareBoardLocation.charAt(1) == '2'){
-            assert piece != null;
-            piece.setColour(PieceColour.White);
-        }
-        else if (squareBoardLocation.charAt(1) == '7' || squareBoardLocation.charAt(1) == '8') {
-            assert piece != null;
-            piece.setColour(PieceColour.Black);
-        }
-        return piece;
-    }
+//    private ChessPiece getChessPieceFromBoardLocation(String squareBoardLocation) {
+//        ChessPiece piece = null;
+//        if (squareBoardLocation.charAt(1) == '2' || squareBoardLocation.charAt(1) == '7') {
+//            piece = new Pawn();
+//        }
+//        else if(squareBoardLocation.charAt(1) == '1' || squareBoardLocation.charAt(1) == '8') {
+//            if (squareBoardLocation.charAt(0) == 'a' || squareBoardLocation.charAt(0) == 'h') {
+//                piece = new Rook();
+//            }
+//            if (squareBoardLocation.charAt(0) == 'b' || squareBoardLocation.charAt(0) == 'g') {
+//                piece = new Knight();
+//            }
+//            if (squareBoardLocation.charAt(0) == 'c' || squareBoardLocation.charAt(0) == 'f') {
+//                piece = new Bishop();
+//            }
+//            if (squareBoardLocation.charAt(0) == 'd') {
+//                piece = new Queen();
+//            }
+//            if (squareBoardLocation.charAt(0) == 'e') {
+//                piece = new King();
+//            }
+//        }
+//        else {
+//            piece = new Empty();
+//        }
+//        if (squareBoardLocation.charAt(1) == '1' || squareBoardLocation.charAt(1) == '2'){
+//            assert piece != null;
+//            piece.setColour(PieceColour.White);
+//        }
+//        else if (squareBoardLocation.charAt(1) == '7' || squareBoardLocation.charAt(1) == '8') {
+//            assert piece != null;
+//            piece.setColour(PieceColour.Black);
+//        }
+//        return piece;
+//    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -242,14 +327,30 @@ public class ChessView extends View {
                         greyedOut = true;
                     }
                     if(touched && (chessSquare.getPiece().getId() == ChessPieceId.NoPiece || chessSquare.getPiece().getColour() != turnToPlay)) {
-                        secondSelectedSquare = chessSquare;
-                        secondTouched = true;
+                        selectedSquare.getPiece().setParentSquare(selectedSquare);
+                        boolean legalMove = true;
+                        if (selectedSquare.getPiece().getId() == ChessPieceId.Pawn || selectedSquare.getPiece().getId() == ChessPieceId.King || selectedSquare.getPiece().getId() == ChessPieceId.Rook) {
+                            legalMove = false;
+                            for (ChessSquare legalSquare : selectedSquare.getPiece().getLegalMoves(allChessSquares)) {
+                                if (chessSquare == legalSquare) {
+                                    legalMove = true;
+                                    break;
+                                }
+                            }
+                            //executeMove = selectedSquare.getPiece().isMoveLegal(allChessSquares, chessSquare);//getMoveViability(chessSquare, selectedSquare);
+                        }
+                        if (legalMove) {
+                            secondSelectedSquare = chessSquare;
+                            secondTouched = true;
+                        }
                     }
                     invalidate();
                 }
             }
             if(secondTouched && confirmMoveButtonBounds.squareContainsCoordinates(confirmMoveButtonBounds, xTouch, yTouch)) {
+                selectedSquare.getPiece().setHasMoved();
                 secondSelectedSquare.setPiece(selectedSquare.getPiece());
+                secondSelectedSquare.getPiece().setParentSquare(secondSelectedSquare);
                 selectedSquare.setPiece(new Empty());
                 changeTurn();
                 touched = false;
@@ -262,38 +363,39 @@ public class ChessView extends View {
         return true;
     }
 
-    private String getSquareBoardLocation(int xNum, int yNum) {
-        String loc;
-        switch(xNum) {
-            case 0:
-                loc = "a" + Integer.toString(8 - yNum);
-                break;
-            case 1:
-                loc = "b" + Integer.toString(8 - yNum);
-                break;
-            case 2:
-                loc = "c" + Integer.toString(8 - yNum);
-                break;
-            case 3:
-                loc = "d" + Integer.toString(8 - yNum);
-                break;
-            case 4:
-                loc = "e" + Integer.toString(8 - yNum);
-                break;
-            case 5:
-                loc = "f" + Integer.toString(8 - yNum);
-                break;
-            case 6:
-                loc = "g" + Integer.toString(8 - yNum);
-                break;
-            case 7:
-                loc = "h" + Integer.toString(8 - yNum);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + xNum);
-        }
-        return loc;
-    }
+//
+//    private String getSquareBoardLocation(int xNum, int yNum) {
+//        String loc;
+//        switch(xNum) {
+//            case 0:
+//                loc = "a" + Integer.toString(8 - yNum);
+//                break;
+//            case 1:
+//                loc = "b" + Integer.toString(8 - yNum);
+//                break;
+//            case 2:
+//                loc = "c" + Integer.toString(8 - yNum);
+//                break;
+//            case 3:
+//                loc = "d" + Integer.toString(8 - yNum);
+//                break;
+//            case 4:
+//                loc = "e" + Integer.toString(8 - yNum);
+//                break;
+//            case 5:
+//                loc = "f" + Integer.toString(8 - yNum);
+//                break;
+//            case 6:
+//                loc = "g" + Integer.toString(8 - yNum);
+//                break;
+//            case 7:
+//                loc = "h" + Integer.toString(8 - yNum);
+//                break;
+//            default:
+//                throw new IllegalStateException("Unexpected value: " + xNum);
+//        }
+//        return loc;
+//    }
     private void changeTurn() {
         if (this.turnToPlay == PieceColour.Black){
             this.turnToPlay = PieceColour.White;
@@ -302,4 +404,17 @@ public class ChessView extends View {
             this.turnToPlay = PieceColour.Black;
         }
     }
+
+//
+//    private void fillLetterIndexMap() {
+//
+//        for (char letter = 'a'; letter < 'i'; letter++) {
+//            letterIndexMap.put(letter, (int) letter - 96);
+//        }
+//    }
+//
+//    public static int getLetterIndex(Character letter) {
+//        return (int) letter - 96;
+//    }
+
 }

@@ -27,4 +27,10 @@ public class Empty extends ChessPiece {
     public ChessPieceId getId() {
         return this.id;
     }
+
+    @Override
+    public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
+        return null;
+    }
+
 }
