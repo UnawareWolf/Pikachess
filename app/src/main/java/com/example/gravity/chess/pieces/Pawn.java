@@ -36,25 +36,28 @@ public class Pawn extends ChessPiece {
     @Override
     public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
         List<ChessSquare> legalMoves = new ArrayList<>();
-//        int positionNumber = this.getParentSquare().getBoardLocation().charAt(1);
-//        char currentLetter = this.getParentSquare().getBoardLocation().charAt(0);
-//        for (ChessSquare chessSquare : allChessSquares) {
-//            int targetNumber = chessSquare.getBoardLocation().charAt(1);
-//            char targetLetter = chessSquare.getBoardLocation().charAt(0);
-//            if (chessSquare.getPiece().getId() == ChessPieceId.NoPiece) {
-//                if (targetLetter == currentLetter && howFarInFront(positionNumber, targetNumber) == 1) {
-//                    legalMoves.add(chessSquare);
-//                }
-//                else if (!this.hasMoved && howFarInFront(positionNumber, targetNumber) == 2 && targetLetter == currentLetter) {
-//                    legalMoves.add(chessSquare);
-//                }
-//            }
-//            else if (chessSquare.getPiece().getId() != ChessPieceId.King) {
-//                if (howFarInFront(positionNumber, targetNumber) == 1 && (howFarToTheRight(currentLetter, targetLetter) == -1 || howFarToTheRight(currentLetter, targetLetter) == 1)) {
-//                    legalMoves.add(chessSquare);
-//                }
-//            }
-//        }
+        int xCoordinate = this.getParentSquare().getXCoordinate();
+        int yCoordinate = this.getParentSquare().getYCoordinate();
+        for (ChessSquare chessSquare : allChessSquares) {
+            int targetX = chessSquare.getXCoordinate();
+            int targetY = chessSquare.getYCoordinate();
+            int relativeXPos = howFarToTheRight(xCoordinate, targetX);
+            int relativeYPos = howFarInFront(yCoordinate, targetY);
+
+            if (chessSquare.getPiece().getId() == ChessPieceId.NoPiece) {
+                if (targetX == xCoordinate && relativeYPos == 1) {
+                    legalMoves.add(chessSquare);
+                }
+                else if (!this.hasMoved && relativeYPos == 2 && targetX == xCoordinate) {
+                    legalMoves.add(chessSquare);
+                }
+            }
+            else if (chessSquare.getPiece().getId() != ChessPieceId.King) {
+                if (relativeYPos == 1 && (relativeXPos == -1 || relativeXPos == 1)) {
+                    legalMoves.add(chessSquare);
+                }
+            }
+        }
 
         return legalMoves;
     }

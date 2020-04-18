@@ -8,10 +8,13 @@ import com.example.gravity.R;
 import com.example.gravity.chess.ChessPiece;
 import com.example.gravity.chess.ChessPieceId;
 import com.example.gravity.chess.ChessSquare;
+import com.example.gravity.chess.ChessView;
 import com.example.gravity.chess.PieceColour;
 import com.example.gravity.chess.SquareBounds;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Knight extends ChessPiece {
@@ -40,24 +43,18 @@ public class Knight extends ChessPiece {
 
     @Override
     public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
+        int xCoordinate = this.getParentSquare().getXCoordinate();
+        int yCoordinate = this.getParentSquare().getYCoordinate();
         List<ChessSquare> legalMoves = new ArrayList<>();
         for (ChessSquare chessSquare : allChessSquares) {
-
+            int targetX = chessSquare.getXCoordinate();
+            int targetY = chessSquare.getYCoordinate();
+            int relativeXPos = howFarToTheRight(xCoordinate, targetX);
+            int relativeYPos = howFarInFront(yCoordinate, targetY);
+            if (((relativeXPos == 1 || relativeXPos == - 1) && (relativeYPos == 2 || relativeYPos == - 2)) || ((relativeXPos == 2 || relativeXPos == - 2) && (relativeYPos == 1 || relativeYPos == - 1))) {
+                legalMoves.add(chessSquare);
+            }
         }
-        return null;
+        return legalMoves;
     }
-
-    public List<ChessSquare> getHorizontalSquares(List<ChessSquare> allChessSquares, ChessSquare currentSquare) {
-        List<ChessSquare> horizontalSquares = new ArrayList<>();
-//        int positionNumber = currentSquare.getBoardLocation().charAt(1);
-//        char currentLetter = currentSquare.getBoardLocation().charAt(0);
-//        for (ChessSquare chessSquare : allChessSquares) {
-//            if (positionNumber == chessSquare.getBoardLocation().charAt(1)) {
-//
-//            }
-//        }
-        return horizontalSquares;
-    }
-
-
 }

@@ -8,9 +8,13 @@ import com.example.gravity.R;
 import com.example.gravity.chess.ChessPiece;
 import com.example.gravity.chess.ChessPieceId;
 import com.example.gravity.chess.ChessSquare;
+import com.example.gravity.chess.ChessView;
 import com.example.gravity.chess.PieceColour;
 import com.example.gravity.chess.SquareBounds;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Queen extends ChessPiece {
@@ -39,6 +43,10 @@ public class Queen extends ChessPiece {
 
     @Override
     public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
-        return null;
+        List<ChessSquare> legalMoves = new ArrayList<>();
+        legalMoves.addAll(getStraightLineMoves());
+        legalMoves.addAll(getDiagonalMoves(allChessSquares));
+        return legalMoves;
     }
+
 }
