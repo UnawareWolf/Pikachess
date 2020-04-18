@@ -1,7 +1,7 @@
-package com.example.gravity;
+package com.example.gravity.chess;
 
 public enum ChessPieceId {
-
+    /*
     WhitePawn(),
     WhiteRook(),
     WhiteKnight(),
@@ -14,6 +14,12 @@ public enum ChessPieceId {
     BlackBishop(),
     BlackQueen(),
     BlackKing(),
+    */
+    Pawn(),
+    Rook(),
+    Knight(),
+    Bishop(),
+    Queen(),
+    King(),
     NoPiece();
-
 }
