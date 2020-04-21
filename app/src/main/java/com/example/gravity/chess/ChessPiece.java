@@ -105,10 +105,10 @@ public abstract class ChessPiece {
         List<ChessSquare> rightSquares = horizontalSquares.subList(xCoordinate, horizontalSquares.size());
         List<ChessSquare> leftSquares = new ArrayList<>(horizontalSquares.subList(0, xCoordinate - 1));
         Collections.reverse(leftSquares);
-        addSquaresUntilBlocked(openSquares, forwardSquares);
-        addSquaresUntilBlocked(openSquares, backwardSquares);
-        addSquaresUntilBlocked(openSquares, leftSquares);
-        addSquaresUntilBlocked(openSquares, rightSquares);
+        openSquares.addAll(addSquaresUntilBlocked(forwardSquares));
+        openSquares.addAll(addSquaresUntilBlocked(backwardSquares));
+        openSquares.addAll(addSquaresUntilBlocked(leftSquares));
+        openSquares.addAll(addSquaresUntilBlocked(rightSquares));
         return openSquares;
     }
 
@@ -130,14 +130,15 @@ public abstract class ChessPiece {
         List<ChessSquare> upLeft = diagonalDown.subList(pieceDownIndex, diagonalDown.size());
         List<ChessSquare> downRight = new ArrayList<>(diagonalDown.subList(0, pieceDownIndex - 1));
         Collections.reverse(downRight);
-        addSquaresUntilBlocked(openSquares, upRight);
-        addSquaresUntilBlocked(openSquares, downLeft);
-        addSquaresUntilBlocked(openSquares, upLeft);
-        addSquaresUntilBlocked(openSquares, downRight);
+        openSquares.addAll(addSquaresUntilBlocked(upRight));
+        openSquares.addAll(addSquaresUntilBlocked(downLeft));
+        openSquares.addAll(addSquaresUntilBlocked(upLeft));
+        openSquares.addAll(addSquaresUntilBlocked(downRight));
         return openSquares;
     }
 
-    protected void addSquaresUntilBlocked(List<ChessSquare> openSquares, List<ChessSquare> directionSquares) {
+    protected List<ChessSquare> addSquaresUntilBlocked(List<ChessSquare> directionSquares) {
+        List<ChessSquare> openSquares = new ArrayList<>();
         for (ChessSquare chessSquare : directionSquares) {
             if (chessSquare.getPiece().getId() == ChessPieceId.NoPiece) {
                 openSquares.add(chessSquare);
@@ -147,6 +148,7 @@ public abstract class ChessPiece {
                 break;
             }
         }
+        return openSquares;
     }
 
     protected void removeMovesThatTakeTeammate(List<ChessSquare> legalMoves) {

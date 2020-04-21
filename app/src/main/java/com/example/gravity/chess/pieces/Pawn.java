@@ -48,6 +48,8 @@ public class Pawn extends ChessPiece {
         List<ChessSquare> legalMoves = new ArrayList<>();
         int xCoordinate = this.getParentSquare().getXCoordinate();
         int yCoordinate = this.getParentSquare().getYCoordinate();
+        boolean canMoveTwoSquares = false;
+
         for (ChessSquare chessSquare : chessBoard.getBoardSquares()) {
             int targetX = chessSquare.getXCoordinate();
             int targetY = chessSquare.getYCoordinate();
@@ -57,14 +59,28 @@ public class Pawn extends ChessPiece {
             if (chessSquare.getPiece().getId() == ChessPieceId.NoPiece) {
                 if (targetX == xCoordinate && relativeYPos == 1) {
                     legalMoves.add(chessSquare);
+                    canMoveTwoSquares = true;
                 }
-                else if (!this.hasMoved && relativeYPos == 2 && targetX == xCoordinate) {
+//                else if (!this.hasMoved && relativeYPos == 2 && targetX == xCoordinate) {
+//                    legalMoves.add(chessSquare);
+//                }
+            }
+            else if (chessSquare.getPiece().getId() != ChessPieceId.King) { //don't need this part
+                if (relativeYPos == 1 && (relativeXPos == -1 || relativeXPos == 1)) {
                     legalMoves.add(chessSquare);
                 }
             }
-            else if (chessSquare.getPiece().getId() != ChessPieceId.King) {
-                if (relativeYPos == 1 && (relativeXPos == -1 || relativeXPos == 1)) {
-                    legalMoves.add(chessSquare);
+        }
+        if (!this.hasMoved && canMoveTwoSquares) {
+
+            for (ChessSquare chessSquare : chessBoard.getBoardSquares()) {
+                int targetX = chessSquare.getXCoordinate();
+                int targetY = chessSquare.getYCoordinate();
+                int relativeYPos = howFarInFront(yCoordinate, targetY);
+                if (chessSquare.getPiece().getId() == ChessPieceId.NoPiece) {
+                    if (relativeYPos == 2 && targetX == xCoordinate) {
+                        legalMoves.add(chessSquare);
+                    }
                 }
             }
         }
