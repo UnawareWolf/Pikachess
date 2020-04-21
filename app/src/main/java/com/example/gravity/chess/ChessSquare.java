@@ -20,9 +20,9 @@ public class ChessSquare {
     private SquareBounds boundary;
     private ChessPiece piece;
     private String boardLocation;
-    private LinkedList<ChessSquare> diagonalSquares;// make a new class so that it has attributes like blocked. Maybe. Might need something different because of knights. Actually should work.
-    private LinkedList<ChessSquare> horizontalSquares = new LinkedList<>(); // maybe up down left right (or forwards backwards left right).
-    private Map<Character, ChessSquare> verticalSquares = new HashMap<>();
+    //private LinkedList<ChessSquare> diagonalSquares;// make a new class so that it has attributes like blocked. Maybe. Might need something different because of knights. Actually should work.
+    //private LinkedList<ChessSquare> horizontalSquares = new LinkedList<>(); // maybe up down left right (or forwards backwards left right).
+    //private Map<Character, ChessSquare> verticalSquares = new HashMap<>();
     private PieceColour colour;
     private int xCoordinate;
     private int yCoordinate;
@@ -38,12 +38,22 @@ public class ChessSquare {
         //this.boardLocation = boardLocation;
     }
 
+    public ChessSquare(ChessSquare chessSquare) {
+        boundary = chessSquare.boundary;
+        piece = chessSquare.piece.copyPiece();
+        colour = chessSquare.colour;
+        xCoordinate = chessSquare.xCoordinate;
+        yCoordinate = chessSquare.yCoordinate;
+
+    }
+
     public void setPiece(ChessPiece piece) {
         this.piece = piece;
+        this.piece.setParentSquare(this);
     }
 
     public ChessPiece getPiece() {
-        return piece;
+        return this.piece;
     }
 
     public void set(SquareBounds boundary, ChessPiece piece, String boardLocation){
@@ -84,9 +94,9 @@ public class ChessSquare {
 //            }
 //        }
 //    }
-    public LinkedList<ChessSquare> getHorizontalSquares() {
-        return this.horizontalSquares;
-    }
+    //public LinkedList<ChessSquare> getHorizontalSquares() {
+//        return this.horizontalSquares;
+//    }
     public LinkedList<ChessSquare> getVerticalSquares() {
         //return this.verticalSquares;
         return null;

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.gravity.R;
+import com.example.gravity.chess.Board;
 import com.example.gravity.chess.ChessPiece;
 import com.example.gravity.chess.ChessPieceId;
 import com.example.gravity.chess.ChessSquare;
@@ -23,9 +24,13 @@ public class Rook extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.Rook;
 
-    @Override
-    public List<ChessSquare> getLegalMoves() {
-        return null;
+    public Rook() {
+        super();
+    }
+
+    public Rook(Rook chessPiece) {
+        super(chessPiece);
+        id = chessPiece.id;
     }
 
     @Override
@@ -44,13 +49,14 @@ public class Rook extends ChessPiece {
     }
 
     @Override
-    public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
-        return getStraightLineMoves();
+    public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
+        return getStraightLineMoves(chessBoard);
     }
 
-
-
-
+    @Override
+    public ChessPiece copyPiece() {
+        return new Rook(this);
+    }
 
 
 }

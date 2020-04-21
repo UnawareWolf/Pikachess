@@ -34,13 +34,14 @@ public class ChessView extends View {
     private Bitmap totodileBackground;
     public static final int OFFSET = 60;
     public static final int BORDER_WIDTH = 8;
-    private SquareBounds squareBounds = new SquareBounds();
-    private ChessSquare mSquare;
-    private List<ChessSquare> allChessSquares = new ArrayList<>(); // dont think this should be static. pretty sure
-    private String squareBoardLocation;
+    //private SquareBounds squareBounds = new SquareBounds();
+    //private ChessSquare mSquare;
+    //private List<ChessSquare> allChessSquares = new ArrayList<>(); // dont think this should be static. pretty sure
+    //private String squareBoardLocation;
     boolean touched = false;
     float xTouch, yTouch;
-    private Rect selectRect = new Rect();
+    private Board chessBoard;
+    //private Rect selectRect = new Rect();
     private ChessSquare selectedSquare;
     boolean secondTouched = false;
     private ChessSquare secondSelectedSquare;
@@ -48,8 +49,7 @@ public class ChessView extends View {
     private SquareBounds confirmMoveButtonBounds = new SquareBounds();
     boolean newBoard = true;
     int canvasWidth;
-    int squareSize;
-    //private Canvas canvas;
+    private int squareSize;
     int boardSize;
     private Context context;// only make variables private if they will be get or set by other classes. Otherwise package private (ie nothing) is good. wrong
     private PieceColour turnToPlay = PieceColour.White;
@@ -57,31 +57,32 @@ public class ChessView extends View {
     public static Map<Integer, LinkedList<ChessSquare>> pieceRows = new HashMap<>();
     public static Map<Integer, LinkedList<ChessSquare>> pieceUpDiagonals = new HashMap<>();
     public static Map<Integer, LinkedList<ChessSquare>> pieceDownDiagonals = new HashMap<>();
-    //public static Map<Character, Integer> letterIndexMap = new HashMap<>();
 
     public ChessView(Context context) {
         super(context);
         this.context = context;
         totodileBackground = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
-        //fillLetterIndexMap();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         if (newBoard) {
-            //this.canvas = canvas;
             canvasWidth = getWidth();
             boardSize = canvasWidth - 2*OFFSET - 2*BORDER_WIDTH;
             squareSize = boardSize/8;
-            this.allChessSquares = assembleSquares();
-            assembleBoardGroups();
-            initialisePieceBitmaps();
-            resizePieceBitmaps();
+            chessBoard = new Board(this);
+//            this.allChessSquares = assembleSquares();
+//            assembleBoardGroups();
+//            initialisePieceBitmaps();
+//            resizePieceBitmaps();
+            chessBoard.initialisePieceBitmaps(context);
+            chessBoard.resizePieceBitmaps();
             newBoard = false;
         }
         canvas.drawBitmap(totodileBackground, 0, 0, null);
         drawBoardBorder(canvas);
-        drawBoard(canvas, allChessSquares);
+        //drawBoard(canvas, allChessSquares);
+        chessBoard.drawBoard(context, canvas);
 
         if (touched) {
             highlightChessSquare(canvas, selectedSquare);
@@ -92,22 +93,20 @@ public class ChessView extends View {
         }
 
         drawConfirmMoveButton(canvas);
-        /*Pawn pawn = new Pawn();
-        ChessPieceId id = pawn.getId();*/
 
-        drawAllChessPieces(allChessSquares, canvas);
+        drawAllChessPieces(chessBoard.getBoardSquares(), canvas);
 
     }
-
-    private void resizePieceBitmaps() {
-        for (ChessSquare chessSquare : allChessSquares) {
-            ChessPiece newPiece = chessSquare.getPiece();
-            ChessPieceId newID = chessSquare.getPiece().getId();
-            if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
-                chessSquare.getPiece().resizePieceImage(squareSize); //not ideal because if there are multiple instances of each piece, there will be multiple images stored.
-            } // maybe do something like a set of pieces to avoid duplicates.
-        }
-    }
+//
+//    private void resizePieceBitmaps() {
+//        for (ChessSquare chessSquare : allChessSquares) {
+//            ChessPiece newPiece = chessSquare.getPiece();
+//            ChessPieceId newID = chessSquare.getPiece().getId();
+//            if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
+//                chessSquare.getPiece().resizePieceImage(squareSize); //not ideal because if there are multiple instances of each piece, there will be multiple images stored.
+//            } // maybe do something like a set of pieces to avoid duplicates.
+//        }
+//    }
 
     private void drawBoardBorder(Canvas canvas) {
         mPaint.setColor(getResources().getColor(R.color.chessBrown));
@@ -116,35 +115,33 @@ public class ChessView extends View {
         mRect.set(OFFSET + BORDER_WIDTH/2, OFFSET + BORDER_WIDTH/2, canvasWidth - OFFSET - BORDER_WIDTH/2, canvasWidth - OFFSET - BORDER_WIDTH/2);
         canvas.drawRect(mRect, mPaint);
     }
-
-    private List<ChessSquare> assembleSquares() {
-        List<ChessSquare> boardSquares = new ArrayList<>();
-        boolean fillSquare = true;
-        for (int i = 0; i < 8 ; i++){
-            for (int j = 0; j < 8; j++){
-                int squareLeft = OFFSET + BORDER_WIDTH + i*squareSize;
-                int squareRight = OFFSET + BORDER_WIDTH + (i + 1)*squareSize;
-                int squareTop = OFFSET + BORDER_WIDTH + j*squareSize;
-                int squareBottom = OFFSET + BORDER_WIDTH + (j + 1)*squareSize;
-                int xCoordinate = i + 1;
-                int yCoordinate = 8 - j;
-                squareBounds = new SquareBounds(squareLeft, squareTop, squareRight, squareBottom);
-                //squareBoardLocation = getSquareBoardLocation(i, j);
-                ChessPiece piece = getPieceFromCoordinates(xCoordinate, yCoordinate);
-                //ChessPiece piece = getChessPieceFromBoardLocation(squareBoardLocation);
-                mSquare = new ChessSquare(squareBounds, piece, xCoordinate, yCoordinate);
-                if (fillSquare){
-                    mSquare.setColour(PieceColour.Black);
-                } else {
-                    mSquare.setColour(PieceColour.White);
-                }
-                boardSquares.add(mSquare);
-                fillSquare = !fillSquare;
-            }
-            fillSquare = !fillSquare;
-        }
-        return boardSquares;
-    }
+//
+//    private List<ChessSquare> assembleSquares() {
+//        List<ChessSquare> boardSquares = new ArrayList<>();
+//        boolean fillSquare = false;
+//        for (int i = 0; i < 8 ; i++){
+//            for (int j = 0; j < 8; j++){
+//                int squareLeft = OFFSET + BORDER_WIDTH + i*squareSize;
+//                int squareRight = OFFSET + BORDER_WIDTH + (i + 1)*squareSize;
+//                int squareTop = OFFSET + BORDER_WIDTH + j*squareSize;
+//                int squareBottom = OFFSET + BORDER_WIDTH + (j + 1)*squareSize;
+//                int xCoordinate = i + 1;
+//                int yCoordinate = 8 - j;
+//                squareBounds = new SquareBounds(squareLeft, squareTop, squareRight, squareBottom);
+//                ChessPiece piece = getPieceFromCoordinates(xCoordinate, yCoordinate);
+//                mSquare = new ChessSquare(squareBounds, piece, xCoordinate, yCoordinate);
+//                if (fillSquare){
+//                    mSquare.setColour(PieceColour.Black);
+//                } else {
+//                    mSquare.setColour(PieceColour.White);
+//                }
+//                boardSquares.add(mSquare);
+//                fillSquare = !fillSquare;
+//            }
+//            fillSquare = !fillSquare;
+//        }
+//        return boardSquares;
+//    }
 
     private ChessPiece getPieceFromCoordinates(int xCoordinate, int yCoordinate) {
         ChessPiece piece = null;
@@ -183,67 +180,47 @@ public class ChessView extends View {
         return piece;
     }
 
-    private void assembleBoardGroups() {
-        for (int num = 1; num < 9; num++) {
-            LinkedList<ChessSquare> verticalBoardGroup = new LinkedList<>();
-            LinkedList<ChessSquare> horizontalBoardGroup = new LinkedList<>();
-            for (ChessSquare chessSquare : allChessSquares) {
-                if (chessSquare.getXCoordinate() == num) {
-                    verticalBoardGroup.add(chessSquare);
-                }
-                if (chessSquare.getYCoordinate() == num) {
-                    horizontalBoardGroup.add(chessSquare);
-                }
-            }
-
+//    private void assembleBoardGroups() {
+//        for (int num = 1; num < 9; num++) {
+//            LinkedList<ChessSquare> verticalBoardGroup = new LinkedList<>();
+//            LinkedList<ChessSquare> horizontalBoardGroup = new LinkedList<>();
 //            for (ChessSquare chessSquare : allChessSquares) {
+//                if (chessSquare.getXCoordinate() == num) {
+//                    verticalBoardGroup.add(chessSquare);
+//                }
 //                if (chessSquare.getYCoordinate() == num) {
 //                    horizontalBoardGroup.add(chessSquare);
 //                }
 //            }
-            Collections.reverse(verticalBoardGroup);
-
-//            for (ChessSquare chessSquare : allChessSquares) {
-//                if (chessSquare.getYCoordinate() == num && chessSquare.getXCoordinate() == num) {
-//                    diagonalUpBoardGroup.add(chessSquare);
-//                }
-//            }
+//            Collections.reverse(verticalBoardGroup);
+//            pieceColumns.put(num, verticalBoardGroup);
+//            pieceRows.put(num, horizontalBoardGroup);
+//        }
+//        for (int i = 1; i < 16; i++) {
 //
+//            LinkedList<ChessSquare> diagonalUpBoardGroup = new LinkedList<>();
+//            LinkedList<ChessSquare> diagonalDownBoardGroup = new LinkedList<>();
 //            for (ChessSquare chessSquare : allChessSquares) {
-//                if (chessSquare.getYCoordinate() == num && chessSquare.getXCoordinate() == (9 - chessSquare.getYCoordinate())) {
+//                int xCoordinate = chessSquare.getXCoordinate();
+//                int yCoordinate = chessSquare.getYCoordinate();
+//                if (xCoordinate + yCoordinate == i + 1) {
+//                    diagonalDownBoardGroup.add(chessSquare);
+//                }
+//                if ((9 - xCoordinate) + yCoordinate == i + 1) {
 //                    diagonalUpBoardGroup.add(chessSquare);
 //                }
 //            }
-
-            pieceColumns.put(num, verticalBoardGroup);
-            pieceRows.put(num, horizontalBoardGroup);
-        }
-        for (int i = 1; i < 16; i++) {
-
-            LinkedList<ChessSquare> diagonalUpBoardGroup = new LinkedList<>();
-            LinkedList<ChessSquare> diagonalDownBoardGroup = new LinkedList<>();
-            for (ChessSquare chessSquare : allChessSquares) {
-                int xCoordinate = chessSquare.getXCoordinate();
-                int yCoordinate = chessSquare.getYCoordinate();
-                if (xCoordinate + yCoordinate == i + 1) {
-                    diagonalDownBoardGroup.add(chessSquare);
-                }
-                if ((9 - xCoordinate) + yCoordinate == i + 1) {
-                    diagonalUpBoardGroup.add(chessSquare);
-                }
-            }
-            Collections.reverse(diagonalDownBoardGroup);
-            pieceUpDiagonals.put(i, diagonalUpBoardGroup);
-            pieceDownDiagonals.put(i, diagonalDownBoardGroup);
-        }
-
-    }
-
-    private void drawBoard(Canvas canvas, List<ChessSquare> allChessSquares) {
-        for (ChessSquare chessSquare : allChessSquares) {
-            chessSquare.drawSquare(context, canvas, mRect, mPaint);
-        }
-    }
+//            Collections.reverse(diagonalDownBoardGroup);
+//            pieceUpDiagonals.put(i, diagonalUpBoardGroup);
+//            pieceDownDiagonals.put(i, diagonalDownBoardGroup);
+//        }
+//    }
+//
+//    private void drawBoard(Canvas canvas, List<ChessSquare> allChessSquares) {
+//        for (ChessSquare chessSquare : allChessSquares) {
+//            chessSquare.drawSquare(context, canvas, mRect, mPaint);
+//        }
+//    }
 
     private void drawAllChessPieces(List<ChessSquare> chessSquares, Canvas canvas) {
         for (ChessSquare chessSquare : chessSquares){
@@ -253,14 +230,14 @@ public class ChessView extends View {
         }
     }
 
-    private void initialisePieceBitmaps() {
-        for (ChessSquare chessSquare : allChessSquares) {
-            if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
-                chessSquare.getPiece().setPieceImage(context); //not ideal because if there are multiple instances of each piece, there will be multiple images stored.
-                int x = 0;
-            } // maybe do something like a set of pieces to avoid duplicates.
-        }
-    }
+//    private void initialisePieceBitmaps() {
+//        for (ChessSquare chessSquare : allChessSquares) {
+//            if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
+//                chessSquare.getPiece().setPieceImage(context); //not ideal because if there are multiple instances of each piece, there will be multiple images stored.
+//                int x = 0;
+//            } // maybe do something like a set of pieces to avoid duplicates.
+//        }
+//    }
 
     private void drawConfirmMoveButton(Canvas canvas) {
         int buttonWidth = canvasWidth/4;
@@ -302,7 +279,7 @@ public class ChessView extends View {
         if (event.getAction() == MotionEvent.ACTION_DOWN){
             xTouch = event.getX();
             yTouch = event.getY();
-            for (ChessSquare chessSquare : allChessSquares) {
+            for (ChessSquare chessSquare : chessBoard.getBoardSquares()) {
                 if (chessSquare.getBoundary().squareContainsCoordinates(chessSquare.getBoundary(), xTouch, yTouch)){
                     if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece && chessSquare.getPiece().getColour() == turnToPlay) {
                         selectedSquare = chessSquare;
@@ -313,7 +290,7 @@ public class ChessView extends View {
                     if(touched) {
                         selectedSquare.getPiece().setParentSquare(selectedSquare);
                         boolean legalMove = false;
-                        for (ChessSquare legalSquare : selectedSquare.getPiece().getLegalMoves(allChessSquares)) {
+                        for (ChessSquare legalSquare : selectedSquare.getPiece().getLegalMoves(chessBoard)) {
                             if (chessSquare == legalSquare) {
                                 legalMove = true;
                                 break;
@@ -339,9 +316,9 @@ public class ChessView extends View {
                 invalidate();
             }
         }
-
         return true;
     }
+
     private void changeTurn() {
         if (this.turnToPlay == PieceColour.Black){
             this.turnToPlay = PieceColour.White;
@@ -351,5 +328,12 @@ public class ChessView extends View {
         }
     }
 
+    public int getSquareSize() {
+        return this.squareSize;
+    }
+
+//    public Board getChessBoard() {
+//        return this.chessBoard;
+//    }
 
 }

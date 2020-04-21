@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.gravity.R;
+import com.example.gravity.chess.Board;
 import com.example.gravity.chess.ChessPiece;
 import com.example.gravity.chess.ChessPieceId;
 import com.example.gravity.chess.ChessSquare;
@@ -17,6 +18,15 @@ import java.util.List;
 public class Pawn extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.Pawn;
+
+    public Pawn() {
+        super();
+    }
+
+    public Pawn(Pawn chessPiece) {
+        super(chessPiece);
+        id = chessPiece.id;
+    }
 
     @Override
     public void setPieceImage(Context context) {
@@ -34,11 +44,11 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
+    public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
         List<ChessSquare> legalMoves = new ArrayList<>();
         int xCoordinate = this.getParentSquare().getXCoordinate();
         int yCoordinate = this.getParentSquare().getYCoordinate();
-        for (ChessSquare chessSquare : allChessSquares) {
+        for (ChessSquare chessSquare : chessBoard.getBoardSquares()) {
             int targetX = chessSquare.getXCoordinate();
             int targetY = chessSquare.getYCoordinate();
             int relativeXPos = howFarToTheRight(xCoordinate, targetX);
@@ -62,33 +72,9 @@ public class Pawn extends ChessPiece {
         return legalMoves;
     }
 
-//    private int howFarToTheRight(char positionLetter, char targetLetter) {
-//        return positionLetter - targetLetter;
-//    }
-
-
-//    private int howFarInFront(int positionNumber, int targetNumber) {
-//        int relativeRow;
-//        if (this.colour == PieceColour.White){
-//            relativeRow = targetNumber - positionNumber;
-//        }
-//        else {
-//            relativeRow = positionNumber - targetNumber;
-//        }
-//        return relativeRow;
-//    }
-
-//    private char getNextChar(char letter) {
-//        int charValue = letter;
-//        char nextLetter = (char) (charValue + 1);
-//        return nextLetter;
-//    }
-
-
-
     @Override
-    public List<ChessSquare> getLegalMoves() {
-        return null;
+    public ChessPiece copyPiece() {
+        return new Pawn(this);
     }
 
 }

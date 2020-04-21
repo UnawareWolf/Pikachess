@@ -3,6 +3,7 @@ package com.example.gravity.chess.pieces;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.example.gravity.chess.Board;
 import com.example.gravity.chess.ChessPiece;
 import com.example.gravity.chess.ChessPieceId;
 import com.example.gravity.chess.ChessSquare;
@@ -14,9 +15,13 @@ public class Empty extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.NoPiece;
 
-    @Override
-    public List<ChessSquare> getLegalMoves() {
-        return null;
+    public Empty() {
+        super();
+    }
+
+    public Empty(Empty chessPiece) {
+        super(chessPiece);
+        id = chessPiece.id;
     }
 
     @Override
@@ -29,8 +34,13 @@ public class Empty extends ChessPiece {
     }
 
     @Override
-    public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
+    public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
         return null;
+    }
+
+    @Override
+    public ChessPiece copyPiece() {
+        return new Empty(this);
     }
 
 }

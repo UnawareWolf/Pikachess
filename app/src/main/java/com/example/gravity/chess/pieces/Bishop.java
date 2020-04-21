@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.gravity.R;
+import com.example.gravity.chess.Board;
 import com.example.gravity.chess.ChessPiece;
 import com.example.gravity.chess.ChessPieceId;
 import com.example.gravity.chess.ChessSquare;
@@ -17,9 +18,14 @@ public class Bishop extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.Bishop;
 
-    @Override
-    public List<ChessSquare> getLegalMoves() {
-        return null;
+    public Bishop() {
+        super();
+        // set id here and id can be part of superclass
+    }
+
+    public Bishop(Bishop chessPiece) {
+        super(chessPiece);
+        id = chessPiece.id;
     }
 
     @Override
@@ -38,8 +44,13 @@ public class Bishop extends ChessPiece {
     }
 
     @Override
-    public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
-        return getDiagonalMoves(allChessSquares);
+    public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
+        return getDiagonalMoves(chessBoard);
+    }
+
+    @Override
+    public Bishop copyPiece() {
+        return new Bishop(this);
     }
 
 

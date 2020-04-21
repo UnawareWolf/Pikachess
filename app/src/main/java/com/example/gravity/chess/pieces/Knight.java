@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.gravity.R;
+import com.example.gravity.chess.Board;
 import com.example.gravity.chess.ChessPiece;
 import com.example.gravity.chess.ChessPieceId;
 import com.example.gravity.chess.ChessSquare;
@@ -21,9 +22,13 @@ public class Knight extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.Knight;
 
-    @Override
-    public List<ChessSquare> getLegalMoves() {
-        return null;
+    public Knight() {
+        super();
+    }
+
+    public Knight(Knight chessPiece) {
+        super(chessPiece);
+        id = chessPiece.id;
     }
 
     @Override
@@ -42,11 +47,11 @@ public class Knight extends ChessPiece {
     }
 
     @Override
-    public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
+    public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
         int xCoordinate = this.getParentSquare().getXCoordinate();
         int yCoordinate = this.getParentSquare().getYCoordinate();
         List<ChessSquare> legalMoves = new ArrayList<>();
-        for (ChessSquare chessSquare : allChessSquares) {
+        for (ChessSquare chessSquare : chessBoard.getBoardSquares()) {
             int targetX = chessSquare.getXCoordinate();
             int targetY = chessSquare.getYCoordinate();
             int relativeXPos = howFarToTheRight(xCoordinate, targetX);
@@ -56,5 +61,10 @@ public class Knight extends ChessPiece {
             }
         }
         return legalMoves;
+    }
+
+    @Override
+    public ChessPiece copyPiece() {
+        return new Knight(this);
     }
 }

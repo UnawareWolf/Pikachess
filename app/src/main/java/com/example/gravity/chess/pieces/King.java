@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.gravity.R;
+import com.example.gravity.chess.Board;
 import com.example.gravity.chess.ChessPiece;
 import com.example.gravity.chess.ChessPieceId;
 import com.example.gravity.chess.ChessSquare;
@@ -18,9 +19,13 @@ public class King extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.King;
 
-    @Override
-    public List<ChessSquare> getLegalMoves() {
-        return null;
+    public King() {
+        super();
+    }
+
+    public King(King chessPiece) {
+        super(chessPiece);
+        id = chessPiece.id;
     }
 
     @Override
@@ -39,11 +44,11 @@ public class King extends ChessPiece {
     }
 
     @Override
-    public List<ChessSquare> getLegalMoves(List<ChessSquare> allChessSquares) {
+    public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
         List<ChessSquare> legalMoves = new ArrayList<>();
         int xCoordinate = this.getParentSquare().getXCoordinate();
         int yCoordinate = this.getParentSquare().getYCoordinate();
-        for (ChessSquare chessSquare : allChessSquares) {
+        for (ChessSquare chessSquare : chessBoard.getBoardSquares()) {
             int targetX = chessSquare.getXCoordinate();
             int targetY = chessSquare.getYCoordinate();
             if (chessSquare.getPiece().getId() != ChessPieceId.King && howFarToTheRight(xCoordinate, targetX) <= 1 && howFarToTheRight(xCoordinate, targetX) >= - 1 && howFarInFront(yCoordinate, targetY) <= 1 && howFarInFront(yCoordinate, targetY) >= -1) {
@@ -51,5 +56,10 @@ public class King extends ChessPiece {
             }
         }
         return legalMoves;
+    }
+
+    @Override
+    public ChessPiece copyPiece() {
+        return new King(this);
     }
 }
