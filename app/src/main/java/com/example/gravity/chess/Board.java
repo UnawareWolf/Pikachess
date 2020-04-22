@@ -35,6 +35,7 @@ public class Board {
     private Paint mPaint = new Paint();
     //private ChessSquare[][] boardArray = new ChessSquare[8][8];
     private int squareSize;
+    private LinkedList<ChessMove> chessMoves = new LinkedList<>();
 
     public Board(ChessView chessView) {
         this.squareSize = chessView.getSquareSize();
@@ -215,6 +216,23 @@ public class Board {
 
         }
         return squaresUnderAttack;
+    }
+
+    public void storeMove(ChessMove chessMove) {
+        this.chessMoves.add(chessMove);
+    }
+
+    public ChessMove getLastMove() {
+        if (chessMoves.size() != 0) {
+            return this.chessMoves.getLast();
+        }
+        else {
+            return null;
+        }
+    }
+
+    public LinkedList<ChessMove> getAllMoves() {
+        return this.chessMoves;
     }
 
 

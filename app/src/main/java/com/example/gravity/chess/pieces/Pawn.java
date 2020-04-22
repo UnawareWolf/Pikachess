@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 
 import com.example.gravity.R;
 import com.example.gravity.chess.Board;
+import com.example.gravity.chess.ChessMove;
 import com.example.gravity.chess.ChessPiece;
 import com.example.gravity.chess.ChessPieceId;
 import com.example.gravity.chess.ChessSquare;
@@ -65,9 +66,16 @@ public class Pawn extends ChessPiece {
 //                    legalMoves.add(chessSquare);
 //                }
             }
-            else if (chessSquare.getPiece().getId() != ChessPieceId.King) { //don't need this part
-                if (relativeYPos == 1 && (relativeXPos == -1 || relativeXPos == 1)) {
-                    legalMoves.add(chessSquare);
+            else if (relativeYPos == 1 && (relativeXPos == -1 || relativeXPos == 1)) {
+                legalMoves.add(chessSquare);
+            }
+
+            ChessMove lastMove = chessBoard.getLastMove();
+            if (lastMove != null) {
+                if (lastMove.getPieceMoved() == ChessPieceId.Pawn && (lastMove.getYDistanceMoved() == 2 || lastMove.getYDistanceMoved() == - 2)) {
+                    if (lastMove.getSquareTo().getXCoordinate() == targetX && lastMove.getSquareTo().getYCoordinate() == yCoordinate && (relativeXPos == 1|| relativeXPos == -1) && relativeYPos == 1) {
+                        legalMoves.add(chessSquare);
+                    }
                 }
             }
         }
@@ -84,6 +92,8 @@ public class Pawn extends ChessPiece {
                 }
             }
         }
+
+
 
         return legalMoves;
     }

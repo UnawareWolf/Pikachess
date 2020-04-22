@@ -309,6 +309,11 @@ public class ChessView extends View {
                 secondSelectedSquare.setPiece(selectedSquare.getPiece());
                 secondSelectedSquare.getPiece().setParentSquare(secondSelectedSquare);
                 selectedSquare.setPiece(new Empty());
+                ChessMove chessMove = new ChessMove(new ChessSquare(selectedSquare), new ChessSquare(secondSelectedSquare));
+                //if (chessBoard.getAllMoves() != null) {
+
+                    chessBoard.storeMove(chessMove);
+                //}
                 changeTurn();
                 touched = false;
                 secondTouched = false;
