@@ -72,7 +72,7 @@ public class Pawn extends ChessPiece {
 
             ChessMove lastMove = chessBoard.getLastMove();
             if (lastMove != null) {
-                if (lastMove.getPieceMoved() == ChessPieceId.Pawn && (lastMove.getYDistanceMoved() == 2 || lastMove.getYDistanceMoved() == - 2)) {
+                if (lastMove.getPieceIdMoved() == ChessPieceId.Pawn && lastMove.getAbsYDistanceMoved() == 2) {
                     if (lastMove.getSquareTo().getXCoordinate() == targetX && lastMove.getSquareTo().getYCoordinate() == yCoordinate && (relativeXPos == 1|| relativeXPos == -1) && relativeYPos == 1) {
                         legalMoves.add(chessSquare);
                     }

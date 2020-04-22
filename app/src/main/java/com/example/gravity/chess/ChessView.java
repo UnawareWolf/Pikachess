@@ -305,15 +305,14 @@ public class ChessView extends View {
                 }
             }
             if(secondTouched && confirmMoveButtonBounds.squareContainsCoordinates(confirmMoveButtonBounds, xTouch, yTouch)) {
+                ChessMove chessMove = new ChessMove(new ChessSquare(selectedSquare), new ChessSquare(secondSelectedSquare));
                 selectedSquare.getPiece().setHasMoved();
                 secondSelectedSquare.setPiece(selectedSquare.getPiece());
                 secondSelectedSquare.getPiece().setParentSquare(secondSelectedSquare);
                 selectedSquare.setPiece(new Empty());
-                ChessMove chessMove = new ChessMove(new ChessSquare(selectedSquare), new ChessSquare(secondSelectedSquare));
-                //if (chessBoard.getAllMoves() != null) {
+                chessBoard.storeMove(chessMove);
+                chessBoard.removePawnIfEnPassant();
 
-                    chessBoard.storeMove(chessMove);
-                //}
                 changeTurn();
                 touched = false;
                 secondTouched = false;

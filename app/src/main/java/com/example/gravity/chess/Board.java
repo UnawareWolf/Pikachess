@@ -235,6 +235,22 @@ public class Board {
         return this.chessMoves;
     }
 
+    public void removePawnIfEnPassant() {
+        ChessMove lastMove = getLastMove();
+        if (lastMove == null) {
+            return;
+        }
+        if (lastMove.getPieceIdMoved() == ChessPieceId.Pawn && lastMove.getPieceIdTaken() == ChessPieceId.NoPiece && lastMove.getAbsXDistanceMoved() == 1) {
+            for (ChessSquare chessSquare : this.boardSquares) {
+                if (chessSquare.getXCoordinate() == lastMove.getSquareTo().getXCoordinate()) {
+                    if (chessSquare.getYCoordinate() == lastMove.getSquareFrom().getYCoordinate()) {
+                        chessSquare.setPiece(new Empty());
+                    }
+                }
+            }
+        }
+    }
+
 
 //    public void drawBoard(Canvas canvas) {
 //    }

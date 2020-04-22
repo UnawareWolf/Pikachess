@@ -1,5 +1,7 @@
 package com.example.gravity.chess;
 
+import static java.lang.Math.abs;
+
 public class ChessMove {
 
     private ChessSquare squareFrom;
@@ -18,12 +20,24 @@ public class ChessMove {
         return squareTo;
     }
 
-    public ChessPieceId getPieceMoved() {
+    public ChessPieceId getPieceIdMoved() {
+        return squareFrom.getPiece().getId();
+    }
+
+    public PieceColour getPieceColourMoved() {
+        return squareFrom.getPiece().getColour();
+    }
+
+    public ChessPieceId getPieceIdTaken() {
         return squareTo.getPiece().getId();
     }
 
-    public int getYDistanceMoved() {
-        return squareTo.getYCoordinate() - squareFrom.getYCoordinate();
+    public int getAbsYDistanceMoved() {
+        return abs(squareTo.getYCoordinate() - squareFrom.getYCoordinate());
+    }
+
+    public int getAbsXDistanceMoved() {
+        return abs(squareTo.getXCoordinate() - squareFrom.getXCoordinate());
     }
 
 }
