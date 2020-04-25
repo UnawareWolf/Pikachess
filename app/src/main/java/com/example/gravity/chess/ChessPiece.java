@@ -18,12 +18,13 @@ public abstract class ChessPiece {
     protected Bitmap pieceImage;
     protected SquareBounds location;
     protected ChessSquare parentSquare;
-    protected boolean hasMoved;
+    protected boolean hasMoved = false;
     protected ChessPieceId id; // try removing this.
 
     public abstract void setPieceImage(Context context);
     public abstract ChessPieceId getId();
     public abstract List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard);
+    public abstract List<ChessSquare> getPieceSpecificAttackingMoves(Board chessBoard);
     public void setParentSquare(ChessSquare chessSquare) {
         this.parentSquare = chessSquare;
     }
@@ -35,6 +36,9 @@ public abstract class ChessPiece {
     }
     public void setHasMoved() {
         this.hasMoved = true;
+    }
+    public boolean getHasMoved() {
+        return this.hasMoved;
     }
 
     public ChessPiece() {}
@@ -112,6 +116,7 @@ public abstract class ChessPiece {
         return openSquares;
     }
 
+
     protected List<ChessSquare> getDiagonalMoves(Board chessBoard) {
         int xCoordinate = this.getParentSquare().getXCoordinate();
         int yCoordinate = this.getParentSquare().getYCoordinate();
@@ -178,7 +183,7 @@ public abstract class ChessPiece {
         }
     }
 
-    private boolean moveLeavesSelfInCheck(ChessSquare legalMoveSquare, Board chessBoard) {
+    protected boolean moveLeavesSelfInCheck(ChessSquare legalMoveSquare, Board chessBoard) {
         Board boardCopy = new Board(chessBoard); // refactor this into separate methods to make it clear what each step is doing.
 //        ChessSquare legalSquareCopy = new ChessSquare(legalMoveSquare);
         ChessSquare legalSquareCopy = new ChessSquare();

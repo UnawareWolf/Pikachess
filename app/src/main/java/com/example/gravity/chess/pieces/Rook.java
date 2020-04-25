@@ -50,6 +50,11 @@ public class Rook extends ChessPiece {
 
     @Override
     public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
+        return getPieceSpecificAttackingMoves(chessBoard);
+    }
+
+    @Override
+    public List<ChessSquare> getPieceSpecificAttackingMoves(Board chessBoard) {
         return getStraightLineMoves(chessBoard);
     }
 

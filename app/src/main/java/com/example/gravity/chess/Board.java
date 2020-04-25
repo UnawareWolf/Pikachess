@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static com.example.gravity.chess.ChessView.BORDER_WIDTH;
 import static com.example.gravity.chess.ChessView.OFFSET;
+import static java.lang.Math.abs;
 
 public class Board {
 
@@ -200,7 +201,7 @@ public class Board {
         for (ChessSquare chessSquare : boardSquares) {
             try {
                 chessSquare.getPiece().setParentSquare(chessSquare); // this isn't ideal
-                List<ChessSquare> possibleMoves = chessSquare.getPiece().getPieceSpecificLegalMoves(this);
+                List<ChessSquare> possibleMoves = chessSquare.getPiece().getPieceSpecificAttackingMoves(this);
                 if (possibleMoves != null) {
                     for (ChessSquare possibleMove : possibleMoves) {
                         if (possibleMove.getPiece().getId() != ChessPieceId.NoPiece && possibleMove.getPiece().getColour() != chessSquare.getPiece().getColour()) {
@@ -212,10 +213,25 @@ public class Board {
             catch(Exception e) {
                 System.out.println();
             }
-
-
         }
         return squaresUnderAttack;
+    }
+
+    public List<ChessSquare> getAttackingSquares(ChessSquare defendingSquare) {
+        List<ChessSquare> attackingSquares = new ArrayList<>();
+        for (ChessSquare chessSquare : boardSquares) {
+            chessSquare.getPiece().setParentSquare(chessSquare); // this isn't ideal
+            List<ChessSquare> possibleMoves = chessSquare.getPiece().getPieceSpecificAttackingMoves(this);
+            if (possibleMoves != null) {
+                for (ChessSquare possibleMove : possibleMoves) {
+                    if (possibleMove == defendingSquare && possibleMove.getPiece().getColour() != chessSquare.getPiece().getColour()) {
+                        attackingSquares.add(chessSquare);
+                    }
+                }
+            }
+        }
+
+        return attackingSquares;
     }
 
     public void storeMove(ChessMove chessMove) {
@@ -249,6 +265,42 @@ public class Board {
                 }
             }
         }
+    }
+
+    public void moveRookIfCastle() {
+        ChessMove lastMove = getLastMove();
+        if (lastMove == null) {
+            return;
+        }
+        if (lastMove.getPieceIdMoved() == ChessPieceId.King && lastMove.getAbsXDistanceMoved() == 2) {
+            for (ChessSquare chessSquare : this.boardSquares) {
+                if (chessSquare.getYCoordinate() == lastMove.getSquareTo().getYCoordinate() && chessSquare.getPiece().getId() == ChessPieceId.Rook && !chessSquare.getPiece().getHasMoved()) {
+                    int xDistanceFromRookToKing = chessSquare.getXCoordinate() - lastMove.getSquareTo().getXCoordinate();
+                    if (abs(xDistanceFromRookToKing) < 3 ) {
+                        if (xDistanceFromRookToKing > 0) { // rook is to right of king
+                            getChessSquare(lastMove.getSquareTo().getXCoordinate() - 1, lastMove.getSquareTo().getYCoordinate()).setPiece(chessSquare.getPiece());
+                        }
+                        else if(xDistanceFromRookToKing < 0) {
+                            getChessSquare(lastMove.getSquareTo().getXCoordinate() + 1, lastMove.getSquareTo().getYCoordinate()).setPiece(chessSquare.getPiece());
+                        }
+                        chessSquare.setPiece(new Empty());
+                        break;
+                    }
+                }
+            }
+
+        }
+    }
+
+    private ChessSquare getChessSquare(int xCoordinate, int yCoordinate) {
+        ChessSquare newRookLocation = new ChessSquare();
+        for (ChessSquare chessSquare : boardSquares) {
+            if (chessSquare.getXCoordinate() == xCoordinate && chessSquare.getYCoordinate() == yCoordinate) {
+                newRookLocation = chessSquare;
+                break;
+            }
+        }
+        return newRookLocation;
     }
 
 

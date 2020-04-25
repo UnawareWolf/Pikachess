@@ -312,6 +312,7 @@ public class ChessView extends View {
                 selectedSquare.setPiece(new Empty());
                 chessBoard.storeMove(chessMove);
                 chessBoard.removePawnIfEnPassant();
+                chessBoard.moveRookIfCastle();
 
                 changeTurn();
                 touched = false;

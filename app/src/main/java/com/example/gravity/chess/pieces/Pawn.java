@@ -46,6 +46,11 @@ public class Pawn extends ChessPiece {
 
     @Override
     public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
+        return getPieceSpecificAttackingMoves(chessBoard);
+    }
+
+    @Override
+    public List<ChessSquare> getPieceSpecificAttackingMoves(Board chessBoard) {
         List<ChessSquare> legalMoves = new ArrayList<>();
         int xCoordinate = this.getParentSquare().getXCoordinate();
         int yCoordinate = this.getParentSquare().getYCoordinate();

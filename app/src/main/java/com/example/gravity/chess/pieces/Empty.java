@@ -7,6 +7,7 @@ import com.example.gravity.chess.Board;
 import com.example.gravity.chess.ChessPiece;
 import com.example.gravity.chess.ChessPieceId;
 import com.example.gravity.chess.ChessSquare;
+import com.example.gravity.chess.PieceColour;
 import com.example.gravity.chess.SquareBounds;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class Empty extends ChessPiece {
 
     public Empty() {
         super();
+        colour = PieceColour.NoColour;
     }
 
     public Empty(Empty chessPiece) {
@@ -35,6 +37,11 @@ public class Empty extends ChessPiece {
 
     @Override
     public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
+        return null;
+    }
+
+    @Override
+    public List<ChessSquare> getPieceSpecificAttackingMoves(Board chessBoard) {
         return null;
     }
 

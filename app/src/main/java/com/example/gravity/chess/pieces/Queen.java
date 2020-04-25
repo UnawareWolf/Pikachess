@@ -48,6 +48,11 @@ public class Queen extends ChessPiece {
 
     @Override
     public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
+        return getPieceSpecificAttackingMoves(chessBoard);
+    }
+
+    @Override
+    public List<ChessSquare> getPieceSpecificAttackingMoves(Board chessBoard) {
         List<ChessSquare> legalMoves = new ArrayList<>();
         legalMoves.addAll(getStraightLineMoves(chessBoard));
         legalMoves.addAll(getDiagonalMoves(chessBoard));

@@ -13,6 +13,8 @@ import com.example.gravity.chess.PieceColour;
 import com.example.gravity.chess.SquareBounds;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class King extends ChessPiece {
@@ -45,6 +47,44 @@ public class King extends ChessPiece {
 
     @Override
     public List<ChessSquare> getPieceSpecificLegalMoves(Board chessBoard) {
+        List<ChessSquare> legalMoves = getPieceSpecificAttackingMoves(chessBoard);
+        int xCoordinate = this.getParentSquare().getXCoordinate();
+        int yCoordinate = this.getParentSquare().getYCoordinate();
+        if (!hasMoved) {
+            // I think there will be a bug where the opponent pawn can block castling with its non taking move.
+            // Don't know if there is a case where this matters because if its non taking move blocks castling,
+            // so will its taking move.
+            LinkedList<ChessSquare> horizontalSquares = chessBoard.getPieceRows().get(yCoordinate);
+            List<ChessSquare> rightSquares = horizontalSquares.subList(xCoordinate, horizontalSquares.size());
+            List<ChessSquare> leftSquares = new ArrayList<>(horizontalSquares.subList(0, xCoordinate - 1));
+            Collections.reverse(leftSquares);
+
+            for (ChessSquare rightSquare : rightSquares) {
+                //List<ChessSquare> attackingSquares = chessBoard.getAttackingSquares(rightSquare);
+                if ((rightSquares.indexOf(rightSquare) == 0 || rightSquares.indexOf(rightSquare) == 1) && moveLeavesSelfInCheck(rightSquare, chessBoard)) {
+                    break;
+                }
+                if (rightSquare.getPiece().getId() == ChessPieceId.Rook && !rightSquare.getPiece().getHasMoved()) {
+                    legalMoves.add(rightSquares.get(rightSquares.size() - 2));
+                }
+            }
+
+            for (ChessSquare leftSquare : leftSquares) {
+                if ((leftSquares.indexOf(leftSquare) == 0 || leftSquares.indexOf(leftSquare) == 1) && moveLeavesSelfInCheck(leftSquare, chessBoard)) {
+                    break;
+                }
+                if (leftSquare.getPiece().getId() == ChessPieceId.Rook && !leftSquare.getPiece().getHasMoved()) {
+                    legalMoves.add(leftSquares.get(leftSquares.size() - 3));
+                }
+            }
+
+        }
+
+        return legalMoves;
+    }
+
+    @Override
+    public List<ChessSquare> getPieceSpecificAttackingMoves(Board chessBoard) {
         List<ChessSquare> legalMoves = new ArrayList<>();
         int xCoordinate = this.getParentSquare().getXCoordinate();
         int yCoordinate = this.getParentSquare().getYCoordinate();
@@ -55,6 +95,34 @@ public class King extends ChessPiece {
                 legalMoves.add(chessSquare);
             }
         }
+//        if (!hasMoved) {
+//            // I think there will be a bug where the opponent pawn can block castling with its non taking move.
+//            // Don't know if there is a case where this matters because if its non taking move blocks castling,
+//            // so will its taking move.
+//            LinkedList<ChessSquare> horizontalSquares = chessBoard.getPieceRows().get(yCoordinate);
+//            List<ChessSquare> rightSquares = horizontalSquares.subList(xCoordinate, horizontalSquares.size());
+//            List<ChessSquare> leftSquares = new ArrayList<>(horizontalSquares.subList(0, xCoordinate - 1));
+//            Collections.reverse(leftSquares);
+//
+//            for (ChessSquare rightSquare : rightSquares) {
+////                if ((rightSquares.indexOf(rightSquare) == 0 || rightSquares.indexOf(rightSquare) == 1)) {// && chessBoard.getAttackingSquares(rightSquare) != null) {
+////                    break;
+////                }
+//                if (rightSquare.getPiece().getId() == ChessPieceId.Rook && !rightSquare.getPiece().getHasMoved()) {
+//                    legalMoves.add(rightSquares.get(rightSquares.size() - 2));
+//                }
+//            }
+//
+//            for (ChessSquare leftSquare : leftSquares) {
+////                if ((leftSquares.indexOf(leftSquare) == 0 || leftSquares.indexOf(leftSquare) == 1)) {// && chessBoard.getAttackingSquares(leftSquare) != null) {
+////                    break;
+////                }
+//                if (leftSquare.getPiece().getId() == ChessPieceId.Rook && !leftSquare.getPiece().getHasMoved()) {
+//                    legalMoves.add(leftSquares.get(leftSquares.size() - 3));
+//                }
+//            }
+//
+//        }
         return legalMoves;
     }
 
