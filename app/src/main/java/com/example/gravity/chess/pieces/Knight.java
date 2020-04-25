@@ -31,6 +31,10 @@ public class Knight extends ChessPiece {
         id = chessPiece.id;
     }
 
+    public Knight(PieceColour colour) {
+        super(colour);
+    }
+
     @Override
     public void setPieceImage(Context context) {
         if (this.colour == PieceColour.White) {

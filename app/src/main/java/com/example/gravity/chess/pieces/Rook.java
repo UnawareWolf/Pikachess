@@ -33,6 +33,10 @@ public class Rook extends ChessPiece {
         id = chessPiece.id;
     }
 
+    public Rook(PieceColour colour) {
+        super(colour);
+    }
+
     @Override
     public void setPieceImage(Context context) {
         if (this.colour == PieceColour.White) {

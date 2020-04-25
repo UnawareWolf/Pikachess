@@ -43,6 +43,10 @@ public abstract class ChessPiece {
 
     public ChessPiece() {}
 
+    public ChessPiece(PieceColour colour) {
+        this.colour = colour;
+    }
+
     void resizePieceImage(int squareSize) {
         this.pieceImage = Bitmap.createScaledBitmap(pieceImage, squareSize, squareSize, true);
     }

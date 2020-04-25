@@ -38,6 +38,11 @@ public class ChessSquare {
         //this.boardLocation = boardLocation;
     }
 
+    public ChessSquare(ChessPiece piece){
+        this.piece = piece;
+        //this.boardLocation = boardLocation;
+    }
+
     public ChessSquare(ChessSquare chessSquare) {
         boundary = chessSquare.boundary;
         piece = chessSquare.piece.copyPiece();
@@ -116,5 +121,9 @@ public class ChessSquare {
 
     public int getYCoordinate() {
         return this.yCoordinate;
+    }
+
+    public void setBounds(SquareBounds boundary) {
+        this.boundary = boundary;
     }
 }

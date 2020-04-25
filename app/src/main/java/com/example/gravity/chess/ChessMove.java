@@ -12,6 +12,8 @@ public class ChessMove {
         this.squareTo = squareTo;
     }
 
+    public ChessMove() {}
+
     public ChessSquare getSquareFrom() {
         return squareFrom;
     }

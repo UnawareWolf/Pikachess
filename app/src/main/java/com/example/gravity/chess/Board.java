@@ -216,23 +216,23 @@ public class Board {
         }
         return squaresUnderAttack;
     }
-
-    public List<ChessSquare> getAttackingSquares(ChessSquare defendingSquare) {
-        List<ChessSquare> attackingSquares = new ArrayList<>();
-        for (ChessSquare chessSquare : boardSquares) {
-            chessSquare.getPiece().setParentSquare(chessSquare); // this isn't ideal
-            List<ChessSquare> possibleMoves = chessSquare.getPiece().getPieceSpecificAttackingMoves(this);
-            if (possibleMoves != null) {
-                for (ChessSquare possibleMove : possibleMoves) {
-                    if (possibleMove == defendingSquare && possibleMove.getPiece().getColour() != chessSquare.getPiece().getColour()) {
-                        attackingSquares.add(chessSquare);
-                    }
-                }
-            }
-        }
-
-        return attackingSquares;
-    }
+//
+//    public List<ChessSquare> getAttackingSquares(ChessSquare defendingSquare) {
+//        List<ChessSquare> attackingSquares = new ArrayList<>();
+//        for (ChessSquare chessSquare : boardSquares) {
+//            chessSquare.getPiece().setParentSquare(chessSquare); // this isn't ideal
+//            List<ChessSquare> possibleMoves = chessSquare.getPiece().getPieceSpecificAttackingMoves(this);
+//            if (possibleMoves != null) {
+//                for (ChessSquare possibleMove : possibleMoves) {
+//                    if (possibleMove == defendingSquare && possibleMove.getPiece().getColour() != chessSquare.getPiece().getColour()) {
+//                        attackingSquares.add(chessSquare);
+//                    }
+//                }
+//            }
+//        }
+//
+//        return attackingSquares;
+//    }
 
     public void storeMove(ChessMove chessMove) {
         this.chessMoves.add(chessMove);
@@ -292,7 +292,7 @@ public class Board {
         }
     }
 
-    private ChessSquare getChessSquare(int xCoordinate, int yCoordinate) {
+    public ChessSquare getChessSquare(int xCoordinate, int yCoordinate) {
         ChessSquare newRookLocation = new ChessSquare();
         for (ChessSquare chessSquare : boardSquares) {
             if (chessSquare.getXCoordinate() == xCoordinate && chessSquare.getYCoordinate() == yCoordinate) {
@@ -301,6 +301,19 @@ public class Board {
             }
         }
         return newRookLocation;
+    }
+
+    public ChessMove checkForPromotion() {
+        ChessMove lastMove = getLastMove();
+        if (lastMove == null) {
+            return null;
+        }
+        if ((lastMove.getSquareTo().getYCoordinate() == 8 && lastMove.getPieceIdMoved() == ChessPieceId.Pawn && lastMove.getPieceColourMoved() == PieceColour.White) || (lastMove.getSquareTo().getYCoordinate() == 1 && lastMove.getPieceIdMoved() == ChessPieceId.Pawn && lastMove.getPieceColourMoved() == PieceColour.Black)) {
+            return lastMove;
+        }
+        else {
+            return null;
+        }
     }
 
 

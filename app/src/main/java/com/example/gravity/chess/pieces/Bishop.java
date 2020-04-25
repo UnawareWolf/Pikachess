@@ -28,6 +28,10 @@ public class Bishop extends ChessPiece {
         id = chessPiece.id;
     }
 
+    public Bishop(PieceColour colour) {
+        super(colour);
+    }
+
     @Override
     public void setPieceImage(Context context) {
         if (super.colour == PieceColour.White) {

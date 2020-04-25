@@ -53,10 +53,9 @@ public class ChessView extends View {
     int boardSize;
     private Context context;// only make variables private if they will be get or set by other classes. Otherwise package private (ie nothing) is good. wrong
     private PieceColour turnToPlay = PieceColour.White;
-    public static Map<Integer, LinkedList<ChessSquare>> pieceColumns = new HashMap<>();
-    public static Map<Integer, LinkedList<ChessSquare>> pieceRows = new HashMap<>();
-    public static Map<Integer, LinkedList<ChessSquare>> pieceUpDiagonals = new HashMap<>();
-    public static Map<Integer, LinkedList<ChessSquare>> pieceDownDiagonals = new HashMap<>();
+    private ChessMove promotionMove = new ChessMove();
+    private List<ChessSquare> promotionPieces = new ArrayList<>();
+    GameState gameState = GameState.Normal;
 
     public ChessView(Context context) {
         super(context);
@@ -95,18 +94,11 @@ public class ChessView extends View {
         drawConfirmMoveButton(canvas);
 
         drawAllChessPieces(chessBoard.getBoardSquares(), canvas);
+        if (gameState == GameState.PromotionMenu) {
+            drawPawnPromotionMenu(canvas);
+        }
 
     }
-//
-//    private void resizePieceBitmaps() {
-//        for (ChessSquare chessSquare : allChessSquares) {
-//            ChessPiece newPiece = chessSquare.getPiece();
-//            ChessPieceId newID = chessSquare.getPiece().getId();
-//            if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
-//                chessSquare.getPiece().resizePieceImage(squareSize); //not ideal because if there are multiple instances of each piece, there will be multiple images stored.
-//            } // maybe do something like a set of pieces to avoid duplicates.
-//        }
-//    }
 
     private void drawBoardBorder(Canvas canvas) {
         mPaint.setColor(getResources().getColor(R.color.chessBrown));
@@ -115,33 +107,6 @@ public class ChessView extends View {
         mRect.set(OFFSET + BORDER_WIDTH/2, OFFSET + BORDER_WIDTH/2, canvasWidth - OFFSET - BORDER_WIDTH/2, canvasWidth - OFFSET - BORDER_WIDTH/2);
         canvas.drawRect(mRect, mPaint);
     }
-//
-//    private List<ChessSquare> assembleSquares() {
-//        List<ChessSquare> boardSquares = new ArrayList<>();
-//        boolean fillSquare = false;
-//        for (int i = 0; i < 8 ; i++){
-//            for (int j = 0; j < 8; j++){
-//                int squareLeft = OFFSET + BORDER_WIDTH + i*squareSize;
-//                int squareRight = OFFSET + BORDER_WIDTH + (i + 1)*squareSize;
-//                int squareTop = OFFSET + BORDER_WIDTH + j*squareSize;
-//                int squareBottom = OFFSET + BORDER_WIDTH + (j + 1)*squareSize;
-//                int xCoordinate = i + 1;
-//                int yCoordinate = 8 - j;
-//                squareBounds = new SquareBounds(squareLeft, squareTop, squareRight, squareBottom);
-//                ChessPiece piece = getPieceFromCoordinates(xCoordinate, yCoordinate);
-//                mSquare = new ChessSquare(squareBounds, piece, xCoordinate, yCoordinate);
-//                if (fillSquare){
-//                    mSquare.setColour(PieceColour.Black);
-//                } else {
-//                    mSquare.setColour(PieceColour.White);
-//                }
-//                boardSquares.add(mSquare);
-//                fillSquare = !fillSquare;
-//            }
-//            fillSquare = !fillSquare;
-//        }
-//        return boardSquares;
-//    }
 
     private ChessPiece getPieceFromCoordinates(int xCoordinate, int yCoordinate) {
         ChessPiece piece = null;
@@ -180,48 +145,6 @@ public class ChessView extends View {
         return piece;
     }
 
-//    private void assembleBoardGroups() {
-//        for (int num = 1; num < 9; num++) {
-//            LinkedList<ChessSquare> verticalBoardGroup = new LinkedList<>();
-//            LinkedList<ChessSquare> horizontalBoardGroup = new LinkedList<>();
-//            for (ChessSquare chessSquare : allChessSquares) {
-//                if (chessSquare.getXCoordinate() == num) {
-//                    verticalBoardGroup.add(chessSquare);
-//                }
-//                if (chessSquare.getYCoordinate() == num) {
-//                    horizontalBoardGroup.add(chessSquare);
-//                }
-//            }
-//            Collections.reverse(verticalBoardGroup);
-//            pieceColumns.put(num, verticalBoardGroup);
-//            pieceRows.put(num, horizontalBoardGroup);
-//        }
-//        for (int i = 1; i < 16; i++) {
-//
-//            LinkedList<ChessSquare> diagonalUpBoardGroup = new LinkedList<>();
-//            LinkedList<ChessSquare> diagonalDownBoardGroup = new LinkedList<>();
-//            for (ChessSquare chessSquare : allChessSquares) {
-//                int xCoordinate = chessSquare.getXCoordinate();
-//                int yCoordinate = chessSquare.getYCoordinate();
-//                if (xCoordinate + yCoordinate == i + 1) {
-//                    diagonalDownBoardGroup.add(chessSquare);
-//                }
-//                if ((9 - xCoordinate) + yCoordinate == i + 1) {
-//                    diagonalUpBoardGroup.add(chessSquare);
-//                }
-//            }
-//            Collections.reverse(diagonalDownBoardGroup);
-//            pieceUpDiagonals.put(i, diagonalUpBoardGroup);
-//            pieceDownDiagonals.put(i, diagonalDownBoardGroup);
-//        }
-//    }
-//
-//    private void drawBoard(Canvas canvas, List<ChessSquare> allChessSquares) {
-//        for (ChessSquare chessSquare : allChessSquares) {
-//            chessSquare.drawSquare(context, canvas, mRect, mPaint);
-//        }
-//    }
-
     private void drawAllChessPieces(List<ChessSquare> chessSquares, Canvas canvas) {
         for (ChessSquare chessSquare : chessSquares){
             if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece){
@@ -230,14 +153,34 @@ public class ChessView extends View {
         }
     }
 
-//    private void initialisePieceBitmaps() {
-//        for (ChessSquare chessSquare : allChessSquares) {
-//            if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
-//                chessSquare.getPiece().setPieceImage(context); //not ideal because if there are multiple instances of each piece, there will be multiple images stored.
-//                int x = 0;
-//            } // maybe do something like a set of pieces to avoid duplicates.
-//        }
-//    }
+    private void drawPawnPromotionMenu(Canvas canvas) {
+        double squareSizeDub = squareSize;
+        int menuWidth = (int) (squareSizeDub*(2/3.0));
+        int menuHeight = menuWidth*4;
+
+        int menuLeft = promotionMove.getSquareTo().getBoundary().getLeft();
+        int squareTop = promotionMove.getSquareTo().getBoundary().getTop();
+        int menuRight = menuLeft + menuWidth;
+        int menuBottom = squareTop + menuHeight;
+        mRect.set(menuLeft, squareTop, menuRight, menuBottom);
+        mPaint.setColor(getResources().getColor(R.color.buttonGrey));
+        canvas.drawRect(mRect, mPaint);
+        promotionPieces = new ArrayList<>();
+        PieceColour colourLastMoved = chessBoard.getAllMoves().getLast().getPieceColourMoved();
+        promotionPieces.add(new ChessSquare(new Queen(colourLastMoved)));
+        promotionPieces.add(new ChessSquare(new Rook(colourLastMoved)));
+        promotionPieces.add(new ChessSquare(new Bishop(colourLastMoved)));
+        promotionPieces.add(new ChessSquare(new Knight(colourLastMoved)));
+        for (ChessSquare promotionPiece : promotionPieces) {
+            promotionPiece.getPiece().setPieceImage(context);
+            SquareBounds pieceBound = new SquareBounds(menuLeft, squareTop, menuRight, squareTop + menuWidth);
+            promotionPiece.setBounds(pieceBound);
+            promotionPiece.getPiece().drawPiece(canvas, pieceBound);
+            squareTop = squareTop + menuWidth;
+        }
+
+
+    }
 
     private void drawConfirmMoveButton(Canvas canvas) {
         int buttonWidth = canvasWidth/4;
@@ -276,7 +219,7 @@ public class ChessView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN){
+        if (gameState == GameState.Normal && event.getAction() == MotionEvent.ACTION_DOWN){
             xTouch = event.getX();
             yTouch = event.getY();
             for (ChessSquare chessSquare : chessBoard.getBoardSquares()) {
@@ -313,12 +256,31 @@ public class ChessView extends View {
                 chessBoard.storeMove(chessMove);
                 chessBoard.removePawnIfEnPassant();
                 chessBoard.moveRookIfCastle();
-
+                promotionMove = chessBoard.checkForPromotion();
+                if (promotionMove != null) {
+                    gameState = GameState.PromotionMenu;
+                }
                 changeTurn();
                 touched = false;
                 secondTouched = false;
                 greyedOut = true;
                 invalidate();
+            }
+        }
+        else if (gameState == GameState.PromotionMenu && event.getAction() == MotionEvent.ACTION_DOWN) {
+            xTouch = event.getX();
+            yTouch = event.getY();
+            for (ChessSquare promotionPiece : promotionPieces) {
+                if (promotionPiece.getBoundary().squareContainsCoordinates(promotionPiece.getBoundary(), xTouch, yTouch)) {
+                    ChessSquare lastMoveSquareTo = chessBoard.getLastMove().getSquareTo();
+                    ChessSquare squareToPromote = chessBoard.getChessSquare(lastMoveSquareTo.getXCoordinate(), lastMoveSquareTo.getYCoordinate());
+                    squareToPromote.setPiece(promotionPiece.getPiece());
+                    squareToPromote.getPiece().resizePieceImage(squareSize);
+                    squareToPromote.getPiece().setParentSquare(squareToPromote);
+                    squareToPromote.getPiece().setHasMoved();
+                    gameState = GameState.Normal;
+                    invalidate();
+                }
             }
         }
         return true;

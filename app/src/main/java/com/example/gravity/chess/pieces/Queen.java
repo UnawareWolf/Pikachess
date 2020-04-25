@@ -26,6 +26,10 @@ public class Queen extends ChessPiece {
         super();
     }
 
+    public Queen(PieceColour colour) {
+        super(colour);
+    }
+
     public Queen(Queen chessPiece) {
         super(chessPiece);
         id = chessPiece.id;
