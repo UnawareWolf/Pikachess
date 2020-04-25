@@ -34,14 +34,9 @@ public class ChessView extends View {
     private Bitmap totodileBackground;
     public static final int OFFSET = 60;
     public static final int BORDER_WIDTH = 8;
-    //private SquareBounds squareBounds = new SquareBounds();
-    //private ChessSquare mSquare;
-    //private List<ChessSquare> allChessSquares = new ArrayList<>(); // dont think this should be static. pretty sure
-    //private String squareBoardLocation;
     boolean touched = false;
     float xTouch, yTouch;
     private Board chessBoard;
-    //private Rect selectRect = new Rect();
     private ChessSquare selectedSquare;
     boolean secondTouched = false;
     private ChessSquare secondSelectedSquare;
@@ -70,10 +65,6 @@ public class ChessView extends View {
             boardSize = canvasWidth - 2*OFFSET - 2*BORDER_WIDTH;
             squareSize = boardSize/8;
             chessBoard = new Board(this);
-//            this.allChessSquares = assembleSquares();
-//            assembleBoardGroups();
-//            initialisePieceBitmaps();
-//            resizePieceBitmaps();
             chessBoard.initialisePieceBitmaps(context);
             chessBoard.resizePieceBitmaps();
             newBoard = false;
@@ -108,42 +99,42 @@ public class ChessView extends View {
         canvas.drawRect(mRect, mPaint);
     }
 
-    private ChessPiece getPieceFromCoordinates(int xCoordinate, int yCoordinate) {
-        ChessPiece piece = null;
-        if (yCoordinate == 2 || yCoordinate == 7) {
-            piece = new Pawn();
-        }
-        else if(yCoordinate == 1 || yCoordinate == 8) {
-            switch (xCoordinate) {
-                case 1:
-                case 8:
-                    piece = new Rook();
-                    break;
-                case 2:
-                case 7:
-                    piece = new Knight();
-                    break;
-                case 3:
-                case 6:
-                    piece = new Bishop();
-                    break;
-                case 4: piece = new Queen();
-                    break;
-                case 5: piece = new King();
-                    break;
-            }
-        }
-        else {
-            piece = new Empty();
-        }
-        if (yCoordinate == 1 || yCoordinate == 2){
-            piece.setColour(PieceColour.White);
-        }
-        else if (yCoordinate == 7 || yCoordinate == 8) {
-            piece.setColour(PieceColour.Black);
-        }
-        return piece;
-    }
+//    private ChessPiece getPieceFromCoordinates(int xCoordinate, int yCoordinate) {
+//        ChessPiece piece = null;
+//        if (yCoordinate == 2 || yCoordinate == 7) {
+//            piece = new Pawn();
+//        }
+//        else if(yCoordinate == 1 || yCoordinate == 8) {
+//            switch (xCoordinate) {
+//                case 1:
+//                case 8:
+//                    piece = new Rook();
+//                    break;
+//                case 2:
+//                case 7:
+//                    piece = new Knight();
+//                    break;
+//                case 3:
+//                case 6:
+//                    piece = new Bishop();
+//                    break;
+//                case 4: piece = new Queen();
+//                    break;
+//                case 5: piece = new King();
+//                    break;
+//            }
+//        }
+//        else {
+//            piece = new Empty();
+//        }
+//        if (yCoordinate == 1 || yCoordinate == 2){
+//            piece.setColour(PieceColour.White);
+//        }
+//        else if (yCoordinate == 7 || yCoordinate == 8) {
+//            piece.setColour(PieceColour.Black);
+//        }
+//        return piece;
+//    }
 
     private void drawAllChessPieces(List<ChessSquare> chessSquares, Canvas canvas) {
         for (ChessSquare chessSquare : chessSquares){
@@ -298,9 +289,5 @@ public class ChessView extends View {
     public int getSquareSize() {
         return this.squareSize;
     }
-
-//    public Board getChessBoard() {
-//        return this.chessBoard;
-//    }
 
 }
