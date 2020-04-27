@@ -35,6 +35,7 @@ public class ChessSquare {
         this.piece = piece;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        this.piece.setParentSquare(this);
         //this.boardLocation = boardLocation;
     }
 

@@ -5,42 +5,71 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private int mCount = 0;
     private TextView mShowCount;
     private EditText numToAdd;
+    private boolean computer;
+    private List<Spinner> spinnerList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mShowCount = (TextView) findViewById(R.id.show_count);
-
-        //mShowCount = (TextView) findViewById(R.id.show_count);
+        spinnerList.add(setUpSpinner(R.id.opponent_spinner, R.array.opponents_array));
+        spinnerList.add(setUpSpinner(R.id.player_colour_spinner, R.array.player_colour_array));
+        spinnerList.add(setUpSpinner(R.id.computer_level_spinner, R.array.computer_level_array));
+        spinnerList.add(setUpSpinner(R.id.background_spinner, R.array.background_array));
     }
 
-    public void jeeloWorld(View view) {
-        Toast toast = Toast.makeText(this, R.string.jeelo_world, Toast.LENGTH_SHORT);
-        toast.show();
+    public Spinner setUpSpinner(int spinnerId, int spinnerArray) {
+        Spinner spinner = (Spinner) findViewById(spinnerId);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, spinnerArray, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+        return spinner;
     }
 
-    public void countUp(View view) {
-        numToAdd = findViewById(R.id.numberToAdd);
-        if (numToAdd != null) {
-            int theNumber = Integer.parseInt(numToAdd.getText().toString());
-            mCount = mCount + theNumber;
-            mShowCount.setText(Integer.toString(mCount));
-        }
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     public void goGravity(View view) {
-        startActivity(new Intent(this, Gravitactivity.class));
-    }
 
+        for (Spinner spinner : spinnerList) {
+            System.out.println(R.id.opponent_spinner);
+            System.out.println(spinner.getId());
+            System.out.println(spinner.getSelectedItem());
+        }
+
+        Intent chessIntent = new Intent(this, Gravitactivity.class);
+        Bundle chessBundle = new Bundle();
+        for (Spinner spinner : spinnerList) {
+            if (spinner.getSelectedItemId() == R.id.opponent_spinner) {
+                System.out.println("Hooray");
+            }
+            chessBundle.putString(String.valueOf(spinner.getId()), spinner.getSelectedItem().toString());
+        }
+        chessIntent.putExtras(chessBundle);
+        startActivity(chessIntent);
+    }
 }

@@ -20,6 +20,7 @@ public abstract class ChessPiece {
     protected ChessSquare parentSquare;
     protected boolean hasMoved = false;
     protected ChessPieceId id; // try removing this.
+    private int score;
 
     public abstract void setPieceImage(Context context);
     public abstract ChessPieceId getId();
@@ -232,4 +233,5 @@ public abstract class ChessPiece {
         return attackingSquares;
     }
 
+    public abstract int getPieceScore();
 }

@@ -6,6 +6,7 @@ public class ChessMove {
 
     private ChessSquare squareFrom;
     private ChessSquare squareTo;
+    private int moveScore;
 
     public ChessMove(ChessSquare squareFrom, ChessSquare squareTo) {
         this.squareFrom = squareFrom;
@@ -32,6 +33,14 @@ public class ChessMove {
 
     public ChessPieceId getPieceIdTaken() {
         return squareTo.getPiece().getId();
+    }
+
+    public int getMoveScore() {
+        return this.moveScore;
+    }
+
+    public void setMoveScore(int moveScore) {
+        this.moveScore = moveScore;
     }
 
     public int getAbsYDistanceMoved() {

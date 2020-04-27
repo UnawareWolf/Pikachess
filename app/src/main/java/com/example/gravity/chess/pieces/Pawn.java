@@ -19,6 +19,7 @@ import java.util.List;
 public class Pawn extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.Pawn;
+    int score = 1;
 
     public Pawn() {
         super();
@@ -106,6 +107,11 @@ public class Pawn extends ChessPiece {
     @Override
     public ChessPiece copyPiece() {
         return new Pawn(this);
+    }
+
+    @Override
+    public int getPieceScore() {
+        return this.score;
     }
 
 }

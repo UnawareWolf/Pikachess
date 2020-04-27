@@ -23,6 +23,7 @@ import java.util.Set;
 public class Rook extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.Rook;
+    int score = 5;
 
     public Rook() {
         super();
@@ -65,6 +66,11 @@ public class Rook extends ChessPiece {
     @Override
     public ChessPiece copyPiece() {
         return new Rook(this);
+    }
+
+    @Override
+    public int getPieceScore() {
+        return this.score;
     }
 
 

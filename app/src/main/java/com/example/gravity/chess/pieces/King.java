@@ -20,6 +20,7 @@ import java.util.List;
 public class King extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.King;
+    int score = 5;
 
     public King() {
         super();
@@ -28,6 +29,7 @@ public class King extends ChessPiece {
     public King(King chessPiece) {
         super(chessPiece);
         id = chessPiece.id;
+
     }
 
     @Override
@@ -129,5 +131,10 @@ public class King extends ChessPiece {
     @Override
     public ChessPiece copyPiece() {
         return new King(this);
+    }
+
+    @Override
+    public int getPieceScore() {
+        return this.score;
     }
 }

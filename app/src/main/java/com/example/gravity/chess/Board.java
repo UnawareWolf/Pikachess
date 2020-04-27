@@ -14,16 +14,19 @@ import com.example.gravity.chess.pieces.Pawn;
 import com.example.gravity.chess.pieces.Queen;
 import com.example.gravity.chess.pieces.Rook;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static com.example.gravity.chess.ChessView.BORDER_WIDTH;
 import static com.example.gravity.chess.ChessView.OFFSET;
 import static java.lang.Math.abs;
+import static java.lang.Math.random;
 
 public class Board {
 
@@ -314,6 +317,82 @@ public class Board {
         else {
             return null;
         }
+    }
+
+    public void calculateAndExecuteAIMove() {
+        List<ChessMove> allLegalMoves = getAllLegalMoves();
+        Random rand = new Random();
+        List<ChessMove> bestMoves = new ArrayList<>();
+        int bestScore = Integer.MIN_VALUE;
+        for (ChessMove rankedMove : allLegalMoves) {
+            Board boardCopy = new Board(this);
+            ChessMove moveCopy = boardCopy.getMoveOnDuplicateBoard(rankedMove);
+            int moveScore = boardCopy.executeMoveAndReturnScore(moveCopy);
+            rankedMove.setMoveScore(moveScore);
+            if (moveScore >= bestScore) {
+                bestMoves.add(rankedMove);
+                bestScore = moveScore;
+            }
+        }
+        ChessMove randMove = bestMoves.get(rand.nextInt(bestMoves.size()));
+        executeMove(randMove);
+//        randMove.getSquareTo().setPiece(randMove.getSquareFrom().getPiece());
+//        randMove.getSquareTo().getPiece().setHasMoved();
+//        randMove.getSquareFrom().setPiece(new Empty());
+//        randMove.getSquareTo().setPiece(randMove.getSquareFrom().getPiece());
+//        randMove.getSquareFrom().setPiece(new Empty());
+    }
+
+    private ChessMove getMoveOnDuplicateBoard(ChessMove chessMove) {
+        ChessSquare copySquareFrom = getChessSquare(chessMove.getSquareFrom().getXCoordinate(), chessMove.getSquareFrom().getYCoordinate());
+        ChessSquare copySquareTo = getChessSquare(chessMove.getSquareTo().getXCoordinate(), chessMove.getSquareTo().getYCoordinate());
+        return new ChessMove(copySquareFrom, copySquareTo);
+    }
+
+    private int executeMoveAndReturnScore(ChessMove moveToScore) {
+        //ChessSquare squareFrom = getChessSquare(rankedMove.getSquareFrom().getXCoordinate(), rankedMove.getSquareFrom().getYCoordinate());
+        executeMove(moveToScore);
+        int score = 0;
+        ChessSquare squareTo = moveToScore.getSquareTo();
+        List<ChessSquare> squaresUnderAttack = getSquaresUnderAttack();
+        for (ChessSquare underAttackSquare : squaresUnderAttack) {
+            if (underAttackSquare.getPiece().getColour() != squareTo.getPiece().getColour()) {
+
+            }
+        }
+
+        for (ChessSquare underAttackSquare : squaresUnderAttack) {
+            ChessPiece underAttackPiece = underAttackSquare.getPiece();
+            if (underAttackPiece.getColour() == squareTo.getPiece().getColour()) {
+                score -= underAttackPiece.getPieceScore();
+            }
+            else if (underAttackPiece.getColour() != squareTo.getPiece().getColour() && underAttackPiece.getId() != ChessPieceId.NoPiece) {
+                score += underAttackPiece.getPieceScore();
+            }
+            if (score > 0) {
+                System.out.println(score);
+            }
+        }
+        return score;
+    }
+
+    private void executeMove(ChessMove move) {
+        move.getSquareTo().setPiece(move.getSquareFrom().getPiece());
+        move.getSquareTo().getPiece().setHasMoved();
+        move.getSquareFrom().setPiece(new Empty());
+    }
+
+    private List<ChessMove> getAllLegalMoves() {
+        List<ChessMove> allLegalMoves = new ArrayList<>();
+        for (ChessSquare chessSquare : boardSquares) {
+            if (chessSquare.getPiece().getColour() != getLastMove().getPieceColourMoved() && chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
+                List<ChessSquare> legalMoveSquares = chessSquare.getPiece().getLegalMoves(this);
+                for (ChessSquare legalMoveSquare : legalMoveSquares) {
+                    allLegalMoves.add(new ChessMove(chessSquare, legalMoveSquare));
+                }
+            }
+        }
+        return allLegalMoves;
     }
 
 

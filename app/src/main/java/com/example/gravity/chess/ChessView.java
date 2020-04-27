@@ -8,9 +8,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.gravity.Gravitactivity;
 import com.example.gravity.R;
 import com.example.gravity.chess.pieces.Bishop;
 import com.example.gravity.chess.pieces.Empty;
@@ -51,11 +53,23 @@ public class ChessView extends View {
     private ChessMove promotionMove = new ChessMove();
     private List<ChessSquare> promotionPieces = new ArrayList<>();
     GameState gameState = GameState.Normal;
+    private boolean opponentIsAI;
 
     public ChessView(Context context) {
         super(context);
         this.context = context;
         totodileBackground = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
+        Bundle chessBundle = ((Gravitactivity) context).getIntent().getExtras();
+        if (chessBundle != null) {
+            //opponentIsAI = chessBundle.getBoolean("Computer");
+            if (chessBundle.getString(String.valueOf(R.id.opponent_spinner)).equals("Computer")) {
+                opponentIsAI = true;
+            }
+            else {
+                opponentIsAI = false;
+                System.out.println(chessBundle.getString(String.valueOf(R.id.opponent_spinner)));
+            }
+        }
     }
 
     @Override
@@ -98,43 +112,6 @@ public class ChessView extends View {
         mRect.set(OFFSET + BORDER_WIDTH/2, OFFSET + BORDER_WIDTH/2, canvasWidth - OFFSET - BORDER_WIDTH/2, canvasWidth - OFFSET - BORDER_WIDTH/2);
         canvas.drawRect(mRect, mPaint);
     }
-
-//    private ChessPiece getPieceFromCoordinates(int xCoordinate, int yCoordinate) {
-//        ChessPiece piece = null;
-//        if (yCoordinate == 2 || yCoordinate == 7) {
-//            piece = new Pawn();
-//        }
-//        else if(yCoordinate == 1 || yCoordinate == 8) {
-//            switch (xCoordinate) {
-//                case 1:
-//                case 8:
-//                    piece = new Rook();
-//                    break;
-//                case 2:
-//                case 7:
-//                    piece = new Knight();
-//                    break;
-//                case 3:
-//                case 6:
-//                    piece = new Bishop();
-//                    break;
-//                case 4: piece = new Queen();
-//                    break;
-//                case 5: piece = new King();
-//                    break;
-//            }
-//        }
-//        else {
-//            piece = new Empty();
-//        }
-//        if (yCoordinate == 1 || yCoordinate == 2){
-//            piece.setColour(PieceColour.White);
-//        }
-//        else if (yCoordinate == 7 || yCoordinate == 8) {
-//            piece.setColour(PieceColour.Black);
-//        }
-//        return piece;
-//    }
 
     private void drawAllChessPieces(List<ChessSquare> chessSquares, Canvas canvas) {
         for (ChessSquare chessSquare : chessSquares){
@@ -255,6 +232,11 @@ public class ChessView extends View {
                 touched = false;
                 secondTouched = false;
                 greyedOut = true;
+
+                if (opponentIsAI) {
+                    chessBoard.calculateAndExecuteAIMove();
+                    changeTurn();
+                }
                 invalidate();
             }
         }

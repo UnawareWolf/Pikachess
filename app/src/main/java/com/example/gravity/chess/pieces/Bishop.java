@@ -17,6 +17,7 @@ import java.util.List;
 public class Bishop extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.Bishop;
+    int score = 3;
 
     public Bishop() {
         super();
@@ -60,6 +61,11 @@ public class Bishop extends ChessPiece {
     @Override
     public Bishop copyPiece() {
         return new Bishop(this);
+    }
+
+    @Override
+    public int getPieceScore() {
+        return this.score;
     }
 
 

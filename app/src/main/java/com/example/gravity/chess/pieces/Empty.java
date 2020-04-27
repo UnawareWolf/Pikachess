@@ -15,6 +15,7 @@ import java.util.List;
 public class Empty extends ChessPiece {
 
     ChessPieceId id = ChessPieceId.NoPiece;
+    int score = 0;
 
     public Empty() {
         super();
@@ -48,6 +49,11 @@ public class Empty extends ChessPiece {
     @Override
     public ChessPiece copyPiece() {
         return new Empty(this);
+    }
+
+    @Override
+    public int getPieceScore() {
+        return this.score;
     }
 
 }
