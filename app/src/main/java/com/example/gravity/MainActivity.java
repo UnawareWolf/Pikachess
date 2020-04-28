@@ -64,9 +64,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent chessIntent = new Intent(this, Gravitactivity.class);
         Bundle chessBundle = new Bundle();
         for (Spinner spinner : spinnerList) {
-            if (spinner.getSelectedItemId() == R.id.opponent_spinner) {
-                System.out.println("Hooray");
-            }
             chessBundle.putString(String.valueOf(spinner.getId()), spinner.getSelectedItem().toString());
         }
         chessIntent.putExtras(chessBundle);

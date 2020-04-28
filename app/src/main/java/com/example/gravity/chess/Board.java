@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.view.View;
 
 import com.example.gravity.chess.pieces.Bishop;
 import com.example.gravity.chess.pieces.Empty;
@@ -14,7 +13,6 @@ import com.example.gravity.chess.pieces.Pawn;
 import com.example.gravity.chess.pieces.Queen;
 import com.example.gravity.chess.pieces.Rook;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,12 +35,14 @@ public class Board {
     private Map<Integer, LinkedList<ChessSquare>> pieceDownDiagonals = new HashMap<>();
     private Rect mRect = new Rect();
     private Paint mPaint = new Paint();
-    //private ChessSquare[][] boardArray = new ChessSquare[8][8];
     private int squareSize;
     private LinkedList<ChessMove> chessMoves = new LinkedList<>();
+    private boolean playAsWhite;
+    private PieceColour turnToPlay = PieceColour.White;
 
-    public Board(ChessView chessView) {
+    public Board(ChessView chessView, boolean playAsWhite) {
         this.squareSize = chessView.getSquareSize();
+        this.playAsWhite = playAsWhite;
         assembleBoard();
         assembleBoardGroups();
     }
@@ -52,11 +52,12 @@ public class Board {
             boardSquares.add(new ChessSquare(chessSquare));
         }
         assembleBoardGroups();
+        playAsWhite = board.playAsWhite;
+        turnToPlay = board.turnToPlay;
         mRect = board.mRect;
         mPaint = board.mPaint;
         squareSize = board.squareSize;
     }
-    //public
 
     private void assembleBoard() {
         boolean fillSquare = false;
@@ -66,8 +67,17 @@ public class Board {
                 int squareRight = OFFSET + BORDER_WIDTH + (i + 1)*squareSize;
                 int squareTop = OFFSET + BORDER_WIDTH + j*squareSize;
                 int squareBottom = OFFSET + BORDER_WIDTH + (j + 1)*squareSize;
-                int xCoordinate = i + 1;
-                int yCoordinate = 8 - j;
+                int xCoordinate;
+                int yCoordinate;
+                if (playAsWhite) {
+                    xCoordinate = i + 1;
+                    yCoordinate = 8 - j;
+                }
+                else {
+                    xCoordinate = 8 - i;
+                    yCoordinate = j + 1;
+                }
+
                 SquareBounds squareBounds = new SquareBounds(squareLeft, squareTop, squareRight, squareBottom);
                 ChessPiece piece = getPieceFromCoordinates(xCoordinate, yCoordinate);
                 ChessSquare chessSquare = new ChessSquare(squareBounds, piece, xCoordinate, yCoordinate);
@@ -132,12 +142,16 @@ public class Board {
                     horizontalBoardGroup.add(chessSquare);
                 }
             }
-            Collections.reverse(verticalBoardGroup);
+            if (playAsWhite) {
+                Collections.reverse(verticalBoardGroup);
+            }
+            else {
+                Collections.reverse(horizontalBoardGroup);
+            }
             pieceColumns.put(num, verticalBoardGroup);
             pieceRows.put(num, horizontalBoardGroup);
         }
         for (int i = 1; i < 16; i++) {
-
             LinkedList<ChessSquare> diagonalUpBoardGroup = new LinkedList<>();
             LinkedList<ChessSquare> diagonalDownBoardGroup = new LinkedList<>();
             for (ChessSquare chessSquare : boardSquares) {
@@ -155,6 +169,7 @@ public class Board {
             pieceDownDiagonals.put(i, diagonalDownBoardGroup);
         }
     }
+
     public void drawBoard(Context context, Canvas canvas) {
         for (ChessSquare chessSquare : boardSquares) {
             chessSquare.drawSquare(context, canvas, mRect, mPaint);
@@ -385,7 +400,7 @@ public class Board {
     private List<ChessMove> getAllLegalMoves() {
         List<ChessMove> allLegalMoves = new ArrayList<>();
         for (ChessSquare chessSquare : boardSquares) {
-            if (chessSquare.getPiece().getColour() != getLastMove().getPieceColourMoved() && chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
+            if (chessSquare.getPiece().getColour() == turnToPlay && chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
                 List<ChessSquare> legalMoveSquares = chessSquare.getPiece().getLegalMoves(this);
                 for (ChessSquare legalMoveSquare : legalMoveSquares) {
                     allLegalMoves.add(new ChessMove(chessSquare, legalMoveSquare));
@@ -393,6 +408,15 @@ public class Board {
             }
         }
         return allLegalMoves;
+    }
+
+    public void changeTurn() {
+        if (this.turnToPlay == PieceColour.Black){
+            this.turnToPlay = PieceColour.White;
+        }
+        else {
+            this.turnToPlay = PieceColour.Black;
+        }
     }
 
 

@@ -72,6 +72,4 @@ public class Rook extends ChessPiece {
     public int getPieceScore() {
         return this.score;
     }
-
-
 }

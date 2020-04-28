@@ -84,6 +84,13 @@ public class ChessSquare {
             mPaint.setAlpha(140);
             canvas.drawRect(mRect, mPaint);
         }
+        else {
+            mRect.set(boundary.getLeft(), boundary.getTop(), boundary.getRight(), boundary.getBottom());
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setColor(context.getResources().getColor(R.color.chessWhite));
+            mPaint.setAlpha(140);
+            canvas.drawRect(mRect, mPaint);
+        }
     }
 
     public void setColour(PieceColour colour) {

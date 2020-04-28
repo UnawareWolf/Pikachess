@@ -33,7 +33,7 @@ public class ChessView extends View {
 
     private Rect mRect = new Rect();
     private Paint mPaint = new Paint();
-    private Bitmap totodileBackground;
+    private Bitmap backgroundImage;
     public static final int OFFSET = 60;
     public static final int BORDER_WIDTH = 8;
     boolean touched = false;
@@ -54,20 +54,26 @@ public class ChessView extends View {
     private List<ChessSquare> promotionPieces = new ArrayList<>();
     GameState gameState = GameState.Normal;
     private boolean opponentIsAI;
+    private boolean playAsWhite;
 
     public ChessView(Context context) {
         super(context);
         this.context = context;
-        totodileBackground = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
         Bundle chessBundle = ((Gravitactivity) context).getIntent().getExtras();
         if (chessBundle != null) {
-            //opponentIsAI = chessBundle.getBoolean("Computer");
-            if (chessBundle.getString(String.valueOf(R.id.opponent_spinner)).equals("Computer")) {
-                opponentIsAI = true;
+            opponentIsAI = chessBundle.getString(String.valueOf(R.id.opponent_spinner)).equals("Computer");
+            playAsWhite = chessBundle.getString(String.valueOf(R.id.player_colour_spinner)).equals("White");
+            if (chessBundle.getString(String.valueOf(R.id.computer_level_spinner)).equals("Easy")) {
+
             }
             else {
-                opponentIsAI = false;
-                System.out.println(chessBundle.getString(String.valueOf(R.id.opponent_spinner)));
+
+            }
+            if (chessBundle.getString(String.valueOf(R.id.background_spinner)).equals("Totodile")) {
+                backgroundImage = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
+            }
+            else {
+                backgroundImage = BitmapFactory.decodeResource(getResources(), R.drawable.fox_shine);
             }
         }
     }
@@ -78,14 +84,18 @@ public class ChessView extends View {
             canvasWidth = getWidth();
             boardSize = canvasWidth - 2*OFFSET - 2*BORDER_WIDTH;
             squareSize = boardSize/8;
-            chessBoard = new Board(this);
+            chessBoard = new Board(this, playAsWhite);
             chessBoard.initialisePieceBitmaps(context);
             chessBoard.resizePieceBitmaps();
+            if (!playAsWhite && opponentIsAI) {
+                chessBoard.calculateAndExecuteAIMove();
+                chessBoard.changeTurn();
+                changeTurn();
+            }
             newBoard = false;
         }
-        canvas.drawBitmap(totodileBackground, 0, 0, null);
+        canvas.drawBitmap(backgroundImage, 0, 0, null);
         drawBoardBorder(canvas);
-        //drawBoard(canvas, allChessSquares);
         chessBoard.drawBoard(context, canvas);
 
         if (touched) {
@@ -102,7 +112,6 @@ public class ChessView extends View {
         if (gameState == GameState.PromotionMenu) {
             drawPawnPromotionMenu(canvas);
         }
-
     }
 
     private void drawBoardBorder(Canvas canvas) {
@@ -228,13 +237,15 @@ public class ChessView extends View {
                 if (promotionMove != null) {
                     gameState = GameState.PromotionMenu;
                 }
+                chessBoard.changeTurn();
                 changeTurn();
                 touched = false;
                 secondTouched = false;
                 greyedOut = true;
 
-                if (opponentIsAI) {
+                if (opponentIsAI && gameState == GameState.Normal) {
                     chessBoard.calculateAndExecuteAIMove();
+                    chessBoard.changeTurn();
                     changeTurn();
                 }
                 invalidate();
@@ -252,6 +263,11 @@ public class ChessView extends View {
                     squareToPromote.getPiece().setParentSquare(squareToPromote);
                     squareToPromote.getPiece().setHasMoved();
                     gameState = GameState.Normal;
+                    if (opponentIsAI) {
+                        chessBoard.calculateAndExecuteAIMove();
+                        chessBoard.changeTurn();
+                        changeTurn();
+                    }
                     invalidate();
                 }
             }
