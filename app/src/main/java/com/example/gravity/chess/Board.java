@@ -351,11 +351,6 @@ public class Board {
         }
         ChessMove randMove = bestMoves.get(rand.nextInt(bestMoves.size()));
         executeMove(randMove);
-//        randMove.getSquareTo().setPiece(randMove.getSquareFrom().getPiece());
-//        randMove.getSquareTo().getPiece().setHasMoved();
-//        randMove.getSquareFrom().setPiece(new Empty());
-//        randMove.getSquareTo().setPiece(randMove.getSquareFrom().getPiece());
-//        randMove.getSquareFrom().setPiece(new Empty());
     }
 
     private ChessMove getMoveOnDuplicateBoard(ChessMove chessMove) {
@@ -366,9 +361,27 @@ public class Board {
 
     private int executeMoveAndReturnScore(ChessMove moveToScore) {
         //ChessSquare squareFrom = getChessSquare(rankedMove.getSquareFrom().getXCoordinate(), rankedMove.getSquareFrom().getYCoordinate());
-        executeMove(moveToScore);
-        int score = 0;
+
+        ChessSquare squareFrom = moveToScore.getSquareFrom();
         ChessSquare squareTo = moveToScore.getSquareTo();
+        int score = 0;
+        if (squareTo.getPiece().getId() != ChessPieceId.NoPiece) {
+            int takePiece = squareFrom.getPiece().getPieceScore();
+            Board boardCopy = new Board(this);
+            ChessMove moveCopy = boardCopy.getMoveOnDuplicateBoard(moveToScore);
+            boardCopy.executeMove(moveCopy);
+            for (ChessSquare chessSquare : boardCopy.getSquaresUnderAttack()) {
+                if (chessSquare.getXCoordinate() == squareTo.getXCoordinate() && chessSquare.getXCoordinate() == squareTo.getXCoordinate()) {
+                    takePiece -= chessSquare.getPiece().getPieceScore();
+                }
+            }
+            if (takePiece > 0) {
+                score += 20;
+            }
+        }
+
+        executeMove(moveToScore);
+        /*ChessSquare*/ squareTo = moveToScore.getSquareTo();
         List<ChessSquare> squaresUnderAttack = getSquaresUnderAttack();
         for (ChessSquare underAttackSquare : squaresUnderAttack) {
             if (underAttackSquare.getPiece().getColour() != squareTo.getPiece().getColour()) {
@@ -391,9 +404,10 @@ public class Board {
         return score;
     }
 
-    private void executeMove(ChessMove move) {
+    public void executeMove(ChessMove move) {
         move.getSquareTo().setPiece(move.getSquareFrom().getPiece());
         move.getSquareTo().getPiece().setHasMoved();
+        move.getSquareTo().getPiece().setParentSquare(move.getSquareTo());
         move.getSquareFrom().setPiece(new Empty());
     }
 
@@ -419,7 +433,15 @@ public class Board {
         }
     }
 
+    public PieceColour getTurnToPlay() {
+        return this.turnToPlay;
+    }
 
-//    public void drawBoard(Canvas canvas) {
-//    }
+    public void drawAllChessPieces(Canvas canvas) {
+        for (ChessSquare chessSquare : boardSquares){
+            if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece){
+                chessSquare.getPiece().drawPiece(canvas, chessSquare.getBoundary()); // maybe actually set location in piece
+            }
+        }
+    }
 }

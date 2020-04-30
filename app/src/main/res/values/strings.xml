@@ -10,8 +10,8 @@
     <string name="confirm_move">Confirm</string>
     <string name="text_vertical_offset">0.05</string>
     <string-array name="opponents_array">
-        <item>Human</item>
         <item>Computer</item>
+        <item>Human</item>
     </string-array>
     <string-array name="computer_level_array">
         <item>Easy</item>
@@ -24,7 +24,7 @@
         <item>Black</item>
     </string-array>
     <string-array name="background_array">
-        <item>Totodile</item>
         <item>Shine</item>
+        <item>Totodile</item>
     </string-array>
 </resources>
