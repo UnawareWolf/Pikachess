@@ -1,4 +1,4 @@
-package com.example.gravity.chess;
+package com.example.pikachess.chess;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,12 +11,12 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.gravity.Gravitactivity;
-import com.example.gravity.R;
-import com.example.gravity.chess.pieces.Bishop;
-import com.example.gravity.chess.pieces.Knight;
-import com.example.gravity.chess.pieces.Queen;
-import com.example.gravity.chess.pieces.Rook;
+import com.example.pikachess.ChessActivity;
+import com.example.pikachess.R;
+import com.example.pikachess.chess.pieces.Bishop;
+import com.example.pikachess.chess.pieces.Knight;
+import com.example.pikachess.chess.pieces.Queen;
+import com.example.pikachess.chess.pieces.Rook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +110,7 @@ public class ChessView extends View {
     }
 
     private void assignSettings() {
-        Bundle chessBundle = ((Gravitactivity) context).getIntent().getExtras();
+        Bundle chessBundle = ((ChessActivity) context).getIntent().getExtras();
         if (chessBundle != null) {
             opponentIsAI = chessBundle.getString(String.valueOf(R.id.opponent_spinner)).equals("Computer");
             playAsWhite = chessBundle.getString(String.valueOf(R.id.player_colour_spinner)).equals("White");
@@ -118,11 +118,16 @@ public class ChessView extends View {
             }
             else {
             }
-            if (chessBundle.getString(String.valueOf(R.id.background_spinner)).equals("Totodile")) {
-                backgroundImage = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
-            }
-            else {
-                backgroundImage = BitmapFactory.decodeResource(getResources(), R.drawable.fox_shine);
+            switch (chessBundle.getString(String.valueOf(R.id.background_spinner))) {
+                case "Totodile":
+                    backgroundImage = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
+                    break;
+                case "Shine":
+                    backgroundImage = BitmapFactory.decodeResource(getResources(), R.drawable.fox_shine);
+                    break;
+                case "Sky":
+                    backgroundImage = BitmapFactory.decodeResource(getResources(), R.drawable.fox_shine);
+                    break;
             }
         }
     }

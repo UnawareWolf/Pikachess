@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Gravitactivity">
+    tools:context="com.example.pikachess.ChessActivity">
 
     <!--<ImageView
         android:id="@+id/myimageview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>-->
-    <com.example.gravity.chess.ChessView
+    <com.example.pikachess.chess.ChessView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/chess_view"

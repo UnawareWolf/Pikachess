@@ -1,4 +1,4 @@
-package com.example.gravity.chess;
+package com.example.pikachess.chess;
 
 import static java.lang.Math.abs;
 

@@ -1,17 +1,15 @@
-package com.example.gravity.chess.pieces;
+package com.example.pikachess.chess.pieces;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.example.gravity.R;
-import com.example.gravity.chess.Board;
-import com.example.gravity.chess.ChessMove;
-import com.example.gravity.chess.ChessPiece;
-import com.example.gravity.chess.ChessPieceId;
-import com.example.gravity.chess.ChessSquare;
-import com.example.gravity.chess.PieceColour;
-import com.example.gravity.chess.SquareBounds;
+import com.example.pikachess.R;
+import com.example.pikachess.chess.Board;
+import com.example.pikachess.chess.ChessMove;
+import com.example.pikachess.chess.ChessPiece;
+import com.example.pikachess.chess.ChessPieceId;
+import com.example.pikachess.chess.ChessSquare;
+import com.example.pikachess.chess.PieceColour;
 
 import java.util.ArrayList;
 import java.util.List;

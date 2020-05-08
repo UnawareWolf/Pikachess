@@ -1,10 +1,10 @@
-package com.example.gravity.chess;
+package com.example.pikachess.chess;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import com.example.gravity.chess.pieces.Empty;
+import com.example.pikachess.chess.pieces.Empty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,9 +31,6 @@ public abstract class ChessPiece {
     }
     public ChessSquare getParentSquare() {
         return this.parentSquare;
-    }
-    public Bitmap getPieceImage() {
-        return this.pieceImage;
     }
     public void setHasMoved() {
         this.hasMoved = true;
@@ -104,12 +101,10 @@ public abstract class ChessPiece {
         int xCoordinate = this.getParentSquare().getXCoordinate();
         int yCoordinate = this.getParentSquare().getYCoordinate();
         List<ChessSquare> openSquares = new ArrayList<>();
-        //LinkedList<ChessSquare> verticalSquares = ChessView.pieceColumns.get(xCoordinate);
         LinkedList<ChessSquare> verticalSquares = chessBoard.getPieceColumns().get(xCoordinate);
         List<ChessSquare> forwardSquares = verticalSquares.subList(yCoordinate, verticalSquares.size());
         List<ChessSquare> backwardSquares = new ArrayList<>(verticalSquares.subList(0, yCoordinate - 1));
         Collections.reverse(backwardSquares);
-        //LinkedList<ChessSquare> horizontalSquares = ChessView.pieceRows.get(yCoordinate);
         LinkedList<ChessSquare> horizontalSquares = chessBoard.getPieceRows().get(yCoordinate);
         List<ChessSquare> rightSquares = horizontalSquares.subList(xCoordinate, horizontalSquares.size());
         List<ChessSquare> leftSquares = new ArrayList<>(horizontalSquares.subList(0, xCoordinate - 1));
@@ -128,13 +123,11 @@ public abstract class ChessPiece {
         int diagonalUpIndex = 8 - xCoordinate + yCoordinate;
         int diagonalDownIndex = xCoordinate + yCoordinate - 1;
         List<ChessSquare> openSquares = new ArrayList<>();
-        //LinkedList<ChessSquare> diagonalUp = ChessView.pieceUpDiagonals.get(diagonalUpIndex);
         LinkedList<ChessSquare> diagonalUp = chessBoard.getPieceUpDiagonals().get(diagonalUpIndex);
         int pieceUpIndex = diagonalUp.indexOf(this.getParentSquare()) + 1;
         List<ChessSquare> upRight = diagonalUp.subList(pieceUpIndex, diagonalUp.size());
         List<ChessSquare> downLeft = new ArrayList<>(diagonalUp.subList(0, pieceUpIndex - 1));
         Collections.reverse(downLeft);
-        //LinkedList<ChessSquare> diagonalDown = ChessView.pieceDownDiagonals.get(diagonalDownIndex);
         LinkedList<ChessSquare> diagonalDown = chessBoard.getPieceDownDiagonals().get(diagonalDownIndex);
         int pieceDownIndex = diagonalDown.indexOf(this.getParentSquare()) + 1;
         List<ChessSquare> upLeft = diagonalDown.subList(pieceDownIndex, diagonalDown.size());

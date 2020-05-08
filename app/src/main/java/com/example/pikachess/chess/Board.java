@@ -1,17 +1,17 @@
-package com.example.gravity.chess;
+package com.example.pikachess.chess;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.example.gravity.chess.pieces.Bishop;
-import com.example.gravity.chess.pieces.Empty;
-import com.example.gravity.chess.pieces.King;
-import com.example.gravity.chess.pieces.Knight;
-import com.example.gravity.chess.pieces.Pawn;
-import com.example.gravity.chess.pieces.Queen;
-import com.example.gravity.chess.pieces.Rook;
+import com.example.pikachess.chess.pieces.Bishop;
+import com.example.pikachess.chess.pieces.Empty;
+import com.example.pikachess.chess.pieces.King;
+import com.example.pikachess.chess.pieces.Knight;
+import com.example.pikachess.chess.pieces.Pawn;
+import com.example.pikachess.chess.pieces.Queen;
+import com.example.pikachess.chess.pieces.Rook;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,10 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import static com.example.gravity.chess.ChessView.BORDER_WIDTH;
-import static com.example.gravity.chess.ChessView.OFFSET;
 import static java.lang.Math.abs;
-import static java.lang.Math.random;
 
 public class Board {
 
@@ -51,22 +48,22 @@ public class Board {
         for (ChessSquare chessSquare : board.getBoardSquares()) {
             boardSquares.add(new ChessSquare(chessSquare));
         }
-        assembleBoardGroups();
         playAsWhite = board.playAsWhite;
         turnToPlay = board.turnToPlay;
         mRect = board.mRect;
         mPaint = board.mPaint;
         squareSize = board.squareSize;
+        assembleBoardGroups();
     }
 
     private void assembleBoard() {
         boolean fillSquare = false;
         for (int i = 0; i < 8 ; i++){
             for (int j = 0; j < 8; j++){
-                int squareLeft = OFFSET + BORDER_WIDTH + i*squareSize;
-                int squareRight = OFFSET + BORDER_WIDTH + (i + 1)*squareSize;
-                int squareTop = OFFSET + BORDER_WIDTH + j*squareSize;
-                int squareBottom = OFFSET + BORDER_WIDTH + (j + 1)*squareSize;
+                int squareLeft = ChessView.OFFSET + ChessView.BORDER_WIDTH + i*squareSize;
+                int squareRight = ChessView.OFFSET + ChessView.BORDER_WIDTH + (i + 1)*squareSize;
+                int squareTop = ChessView.OFFSET + ChessView.BORDER_WIDTH + j*squareSize;
+                int squareBottom = ChessView.OFFSET + ChessView.BORDER_WIDTH + (j + 1)*squareSize;
                 int xCoordinate;
                 int yCoordinate;
                 if (playAsWhite) {
@@ -94,6 +91,39 @@ public class Board {
     }
 
     private ChessPiece getPieceFromCoordinates(int xCoordinate, int yCoordinate) {
+//        ChessPiece piece = null;
+//        PieceColour pieceColour = null;
+//        if (yCoordinate == 1 || yCoordinate == 2){
+//            pieceColour = PieceColour.White;
+//        }
+//        else if (yCoordinate == 7 || yCoordinate == 8) {
+//            pieceColour = PieceColour.Black;
+//        }
+//
+//        if (yCoordinate == 2 || yCoordinate == 7) {
+//            piece = new Pawn(pieceColour);
+//        }
+//        else if(yCoordinate == 1 || yCoordinate == 8) {
+//            switch (xCoordinate) {
+//                case 1:
+//                case 8:
+//                    piece = new Rook();
+//                    break;
+//                case 2:
+//                case 7:
+//                    piece = new Knight();
+//                    break;
+//                case 3:
+//                case 6:
+//                    piece = new Bishop();
+//                    break;
+//                case 4: piece = new Queen();
+//                    break;
+//                case 5: piece = new King();
+//                    break;
+//            }
+//        }
+
         ChessPiece piece = null;
         if (yCoordinate == 2 || yCoordinate == 7) {
             piece = new Pawn();
@@ -127,6 +157,7 @@ public class Board {
         else if (yCoordinate == 7 || yCoordinate == 8) {
             piece.setColour(PieceColour.Black);
         }
+
         return piece;
     }
 
@@ -217,22 +248,38 @@ public class Board {
     public List<ChessSquare> getSquaresUnderAttack() {
         List<ChessSquare> squaresUnderAttack = new ArrayList<>(); // refactor into multiple methods for readability
         for (ChessSquare chessSquare : boardSquares) {
-            try {
+//            try {
                 chessSquare.getPiece().setParentSquare(chessSquare); // this isn't ideal
                 List<ChessSquare> possibleMoves = chessSquare.getPiece().getPieceSpecificAttackingMoves(this);
                 if (possibleMoves != null) {
                     for (ChessSquare possibleMove : possibleMoves) {
                         if (possibleMove.getPiece().getId() != ChessPieceId.NoPiece && possibleMove.getPiece().getColour() != chessSquare.getPiece().getColour()) {
+                            if (possibleMove.getXCoordinate() == 4 && possibleMove.getYCoordinate() == 2) { // just debugging
+                                System.out.println();
+
+                            }
+
                             squaresUnderAttack.add(possibleMove);
                         }
                     }
                 }
-            }
-            catch(Exception e) {
-                System.out.println();
-            }
+//            }
+//            catch(Exception e) {
+//                System.out.println();
+//            }
         }
         return squaresUnderAttack;
+    }
+
+    public boolean isSquareUnderAttack(ChessSquare chessSquare) {
+        boolean underAttack = false;
+        for (ChessSquare boardSquare : getSquaresUnderAttack()) {// get squares under attack usually uses a copy of the board.
+            if (chessSquare == boardSquare) {
+                underAttack = true;
+                break;
+            }
+        }
+        return underAttack;
     }
 //
 //    public List<ChessSquare> getAttackingSquares(ChessSquare defendingSquare) {

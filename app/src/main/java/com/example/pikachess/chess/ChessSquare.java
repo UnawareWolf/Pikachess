@@ -1,19 +1,13 @@
-package com.example.gravity.chess;
+package com.example.pikachess.chess;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.example.gravity.R;
+import com.example.pikachess.R;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class ChessSquare {
 

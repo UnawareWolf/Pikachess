@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gravity</string>
+    <string name="app_name">Pikachess</string>
     <string name="jeelo_world">Jeelo world!</string>
     <string name="play_chess">Play Chess</string>
     <string name="opponent">Opponent</string>
@@ -26,5 +26,6 @@
     <string-array name="background_array">
         <item>Shine</item>
         <item>Totodile</item>
+        <item>Sky</item>
     </string-array>
 </resources>

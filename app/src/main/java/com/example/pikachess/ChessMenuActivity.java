@@ -1,4 +1,4 @@
-package com.example.gravity;
+package com.example.pikachess;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,27 +7,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.pikachess.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ChessMenuActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private int mCount = 0;
-    private TextView mShowCount;
-    private EditText numToAdd;
-    private boolean computer;
     private List<Spinner> spinnerList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_chess_menu);
         spinnerList.add(setUpSpinner(R.id.opponent_spinner, R.array.opponents_array));
         spinnerList.add(setUpSpinner(R.id.player_colour_spinner, R.array.player_colour_array));
         spinnerList.add(setUpSpinner(R.id.computer_level_spinner, R.array.computer_level_array));
@@ -61,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             System.out.println(spinner.getSelectedItem());
         }
 
-        Intent chessIntent = new Intent(this, Gravitactivity.class);
+        Intent chessIntent = new Intent(this, ChessActivity.class);
         Bundle chessBundle = new Bundle();
         for (Spinner spinner : spinnerList) {
             chessBundle.putString(String.valueOf(spinner.getId()), spinner.getSelectedItem().toString());
