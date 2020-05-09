@@ -9,4 +9,5 @@
     <color name="selectedSquareColour">#6dbf3b</color>
     <color name="buttonGrey">#c8c8c8</color>
     <color name="chessWhite">#dedede</color>
+    <color name="lastMove">#fcba03</color>
 </resources>

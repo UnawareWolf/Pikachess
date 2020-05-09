@@ -15,20 +15,14 @@ import java.util.List;
 
 public class Queen extends ChessPiece {
 
-    ChessPieceId id = ChessPieceId.Queen;
-    int score = 8;
-
-    public Queen() {
-        super();
-    }
-
     public Queen(PieceColour colour) {
         super(colour);
+        this.id = ChessPieceId.Queen;
+        this.score = 8;
     }
 
     public Queen(Queen chessPiece) {
         super(chessPiece);
-        id = chessPiece.id;
     }
 
     @Override

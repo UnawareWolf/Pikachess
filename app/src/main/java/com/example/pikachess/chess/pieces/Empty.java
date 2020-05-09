@@ -11,18 +11,14 @@ import com.example.pikachess.chess.PieceColour;
 import java.util.List;
 
 public class Empty extends ChessPiece {
-
-    ChessPieceId id = ChessPieceId.NoPiece;
-    int score = 0;
-
     public Empty() {
-        super();
-        colour = PieceColour.NoColour;
+        super(PieceColour.NoColour);
+        this.id = ChessPieceId.NoPiece;
+        this.score = 0;
     }
 
     public Empty(Empty chessPiece) {
         super(chessPiece);
-        id = chessPiece.id;
     }
 
     @Override

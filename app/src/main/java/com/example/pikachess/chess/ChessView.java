@@ -59,6 +59,8 @@ public class ChessView extends View {
         canvas.drawBitmap(backgroundImage, 0, 0, null);
         drawBoardBorder(canvas);
         chessBoard.drawBoard(context, canvas);
+        setGameOverIfValidConditions();
+        highlightLastMove(canvas);
         highlightTouchedChessSquares(canvas);
         drawConfirmMoveButton(canvas);
         chessBoard.drawAllChessPieces(canvas);
@@ -77,7 +79,8 @@ public class ChessView extends View {
                 invalidate();
             }
             if(secondTouched && confirmMoveButtonBounds.squareContainsCoordinates(confirmMoveButtonBounds, xTouch, yTouch)) {
-                executeMoveAndSetAttrsIfValidConditions();
+                ChessMove humanMove = new ChessMove(selectedSquare, secondSelectedSquare);
+                executeMoveAndSetAttrsIfValidConditions(humanMove);
                 makeAIMoveIfOpponentIsAIAndGameStateNormal();
                 invalidate();
             }
@@ -85,7 +88,7 @@ public class ChessView extends View {
         if (gameState == GameState.PromotionMenu && event.getAction() == MotionEvent.ACTION_DOWN) {
             ChessSquare promotionSquare = getTouchedPromotionSquare();
             if (promotionSquare != null) {
-                promoteSquare(promotionSquare);
+                promoteSquare(promotionSquare.getPiece());
                 gameState = GameState.Normal;
                 makeAIMoveIfOpponentIsAIAndGameStateNormal();
                 invalidate();
@@ -132,10 +135,10 @@ public class ChessView extends View {
         }
     }
 
-    private void promoteSquare(ChessSquare promotionSquare) {
+    private void promoteSquare(ChessPiece promotionPiece) {
         ChessSquare lastMoveSquareTo = chessBoard.getLastMove().getSquareTo();
         ChessSquare squareToPromote = chessBoard.getChessSquare(lastMoveSquareTo.getXCoordinate(), lastMoveSquareTo.getYCoordinate());
-        squareToPromote.setPiece(promotionSquare.getPiece());
+        squareToPromote.setPiece(promotionPiece);
         squareToPromote.getPiece().resizePieceImage(squareSize);
         squareToPromote.getPiece().setParentSquare(squareToPromote);
         squareToPromote.getPiece().setHasMoved();
@@ -151,22 +154,83 @@ public class ChessView extends View {
         return touchedSquare;
     }
 
-    private void executeMoveAndSetAttrsIfValidConditions() {
-        ChessMove chessMoveStore = new ChessMove(new ChessSquare(selectedSquare), new ChessSquare(secondSelectedSquare));
-        ChessMove confirmedMove = new ChessMove(selectedSquare, secondSelectedSquare);
+    private void executeMoveAndSetAttrsIfValidConditions(ChessMove confirmedMove) {
+        ChessMove chessMoveStore = new ChessMove(confirmedMove);
         chessBoard.storeMove(chessMoveStore);
         chessBoard.executeMove(confirmedMove);
         chessBoard.removePawnIfEnPassant();
         chessBoard.moveRookIfCastle();
         promotionMove = chessBoard.checkForPromotion();
         if (promotionMove != null) {
-            gameState = GameState.PromotionMenu;
+            if (computerToPlayNext()) {
+                Queen newQueen = new Queen(chessBoard.getTurnToPlay());
+                newQueen.setPieceImage(context);
+                promoteSquare(newQueen);
+            }
         }
         chessBoard.changeTurn();
         touched = false;
         secondTouched = false;
         greyOutConfirmMoveButton = true;
     }
+
+    private boolean computerToPlayNext() {
+        boolean computerTurn = false;
+        if (opponentIsAI) {
+            if ((chessBoard.getTurnToPlay() == PieceColour.White && !playAsWhite) || (chessBoard.getTurnToPlay() == PieceColour.Black && playAsWhite))  {
+                computerTurn = true;
+            }
+        }
+        return computerTurn;
+    }
+
+//
+//    private void makeAIMoveIfOpponentIsAIAndGameStateNormal() {
+//        if (opponentIsAI && gameState == GameState.Normal) {
+//            chessBoard.calculateAndExecuteAIMove();
+//            chessBoard.changeTurn();
+//        }
+//    }
+
+    private void makeAIMoveIfOpponentIsAIAndGameStateNormal() {
+        if (opponentIsAI && gameState == GameState.Normal) {
+            ChessMove computerMove = chessBoard.getBestAIMove();
+            if (computerMove != null) {
+                executeMoveAndSetAttrsIfValidConditions(computerMove);
+            }
+//            else {
+//                gameState = GameState.GameOver;
+//            }
+        }
+    }
+
+    private void setGameOverIfValidConditions() {
+        if (chessBoard.isGameCheckmate() || chessBoard.isInsufficientMaterial()) {
+            gameState = GameState.GameOver;
+        }
+    }
+
+//    private boolean isGameCheckmate() { // this includes stalemate but they should probably be separated.
+//        boolean checkmate = true;
+//        PieceColour colourOfLastMove = PieceColour.Black;
+//        if (chessBoard.getAllMoves().size() > 0) {
+//            colourOfLastMove = chessBoard.getLastMove().getPieceColourMoved();
+//        }
+//        for (ChessSquare chessSquare : chessBoard.getBoardSquares()) {
+//            if (chessSquare.getPiece().getColour() != colourOfLastMove && chessSquare.getPiece().getColour() != PieceColour.NoColour && chessSquare.getPiece().getLegalMoves(chessBoard).size() != 0) {
+//                checkmate = false;
+//            }
+//        }
+//        return checkmate;
+//    }
+//
+//    private boolean isInsufficientMaterial() {
+//        boolean insufficientMaterial = false;
+//        for (ChessPiece chessPiece : chessBoard.getAllPieces()) {
+//
+//        }
+//        return insufficientMaterial;
+//    }
 
     private void drawBoardBorder(Canvas canvas) {
         mPaint.setColor(getResources().getColor(R.color.chessBrown));
@@ -179,7 +243,8 @@ public class ChessView extends View {
     private void drawPromotionMenuIfPromotionState(Canvas canvas) {
         if (gameState == GameState.PromotionMenu) {
             double squareSizeDub = squareSize;
-            int menuWidth = (int) (squareSizeDub*(2/3.0));
+            double promotionMenuScaleFactor = 3/2.0;
+            int menuWidth = (int) (squareSizeDub*promotionMenuScaleFactor);
             int menuHeight = menuWidth*4;
             int menuLeft = promotionMove.getSquareTo().getBoundary().getLeft();
             int squareTop = promotionMove.getSquareTo().getBoundary().getTop();
@@ -196,6 +261,7 @@ public class ChessView extends View {
             promotionPieces.add(new ChessSquare(new Knight(colourLastMoved)));
             for (ChessSquare promotionPiece : promotionPieces) {
                 promotionPiece.getPiece().setPieceImage(context);
+                promotionPiece.getPiece().resizePieceImage(menuWidth);
                 SquareBounds pieceBound = new SquareBounds(menuLeft, squareTop, menuRight, squareTop + menuWidth);
                 promotionPiece.setBounds(pieceBound);
                 promotionPiece.getPiece().drawPiece(canvas, pieceBound);
@@ -232,19 +298,29 @@ public class ChessView extends View {
     }
 
     private void highlightTouchedChessSquares(Canvas canvas) {
-        if (touched) {
+        if (touched && gameState == GameState.Normal) {
             highlightChessSquare(canvas, selectedSquare);
         }
-        if (secondTouched) {
+        if (secondTouched && gameState == GameState.Normal) {
             highlightChessSquare(canvas, secondSelectedSquare);
             greyOutConfirmMoveButton = false;
         }
     }
 
+    private void highlightLastMove(Canvas canvas) {
+        if (chessBoard.getLastMove() != null) {
+            highlightChessSquare(canvas, chessBoard.getLastMove().getSquareTo(), R.color.lastMove);
+        }
+    }
+
     private void highlightChessSquare(Canvas canvas, ChessSquare squareToHighlight) {
+        highlightChessSquare(canvas, squareToHighlight, R.color.selectedSquareColour);
+    }
+
+    private void highlightChessSquare(Canvas canvas, ChessSquare squareToHighlight, int colourId) {
         mRect.set(squareToHighlight.getBoundary().getLeft(), squareToHighlight.getBoundary().getTop(), squareToHighlight.getBoundary().getRight(), squareToHighlight.getBoundary().getBottom());
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(getResources().getColor(R.color.selectedSquareColour));
+        mPaint.setColor(getResources().getColor(colourId));
         canvas.drawRect(mRect, mPaint);
     }
 
@@ -282,13 +358,6 @@ public class ChessView extends View {
             }
         }
         return touchedSquare;
-    }
-
-    private void makeAIMoveIfOpponentIsAIAndGameStateNormal() {
-        if (opponentIsAI && gameState == GameState.Normal) {
-            chessBoard.calculateAndExecuteAIMove();
-            chessBoard.changeTurn();
-        }
     }
 
     public int getSquareSize() {

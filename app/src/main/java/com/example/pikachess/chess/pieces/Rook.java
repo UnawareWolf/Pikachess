@@ -14,20 +14,14 @@ import java.util.List;
 
 public class Rook extends ChessPiece {
 
-    ChessPieceId id = ChessPieceId.Rook;
-    int score = 5;
-
-    public Rook() {
-        super();
-    }
-
     public Rook(Rook chessPiece) {
         super(chessPiece);
-        id = chessPiece.id;
     }
 
     public Rook(PieceColour colour) {
         super(colour);
+        this.id = ChessPieceId.Rook;
+        this.score = 5;
     }
 
     @Override

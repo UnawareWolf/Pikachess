@@ -16,11 +16,11 @@ public abstract class ChessPiece {
 
     protected PieceColour colour;
     protected Bitmap pieceImage;
-    protected SquareBounds location;
+    //protected SquareBounds location;
     protected ChessSquare parentSquare;
     protected boolean hasMoved = false;
-    protected ChessPieceId id; // try removing this.
-    private int score;
+    protected ChessPieceId id;
+    protected int score;
 
     public abstract void setPieceImage(Context context);
     public abstract ChessPieceId getId();
@@ -39,8 +39,6 @@ public abstract class ChessPiece {
         return this.hasMoved;
     }
 
-    public ChessPiece() {}
-
     public ChessPiece(PieceColour colour) {
         this.colour = colour;
     }
@@ -51,21 +49,22 @@ public abstract class ChessPiece {
 
     public ChessPiece(ChessPiece chessPiece) {
         colour = chessPiece.colour;
-        //id = chessPiece.id;
+        id = chessPiece.id;
         hasMoved = chessPiece.hasMoved;
+        score = chessPiece.score;
     }
 
 
 
     public abstract ChessPiece copyPiece();
 
-    public SquareBounds getLocation() {
-        return this.location;
-    }
-
-    public void setLocation(SquareBounds location) {
-        this.location = location;
-    }
+//    public SquareBounds getLocation() {
+//        return this.location;
+//    }
+//
+//    public void setLocation(SquareBounds location) {
+//        this.location = location;
+//    }
 
     void drawPiece(Canvas canvas, SquareBounds boundary) {
         canvas.drawBitmap(this.pieceImage, boundary.getLeft(), boundary.getTop(), null);
@@ -115,7 +114,6 @@ public abstract class ChessPiece {
         openSquares.addAll(addSquaresUntilBlocked(rightSquares));
         return openSquares;
     }
-
 
     protected List<ChessSquare> getDiagonalMoves(Board chessBoard) {
         int xCoordinate = this.getParentSquare().getXCoordinate();

@@ -17,18 +17,14 @@ import java.util.List;
 
 public class King extends ChessPiece {
 
-    ChessPieceId id = ChessPieceId.King;
-    int score = 5;
-
-
-    public King() {
-        super();
-    }
-
     public King(King chessPiece) {
         super(chessPiece);
-        id = chessPiece.id;
+    }
 
+    public King(PieceColour colour) {
+        super(colour);
+        this.id = ChessPieceId.King;
+        this.score = 5;
     }
 
     @Override
@@ -78,9 +74,7 @@ public class King extends ChessPiece {
                     legalMoves.add(leftSquares.get(leftSquares.size() - 3));
                 }
             }
-
         }
-
         return legalMoves;
     }
 
@@ -92,7 +86,7 @@ public class King extends ChessPiece {
         for (ChessSquare chessSquare : chessBoard.getBoardSquares()) {
             int targetX = chessSquare.getXCoordinate();
             int targetY = chessSquare.getYCoordinate();
-            if (chessSquare.getPiece().getId() != ChessPieceId.King && howFarToTheRight(xCoordinate, targetX) <= 1 && howFarToTheRight(xCoordinate, targetX) >= - 1 && howFarInFront(yCoordinate, targetY) <= 1 && howFarInFront(yCoordinate, targetY) >= -1) {
+            if (howFarToTheRight(xCoordinate, targetX) <= 1 && howFarToTheRight(xCoordinate, targetX) >= - 1 && howFarInFront(yCoordinate, targetY) <= 1 && howFarInFront(yCoordinate, targetY) >= -1) {
                 legalMoves.add(chessSquare);
             }
         }

@@ -13,6 +13,12 @@ public class ChessMove {
         this.squareTo = squareTo;
     }
 
+    public ChessMove(ChessMove chessMove) {
+        squareFrom = new ChessSquare(chessMove.squareFrom);
+        squareTo = new ChessSquare(chessMove.squareTo);
+        moveScore = chessMove.moveScore;
+    }
+
     public ChessMove() {}
 
     public ChessSquare getSquareFrom() {

@@ -14,21 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Knight extends ChessPiece {
-
-    ChessPieceId id = ChessPieceId.Knight;
-    int score = 3;
-
-    public Knight() {
-        super();
-    }
-
     public Knight(Knight chessPiece) {
         super(chessPiece);
-        id = chessPiece.id;
     }
 
     public Knight(PieceColour colour) {
         super(colour);
+        this.id = ChessPieceId.Knight;
+        this.score = 3;
     }
 
     @Override

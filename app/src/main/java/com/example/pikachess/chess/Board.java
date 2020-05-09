@@ -46,13 +46,14 @@ public class Board {
 
     public Board(Board board) {
         for (ChessSquare chessSquare : board.getBoardSquares()) {
-            boardSquares.add(new ChessSquare(chessSquare));
+            boardSquares.add(new ChessSquare(chessSquare)); // use copy method maybe
         }
         playAsWhite = board.playAsWhite;
         turnToPlay = board.turnToPlay;
         mRect = board.mRect;
         mPaint = board.mPaint;
         squareSize = board.squareSize;
+        chessMoves = board.chessMoves;
         assembleBoardGroups();
     }
 
@@ -91,73 +92,41 @@ public class Board {
     }
 
     private ChessPiece getPieceFromCoordinates(int xCoordinate, int yCoordinate) {
-//        ChessPiece piece = null;
-//        PieceColour pieceColour = null;
-//        if (yCoordinate == 1 || yCoordinate == 2){
-//            pieceColour = PieceColour.White;
-//        }
-//        else if (yCoordinate == 7 || yCoordinate == 8) {
-//            pieceColour = PieceColour.Black;
-//        }
-//
-//        if (yCoordinate == 2 || yCoordinate == 7) {
-//            piece = new Pawn(pieceColour);
-//        }
-//        else if(yCoordinate == 1 || yCoordinate == 8) {
-//            switch (xCoordinate) {
-//                case 1:
-//                case 8:
-//                    piece = new Rook();
-//                    break;
-//                case 2:
-//                case 7:
-//                    piece = new Knight();
-//                    break;
-//                case 3:
-//                case 6:
-//                    piece = new Bishop();
-//                    break;
-//                case 4: piece = new Queen();
-//                    break;
-//                case 5: piece = new King();
-//                    break;
-//            }
-//        }
-
         ChessPiece piece = null;
+        PieceColour pieceColour = null;
+        if (yCoordinate == 1 || yCoordinate == 2){
+            pieceColour = PieceColour.White;
+        }
+        else if (yCoordinate == 7 || yCoordinate == 8) {
+            pieceColour = PieceColour.Black;
+        }
+
         if (yCoordinate == 2 || yCoordinate == 7) {
-            piece = new Pawn();
+            piece = new Pawn(pieceColour);
         }
         else if(yCoordinate == 1 || yCoordinate == 8) {
             switch (xCoordinate) {
                 case 1:
                 case 8:
-                    piece = new Rook();
+                    piece = new Rook(pieceColour);
                     break;
                 case 2:
                 case 7:
-                    piece = new Knight();
+                    piece = new Knight(pieceColour);
                     break;
                 case 3:
                 case 6:
-                    piece = new Bishop();
+                    piece = new Bishop(pieceColour);
                     break;
-                case 4: piece = new Queen();
+                case 4: piece = new Queen(pieceColour);
                     break;
-                case 5: piece = new King();
+                case 5: piece = new King(pieceColour);
                     break;
             }
         }
         else {
             piece = new Empty();
         }
-        if (yCoordinate == 1 || yCoordinate == 2){
-            piece.setColour(PieceColour.White);
-        }
-        else if (yCoordinate == 7 || yCoordinate == 8) {
-            piece.setColour(PieceColour.Black);
-        }
-
         return piece;
     }
 
@@ -248,25 +217,15 @@ public class Board {
     public List<ChessSquare> getSquaresUnderAttack() {
         List<ChessSquare> squaresUnderAttack = new ArrayList<>(); // refactor into multiple methods for readability
         for (ChessSquare chessSquare : boardSquares) {
-//            try {
-                chessSquare.getPiece().setParentSquare(chessSquare); // this isn't ideal
-                List<ChessSquare> possibleMoves = chessSquare.getPiece().getPieceSpecificAttackingMoves(this);
-                if (possibleMoves != null) {
-                    for (ChessSquare possibleMove : possibleMoves) {
-                        if (possibleMove.getPiece().getId() != ChessPieceId.NoPiece && possibleMove.getPiece().getColour() != chessSquare.getPiece().getColour()) {
-                            if (possibleMove.getXCoordinate() == 4 && possibleMove.getYCoordinate() == 2) { // just debugging
-                                System.out.println();
-
-                            }
-
-                            squaresUnderAttack.add(possibleMove);
-                        }
+            chessSquare.getPiece().setParentSquare(chessSquare); // this isn't ideal
+            List<ChessSquare> possibleMoves = chessSquare.getPiece().getPieceSpecificAttackingMoves(this);
+            if (possibleMoves != null) {
+                for (ChessSquare possibleMove : possibleMoves) {
+                    if (possibleMove.getPiece().getId() != ChessPieceId.NoPiece && possibleMove.getPiece().getColour() != chessSquare.getPiece().getColour()) {
+                        squaresUnderAttack.add(possibleMove);
                     }
                 }
-//            }
-//            catch(Exception e) {
-//                System.out.println();
-//            }
+            }
         }
         return squaresUnderAttack;
     }
@@ -400,6 +359,28 @@ public class Board {
         executeMove(randMove);
     }
 
+    public ChessMove getBestAIMove() {
+        List<ChessMove> allLegalMoves = getAllLegalMoves();
+        Random rand = new Random();
+        List<ChessMove> bestMoves = new ArrayList<>();
+        int bestScore = Integer.MIN_VALUE;
+        for (ChessMove rankedMove : allLegalMoves) {
+            Board boardCopy = new Board(this);
+            ChessMove moveCopy = boardCopy.getMoveOnDuplicateBoard(rankedMove);
+            int moveScore = boardCopy.executeMoveAndReturnScore(moveCopy);
+            rankedMove.setMoveScore(moveScore);
+            if (moveScore >= bestScore) {
+                bestMoves.add(rankedMove);
+                bestScore = moveScore;
+            }
+        }
+        ChessMove moveToExecute = null;
+        if (bestMoves.size() > 0) {
+            moveToExecute = bestMoves.get(rand.nextInt(bestMoves.size()));
+        }
+        return moveToExecute;
+    }
+
     private ChessMove getMoveOnDuplicateBoard(ChessMove chessMove) {
         ChessSquare copySquareFrom = getChessSquare(chessMove.getSquareFrom().getXCoordinate(), chessMove.getSquareFrom().getYCoordinate());
         ChessSquare copySquareTo = getChessSquare(chessMove.getSquareTo().getXCoordinate(), chessMove.getSquareTo().getYCoordinate());
@@ -490,5 +471,37 @@ public class Board {
                 chessSquare.getPiece().drawPiece(canvas, chessSquare.getBoundary()); // maybe actually set location in piece
             }
         }
+    }
+
+    public boolean isGameCheckmate() { // this includes stalemate but they should probably be separated.
+        boolean checkmate = true;
+        PieceColour colourOfLastMove = PieceColour.Black;
+        if (this.getAllMoves().size() > 0) {
+            colourOfLastMove = this.getLastMove().getPieceColourMoved();
+        }
+        for (ChessSquare chessSquare : this.getBoardSquares()) {
+            if (chessSquare.getPiece().getColour() != colourOfLastMove && chessSquare.getPiece().getColour() != PieceColour.NoColour && chessSquare.getPiece().getLegalMoves(this).size() != 0) {
+                checkmate = false;
+            }
+        }
+        return checkmate;
+    }
+
+    public boolean isInsufficientMaterial() {
+        boolean insufficientMaterial = false;
+        for (ChessPiece chessPiece : this.getAllPieces()) {
+
+        }
+        return insufficientMaterial;
+    }
+
+    public List<ChessPiece> getAllPieces() {
+        List<ChessPiece> allPieces = new ArrayList<>();
+        for (ChessSquare chessSquare : boardSquares) {
+            if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
+                allPieces.add(chessSquare.getPiece());
+            }
+        }
+        return allPieces;
     }
 }

@@ -14,21 +14,14 @@ import java.util.List;
 
 public class Bishop extends ChessPiece {
 
-    ChessPieceId id = ChessPieceId.Bishop;
-    int score = 3;
-
-    public Bishop() {
-        super();
-        // set id here and id can be part of superclass
-    }
-
     public Bishop(Bishop chessPiece) {
         super(chessPiece);
-        id = chessPiece.id;
     }
 
     public Bishop(PieceColour colour) {
         super(colour);
+        this.id = ChessPieceId.Bishop;
+        this.score = 3;
     }
 
     @Override
@@ -65,6 +58,4 @@ public class Bishop extends ChessPiece {
     public int getPieceScore() {
         return this.score;
     }
-
-
 }

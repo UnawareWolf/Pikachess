@@ -16,16 +16,14 @@ import java.util.List;
 
 public class Pawn extends ChessPiece {
 
-    ChessPieceId id = ChessPieceId.Pawn;
-    int score = 1;
-
-    public Pawn() {
-        super();
+    public Pawn(PieceColour colour) {
+        super(colour);
+        this.id = ChessPieceId.Pawn;
+        this.score = 1;
     }
 
     public Pawn(Pawn chessPiece) {
         super(chessPiece);
-        id = chessPiece.id;
     }
 
     @Override
@@ -96,9 +94,6 @@ public class Pawn extends ChessPiece {
                 }
             }
         }
-
-
-
         return legalMoves;
     }
 
@@ -111,5 +106,4 @@ public class Pawn extends ChessPiece {
     public int getPieceScore() {
         return this.score;
     }
-
 }
