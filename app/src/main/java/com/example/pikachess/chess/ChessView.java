@@ -1,6 +1,7 @@
 package com.example.pikachess.chess;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -18,6 +19,14 @@ import com.example.pikachess.chess.pieces.Knight;
 import com.example.pikachess.chess.pieces.Queen;
 import com.example.pikachess.chess.pieces.Rook;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +39,7 @@ public class ChessView extends View {
     private boolean touched = false;
     private boolean secondTouched = false;
     private boolean newBoard = true;
+    private boolean newGame;
     private boolean greyOutConfirmMoveButton = true;
     private int canvasWidth;
     private int squareSize;
@@ -42,6 +52,7 @@ public class ChessView extends View {
     private ChessSquare selectedSquare;
     private ChessSquare secondSelectedSquare;
     private SquareBounds confirmMoveButtonBounds = new SquareBounds();
+    private SquareBounds saveGameButtonBounds = new SquareBounds();
     private List<ChessSquare> promotionPieces = new ArrayList<>();
     private ChessMove promotionMove = new ChessMove();
     private GameState gameState = GameState.Normal;
@@ -56,6 +67,13 @@ public class ChessView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         setupBoardIfNewBoard();
+        try {
+            loadSavedBoard();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         canvas.drawBitmap(backgroundImage, 0, 0, null);
         drawBoardBorder(canvas);
         chessBoard.drawBoard(context, canvas);
@@ -63,6 +81,7 @@ public class ChessView extends View {
         highlightLastMove(canvas);
         highlightTouchedChessSquares(canvas);
         drawConfirmMoveButton(canvas);
+        drawSaveGameButton(canvas);
         chessBoard.drawAllChessPieces(canvas);
         drawPromotionMenuIfPromotionState(canvas);
     }
@@ -84,6 +103,35 @@ public class ChessView extends View {
                 makeAIMoveIfOpponentIsAIAndGameStateNormal();
                 invalidate();
             }
+            if (saveGameButtonBounds.squareContainsCoordinates(saveGameButtonBounds, xTouch, yTouch)) {
+                FileOutputStream fos = null;
+                try {
+                    fos = context.openFileOutput("hi.txt", Context.MODE_PRIVATE);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ObjectOutputStream os = null;
+                try {
+                    os = new ObjectOutputStream(fos);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    os.writeObject(chessBoard);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         if (gameState == GameState.PromotionMenu && event.getAction() == MotionEvent.ACTION_DOWN) {
             ChessSquare promotionSquare = getTouchedPromotionSquare();
@@ -98,7 +146,7 @@ public class ChessView extends View {
     }
 
     private void setupBoardIfNewBoard() {
-        if (newBoard) {
+        if (newBoard && newGame) {
             canvasWidth = getWidth();
             boardSize = canvasWidth - 2*OFFSET - 2*BORDER_WIDTH;
             squareSize = boardSize/8;
@@ -112,11 +160,29 @@ public class ChessView extends View {
         }
     }
 
+    private void loadSavedBoard() throws IOException, ClassNotFoundException {
+        if (!newGame) {
+            canvasWidth = getWidth();
+            boardSize = canvasWidth - 2*OFFSET - 2*BORDER_WIDTH;
+            squareSize = boardSize/8;
+            FileInputStream fis = context.openFileInput("hi.txt");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            chessBoard = (Board) is.readObject();
+            is.close();
+            fis.close();
+            chessBoard.setAttsOfLoadGame(mPaint, mRect);
+            chessBoard.initialisePieceBitmaps(context);
+            chessBoard.resizePieceBitmaps();
+            newBoard = false;
+        }
+    }
+
     private void assignSettings() {
         Bundle chessBundle = ((ChessActivity) context).getIntent().getExtras();
         if (chessBundle != null) {
             opponentIsAI = chessBundle.getString(String.valueOf(R.id.opponent_spinner)).equals("Computer");
             playAsWhite = chessBundle.getString(String.valueOf(R.id.player_colour_spinner)).equals("White");
+            newGame = chessBundle.getString(String.valueOf(R.id.load_game_spinner)).equals("New Game");
             if (chessBundle.getString(String.valueOf(R.id.computer_level_spinner)).equals("Easy")) {
             }
             else {
@@ -274,7 +340,7 @@ public class ChessView extends View {
         int buttonWidth = canvasWidth/4;
         int buttonHeight = buttonWidth/3;
         int buttonLeft = OFFSET + BORDER_WIDTH/2;
-        int buttonTop = canvasWidth - BORDER_WIDTH/2;
+        int buttonTop = canvasWidth + BORDER_WIDTH/2;
         int buttonRight = buttonLeft + buttonWidth;
         int buttonBottom = buttonTop + buttonHeight;
         confirmMoveButtonBounds.set(buttonLeft, buttonTop, buttonRight, buttonBottom);
@@ -295,6 +361,28 @@ public class ChessView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setTextSize(80 - 2*BORDER_WIDTH);
         canvas.drawText("Confirm", buttonLeft + BORDER_WIDTH, buttonBottom - 2*BORDER_WIDTH, mPaint);
+    }
+
+    private void drawSaveGameButton(Canvas canvas) {
+        int buttonWidth = canvasWidth/4;
+        int buttonHeight = buttonWidth/3;
+        int buttonLeft = OFFSET + BORDER_WIDTH/2;
+        int buttonTop = canvasWidth + OFFSET + BORDER_WIDTH/2 + buttonHeight;
+        int buttonRight = buttonLeft + buttonWidth;
+        int buttonBottom = buttonTop + buttonHeight;
+        saveGameButtonBounds.set(buttonLeft, buttonTop, buttonRight, buttonBottom);
+        mRect.set(buttonLeft, buttonTop, buttonRight, buttonBottom);
+        mPaint.setColor(getResources().getColor(R.color.buttonGrey));
+        mPaint.setAlpha(255);
+        mPaint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(mRect, mPaint);
+        mPaint.setColor(Color.BLACK);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(BORDER_WIDTH);
+        canvas.drawRect(mRect, mPaint);
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setTextSize(66 - 2*BORDER_WIDTH);
+        canvas.drawText("Save Game", buttonLeft + BORDER_WIDTH, buttonBottom - 2*BORDER_WIDTH, mPaint);
     }
 
     private void highlightTouchedChessSquares(Canvas canvas) {

@@ -8,6 +8,7 @@
     <string name="computer_level">AI Level</string>
     <string name="my_image_string">Image</string>
     <string name="confirm_move">Confirm</string>
+    <string name="load_game">Load Game</string>
     <string name="text_vertical_offset">0.05</string>
     <string-array name="opponents_array">
         <item>Computer</item>
@@ -27,5 +28,9 @@
         <item>Shine</item>
         <item>Totodile</item>
         <item>Sky</item>
+    </string-array>
+    <string-array name="load_game_array">
+        <item>New Game</item>
+        <item>Continue</item>
     </string-array>
 </resources>

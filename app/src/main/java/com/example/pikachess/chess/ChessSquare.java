@@ -8,8 +8,11 @@ import android.graphics.Rect;
 import com.example.pikachess.R;
 
 import java.util.LinkedList;
+import java.io.Serializable;
 
-public class ChessSquare {
+public class ChessSquare implements Serializable {
+
+    private static final long serialVersionUID = 9075154632104430357L;
 
     private SquareBounds boundary;
     private ChessPiece piece;

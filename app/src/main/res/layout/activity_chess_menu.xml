@@ -20,16 +20,29 @@
         app:layout_constraintVertical_bias="0.05" />
 
     <TextView
-        android:id="@+id/opponent_text"
+        android:id="@+id/load_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/opponent"
+        android:text="@string/load_game"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/goGravity"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/goGravity"
         app:layout_constraintTop_toBottomOf="@+id/goGravity"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <TextView
+        android:id="@+id/opponent_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/opponent"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/load_game"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/load_game"
+        app:layout_constraintTop_toBottomOf="@+id/load_game"
         app:layout_constraintVertical_bias="0.05" />
 
     <TextView
@@ -46,13 +59,25 @@
         app:layout_constraintVertical_bias="0.05" />
 
     <Spinner
+        android:id="@+id/load_game_spinner"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/load_game"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toEndOf="@+id/load_game"
+        app:layout_constraintTop_toTopOf="@+id/load_game"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Spinner
         android:id="@+id/opponent_spinner"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/opponent_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toEndOf="@+id/opponent_text"
         app:layout_constraintTop_toTopOf="@+id/opponent_text"
         app:layout_constraintVertical_bias="0.0" />
@@ -64,6 +89,7 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/computer_level"
         app:layout_constraintEnd_toEndOf="@+id/opponent_spinner"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="@+id/opponent_spinner"
         app:layout_constraintTop_toTopOf="@+id/computer_level" />
 
@@ -74,6 +100,7 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/background"
         app:layout_constraintEnd_toEndOf="@+id/opponent_spinner"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="@+id/opponent_spinner"
         app:layout_constraintTop_toTopOf="@+id/background" />
 
@@ -84,6 +111,7 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/player_colour_text"
         app:layout_constraintEnd_toEndOf="@+id/opponent_spinner"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="@+id/opponent_spinner"
         app:layout_constraintTop_toTopOf="@+id/player_colour_text"
         app:layout_constraintVertical_bias="1.0" />

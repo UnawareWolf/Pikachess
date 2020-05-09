@@ -1,6 +1,7 @@
 package com.example.pikachess.chess;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -13,6 +14,8 @@ import com.example.pikachess.chess.pieces.Pawn;
 import com.example.pikachess.chess.pieces.Queen;
 import com.example.pikachess.chess.pieces.Rook;
 
+import java.io.FileOutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,18 +23,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.io.Serializable;
 
 import static java.lang.Math.abs;
 
-public class Board {
+public class Board implements Serializable {
+
+    private static final long serialVersionUID = -3260725907362448199L;
 
     private List<ChessSquare> boardSquares = new ArrayList<>();
     private Map<Integer, LinkedList<ChessSquare>> pieceColumns = new HashMap<>();
     private Map<Integer, LinkedList<ChessSquare>> pieceRows = new HashMap<>();
     private Map<Integer, LinkedList<ChessSquare>> pieceUpDiagonals = new HashMap<>();
     private Map<Integer, LinkedList<ChessSquare>> pieceDownDiagonals = new HashMap<>();
-    private Rect mRect = new Rect();
-    private Paint mPaint = new Paint();
+    private transient Rect mRect = new Rect();
+    private transient Paint mPaint = new Paint();
     private int squareSize;
     private LinkedList<ChessMove> chessMoves = new LinkedList<>();
     private boolean playAsWhite;
@@ -503,5 +509,19 @@ public class Board {
             }
         }
         return allPieces;
+    }
+
+    public void setAttsOfLoadGame(Paint mPaint, Rect mRect) {
+        this.mPaint = mPaint;
+        this.mRect = mRect;
+    }
+
+    public void writeBoardToFile() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        URL url = classLoader.getResource("");
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + url);
+
+
+        //FileOutputStream
     }
 }

@@ -1,8 +1,11 @@
 package com.example.pikachess.chess;
 
 import static java.lang.Math.abs;
+import java.io.Serializable;
 
-public class ChessMove {
+public class ChessMove implements Serializable {
+
+    private static final long serialVersionUID = -2178502012430071880L;
 
     private ChessSquare squareFrom;
     private ChessSquare squareTo;

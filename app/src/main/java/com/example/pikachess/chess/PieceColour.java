@@ -1,6 +1,8 @@
 package com.example.pikachess.chess;
 
-public enum PieceColour {
+import java.io.Serializable;
+
+public enum PieceColour implements Serializable {
     Black(),
     White(),
     NoColour();

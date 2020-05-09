@@ -26,6 +26,7 @@ public class ChessMenuActivity extends AppCompatActivity implements AdapterView.
         spinnerList.add(setUpSpinner(R.id.player_colour_spinner, R.array.player_colour_array));
         spinnerList.add(setUpSpinner(R.id.computer_level_spinner, R.array.computer_level_array));
         spinnerList.add(setUpSpinner(R.id.background_spinner, R.array.background_array));
+        spinnerList.add(setUpSpinner(R.id.load_game_spinner, R.array.load_game_array));
     }
 
     public Spinner setUpSpinner(int spinnerId, int spinnerArray) {
@@ -39,22 +40,13 @@ public class ChessMenuActivity extends AppCompatActivity implements AdapterView.
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     public void goGravity(View view) {
-
-        for (Spinner spinner : spinnerList) {
-            System.out.println(R.id.opponent_spinner);
-            System.out.println(spinner.getId());
-            System.out.println(spinner.getSelectedItem());
-        }
-
         Intent chessIntent = new Intent(this, ChessActivity.class);
         Bundle chessBundle = new Bundle();
         for (Spinner spinner : spinnerList) {

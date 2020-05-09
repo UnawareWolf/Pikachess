@@ -11,11 +11,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.Serializable;
 
-public abstract class ChessPiece {
+public abstract class ChessPiece implements Serializable {
+
+    private static final long serialVersionUID = 4661494751713456981L;
 
     protected PieceColour colour;
-    protected Bitmap pieceImage;
+    protected transient Bitmap pieceImage;
     //protected SquareBounds location;
     protected ChessSquare parentSquare;
     protected boolean hasMoved = false;

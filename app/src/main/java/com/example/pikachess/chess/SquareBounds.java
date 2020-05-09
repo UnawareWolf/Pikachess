@@ -1,6 +1,10 @@
 package com.example.pikachess.chess;
 
-public class SquareBounds {
+import java.io.Serializable;
+
+public class SquareBounds implements Serializable {
+
+    private static final long serialVersionUID = 2814514746483458203L;
 
     private int left;
     private int top;
