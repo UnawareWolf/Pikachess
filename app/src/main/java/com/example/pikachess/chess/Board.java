@@ -43,6 +43,8 @@ public class Board implements Serializable {
     private boolean playAsWhite;
     private PieceColour turnToPlay = PieceColour.White;
 
+    private boolean opponentIsAI;
+
     public Board(ChessView chessView, boolean playAsWhite) {
         this.squareSize = chessView.getSquareSize();
         this.playAsWhite = playAsWhite;
@@ -56,10 +58,13 @@ public class Board implements Serializable {
         }
         playAsWhite = board.playAsWhite;
         turnToPlay = board.turnToPlay;
-        mRect = board.mRect;
-        mPaint = board.mPaint;
+        if (board.mPaint != null && board.mRect != null) {
+            mRect = board.mRect;
+            mPaint = board.mPaint;
+        }
         squareSize = board.squareSize;
         chessMoves = board.chessMoves;
+        opponentIsAI = board.opponentIsAI;
         assembleBoardGroups();
     }
 
@@ -197,8 +202,8 @@ public class Board implements Serializable {
 
     public void resizePieceBitmaps() {
         for (ChessSquare chessSquare : boardSquares) {
-            ChessPiece newPiece = chessSquare.getPiece();
-            ChessPieceId newID = chessSquare.getPiece().getId();
+//            ChessPiece newPiece = chessSquare.getPiece();
+//            ChessPieceId newID = chessSquare.getPiece().getId();
             if (chessSquare.getPiece().getId() != ChessPieceId.NoPiece) {
                 chessSquare.getPiece().resizePieceImage(squareSize); //not ideal because if there are multiple instances of each piece, there will be multiple images stored.
             } // maybe do something like a set of pieces to avoid duplicates.
@@ -318,7 +323,6 @@ public class Board implements Serializable {
                     }
                 }
             }
-
         }
     }
 
@@ -439,7 +443,13 @@ public class Board implements Serializable {
     }
 
     public void executeMove(ChessMove move) {
-        move.getSquareTo().setPiece(move.getSquareFrom().getPiece());
+//        ChessSquare squareFrom = this.getChessSquare(move.getSquareFrom().getXCoordinate(), move.getSquareFrom().getYCoordinate());
+//        ChessSquare squareTo = this.getChessSquare(move.getSquareTo().getXCoordinate(), move.getSquareTo().getYCoordinate());
+//        squareTo.setPiece(squareFrom.getPiece());
+//        squareTo.getPiece().setHasMoved();
+//        squareTo.getPiece().setParentSquare(squareTo);
+//        squareFrom.setPiece(new Empty());
+                move.getSquareTo().setPiece(move.getSquareFrom().getPiece());
         move.getSquareTo().getPiece().setHasMoved();
         move.getSquareTo().getPiece().setParentSquare(move.getSquareTo());
         move.getSquareFrom().setPiece(new Empty());
@@ -516,12 +526,11 @@ public class Board implements Serializable {
         this.mRect = mRect;
     }
 
-    public void writeBoardToFile() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL url = classLoader.getResource("");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + url);
+    public void setOpponentIsAI(boolean opponentIsAI) {
+        this.opponentIsAI = opponentIsAI;
+    }
 
-
-        //FileOutputStream
+    public boolean isOpponentAI() {
+        return this.opponentIsAI;
     }
 }

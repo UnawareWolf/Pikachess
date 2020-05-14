@@ -1,6 +1,7 @@
 package com.example.pikachess.chess;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,9 +14,12 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.pikachess.ChessActivity;
+import com.example.pikachess.GameActivity;
 import com.example.pikachess.R;
 import com.example.pikachess.chess.pieces.Bishop;
+import com.example.pikachess.chess.pieces.Empty;
 import com.example.pikachess.chess.pieces.Knight;
+import com.example.pikachess.chess.pieces.Pika;
 import com.example.pikachess.chess.pieces.Queen;
 import com.example.pikachess.chess.pieces.Rook;
 
@@ -34,12 +38,12 @@ public class ChessView extends View {
 
     public static final int OFFSET = 60;
     public static final int BORDER_WIDTH = 8;
-    private boolean opponentIsAI;
-    private boolean playAsWhite;
     private boolean touched = false;
     private boolean secondTouched = false;
     private boolean newBoard = true;
-    private boolean newGame;
+    private boolean loadBoard;
+    private boolean playAsWhite;
+    private boolean opponentIsAI;
     private boolean greyOutConfirmMoveButton = true;
     private int canvasWidth;
     private int squareSize;
@@ -56,27 +60,20 @@ public class ChessView extends View {
     private List<ChessSquare> promotionPieces = new ArrayList<>();
     private ChessMove promotionMove = new ChessMove();
     private GameState gameState = GameState.Normal;
-    private Context context;
 
     public ChessView(Context context) {
         super(context);
-        this.context = context;
+        //this.context = context;
         assignSettings();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         setupBoardIfNewBoard();
-        try {
-            loadSavedBoard();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        loadSavedBoard();
         canvas.drawBitmap(backgroundImage, 0, 0, null);
         drawBoardBorder(canvas);
-        chessBoard.drawBoard(context, canvas);
+        chessBoard.drawBoard(this.getContext(), canvas);
         setGameOverIfValidConditions();
         highlightLastMove(canvas);
         highlightTouchedChessSquares(canvas);
@@ -104,85 +101,93 @@ public class ChessView extends View {
                 invalidate();
             }
             if (saveGameButtonBounds.squareContainsCoordinates(saveGameButtonBounds, xTouch, yTouch)) {
-                FileOutputStream fos = null;
-                try {
-                    fos = context.openFileOutput("hi.txt", Context.MODE_PRIVATE);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                ObjectOutputStream os = null;
-                try {
-                    os = new ObjectOutputStream(fos);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    os.writeObject(chessBoard);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                saveBoard();
             }
         }
         if (gameState == GameState.PromotionMenu && event.getAction() == MotionEvent.ACTION_DOWN) {
             ChessSquare promotionSquare = getTouchedPromotionSquare();
             if (promotionSquare != null) {
-                promoteSquare(promotionSquare.getPiece());
-                gameState = GameState.Normal;
-                makeAIMoveIfOpponentIsAIAndGameStateNormal();
-                invalidate();
+                if (promotionSquare.getPiece().getId() == ChessPieceId.NoPiece) {
+                    startGameActivityIfPikaPromotion(promotionSquare.getPiece());
+                }
+                else {
+                    promoteSquare(promotionSquare.getPiece());
+                    gameState = GameState.Normal;
+                    makeAIMoveIfOpponentIsAIAndGameStateNormal();
+                    invalidate();
+                }
             }
         }
         return true;
     }
 
+    private void saveBoard() {
+        try {
+            FileOutputStream fos = null;
+            fos = this.getContext().openFileOutput("chessSave.ser", Context.MODE_PRIVATE);
+            ObjectOutputStream os = null;
+            os = new ObjectOutputStream(fos);
+            os.writeObject(chessBoard);
+            os.close();
+            fos.close();
+        }
+        catch (Exception ignore){
+        }
+    }
+
+    private void startGameActivityIfPikaPromotion(ChessPiece piece) {
+        if (piece.getId() == ChessPieceId.NoPiece) {
+            Intent gameIntent = new Intent(this.getContext(), GameActivity.class);
+            gameIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.getContext().startActivity(gameIntent);
+        }
+    }
+
     private void setupBoardIfNewBoard() {
-        if (newBoard && newGame) {
+        if (newBoard && !loadBoard) {
             canvasWidth = getWidth();
             boardSize = canvasWidth - 2*OFFSET - 2*BORDER_WIDTH;
             squareSize = boardSize/8;
             chessBoard = new Board(this, playAsWhite);
-            chessBoard.initialisePieceBitmaps(context);
+            chessBoard.initialisePieceBitmaps(this.getContext());
             chessBoard.resizePieceBitmaps();
             if (!playAsWhite) {
                 makeAIMoveIfOpponentIsAIAndGameStateNormal();
             }
+            chessBoard.setOpponentIsAI(opponentIsAI);
             newBoard = false;
         }
     }
 
-    private void loadSavedBoard() throws IOException, ClassNotFoundException {
-        if (!newGame) {
+    private void loadSavedBoard() {
+        if (loadBoard) {
             canvasWidth = getWidth();
             boardSize = canvasWidth - 2*OFFSET - 2*BORDER_WIDTH;
             squareSize = boardSize/8;
-            FileInputStream fis = context.openFileInput("hi.txt");
-            ObjectInputStream is = new ObjectInputStream(fis);
-            chessBoard = (Board) is.readObject();
-            is.close();
-            fis.close();
+            try {
+                FileInputStream fis = this.getContext().openFileInput("chessSave.ser");
+                ObjectInputStream is = new ObjectInputStream(fis);
+                chessBoard = (Board) is.readObject();
+                is.close();
+                fis.close();
+            }
+            catch (Exception ignored) {
+            }
+            chessBoard.setOpponentIsAI(opponentIsAI);
             chessBoard.setAttsOfLoadGame(mPaint, mRect);
-            chessBoard.initialisePieceBitmaps(context);
+            chessBoard.initialisePieceBitmaps(this.getContext());
             chessBoard.resizePieceBitmaps();
             newBoard = false;
+            loadBoard = false;
         }
     }
 
     private void assignSettings() {
-        Bundle chessBundle = ((ChessActivity) context).getIntent().getExtras();
+        Bundle chessBundle = ((ChessActivity) this.getContext()).getIntent().getExtras();
         if (chessBundle != null) {
             opponentIsAI = chessBundle.getString(String.valueOf(R.id.opponent_spinner)).equals("Computer");
             playAsWhite = chessBundle.getString(String.valueOf(R.id.player_colour_spinner)).equals("White");
-            newGame = chessBundle.getString(String.valueOf(R.id.load_game_spinner)).equals("New Game");
+            loadBoard = !chessBundle.getString(String.valueOf(R.id.load_game_spinner)).equals("New Game");
             if (chessBundle.getString(String.valueOf(R.id.computer_level_spinner)).equals("Easy")) {
             }
             else {
@@ -230,8 +235,11 @@ public class ChessView extends View {
         if (promotionMove != null) {
             if (computerToPlayNext()) {
                 Queen newQueen = new Queen(chessBoard.getTurnToPlay());
-                newQueen.setPieceImage(context);
+                newQueen.setPieceImage(this.getContext());
                 promoteSquare(newQueen);
+            }
+            else {
+                gameState = GameState.PromotionMenu;
             }
         }
         chessBoard.changeTurn();
@@ -250,14 +258,6 @@ public class ChessView extends View {
         return computerTurn;
     }
 
-//
-//    private void makeAIMoveIfOpponentIsAIAndGameStateNormal() {
-//        if (opponentIsAI && gameState == GameState.Normal) {
-//            chessBoard.calculateAndExecuteAIMove();
-//            chessBoard.changeTurn();
-//        }
-//    }
-
     private void makeAIMoveIfOpponentIsAIAndGameStateNormal() {
         if (opponentIsAI && gameState == GameState.Normal) {
             ChessMove computerMove = chessBoard.getBestAIMove();
@@ -275,28 +275,6 @@ public class ChessView extends View {
             gameState = GameState.GameOver;
         }
     }
-
-//    private boolean isGameCheckmate() { // this includes stalemate but they should probably be separated.
-//        boolean checkmate = true;
-//        PieceColour colourOfLastMove = PieceColour.Black;
-//        if (chessBoard.getAllMoves().size() > 0) {
-//            colourOfLastMove = chessBoard.getLastMove().getPieceColourMoved();
-//        }
-//        for (ChessSquare chessSquare : chessBoard.getBoardSquares()) {
-//            if (chessSquare.getPiece().getColour() != colourOfLastMove && chessSquare.getPiece().getColour() != PieceColour.NoColour && chessSquare.getPiece().getLegalMoves(chessBoard).size() != 0) {
-//                checkmate = false;
-//            }
-//        }
-//        return checkmate;
-//    }
-//
-//    private boolean isInsufficientMaterial() {
-//        boolean insufficientMaterial = false;
-//        for (ChessPiece chessPiece : chessBoard.getAllPieces()) {
-//
-//        }
-//        return insufficientMaterial;
-//    }
 
     private void drawBoardBorder(Canvas canvas) {
         mPaint.setColor(getResources().getColor(R.color.chessBrown));
@@ -317,7 +295,7 @@ public class ChessView extends View {
             int menuRight = menuLeft + menuWidth;
             int menuBottom = squareTop + menuHeight;
             mRect.set(menuLeft, squareTop, menuRight, menuBottom);
-            mPaint.setColor(getResources().getColor(R.color.buttonGrey));
+            mPaint.setColor(getResources().getColor(R.color.chessBrown));
             canvas.drawRect(mRect, mPaint);
             promotionPieces = new ArrayList<>();
             PieceColour colourLastMoved = chessBoard.getAllMoves().getLast().getPieceColourMoved();
@@ -325,8 +303,9 @@ public class ChessView extends View {
             promotionPieces.add(new ChessSquare(new Rook(colourLastMoved)));
             promotionPieces.add(new ChessSquare(new Bishop(colourLastMoved)));
             promotionPieces.add(new ChessSquare(new Knight(colourLastMoved)));
+            promotionPieces.add(new ChessSquare(new Pika()));
             for (ChessSquare promotionPiece : promotionPieces) {
-                promotionPiece.getPiece().setPieceImage(context);
+                promotionPiece.getPiece().setPieceImage(this.getContext());
                 promotionPiece.getPiece().resizePieceImage(menuWidth);
                 SquareBounds pieceBound = new SquareBounds(menuLeft, squareTop, menuRight, squareTop + menuWidth);
                 promotionPiece.setBounds(pieceBound);

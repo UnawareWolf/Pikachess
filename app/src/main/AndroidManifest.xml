@@ -9,10 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.pikachess.ChessActivity">
-
-        </activity>
-        <activity android:name="com.example.pikachess.ChessMenuActivity">
+        <activity android:name=".GameActivity"></activity>
+        <activity android:name=".ChessActivity"></activity>
+        <activity android:name=".ChessMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
