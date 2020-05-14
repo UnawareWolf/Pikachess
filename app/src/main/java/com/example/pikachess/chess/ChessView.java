@@ -228,6 +228,7 @@ public class ChessView extends View {
     private void executeMoveAndSetAttrsIfValidConditions(ChessMove confirmedMove) {
         ChessMove chessMoveStore = new ChessMove(confirmedMove);
         chessBoard.storeMove(chessMoveStore);
+        chessBoard.storeBoardPosition();
         chessBoard.executeMove(confirmedMove);
         chessBoard.removePawnIfEnPassant();
         chessBoard.moveRookIfCastle();
@@ -271,7 +272,7 @@ public class ChessView extends View {
     }
 
     private void setGameOverIfValidConditions() {
-        if (chessBoard.isGameCheckmate() || chessBoard.isInsufficientMaterial()) {
+        if (chessBoard.isGameCheckmate() || chessBoard.isGameDraw()) {
             gameState = GameState.GameOver;
         }
     }

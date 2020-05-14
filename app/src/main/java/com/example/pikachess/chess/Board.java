@@ -42,8 +42,8 @@ public class Board implements Serializable {
     private LinkedList<ChessMove> chessMoves = new LinkedList<>();
     private boolean playAsWhite;
     private PieceColour turnToPlay = PieceColour.White;
-
     private boolean opponentIsAI;
+    private LinkedList<Board> boardPositions = new LinkedList<>();
 
     public Board(ChessView chessView, boolean playAsWhite) {
         this.squareSize = chessView.getSquareSize();
@@ -271,6 +271,10 @@ public class Board implements Serializable {
 
     public void storeMove(ChessMove chessMove) {
         this.chessMoves.add(chessMove);
+    }
+
+    public void storeBoardPosition() {
+        this.boardPositions.add(new Board(this));
     }
 
     public ChessMove getLastMove() {
@@ -503,12 +507,99 @@ public class Board implements Serializable {
         return checkmate;
     }
 
+    public boolean isGameDraw() {
+        boolean gameIsDraw = false;
+        if (isInsufficientMaterial() || isFiftyMoveStalemate() || isThreefoldRepetition()) {
+            gameIsDraw = true;
+        }
+        return gameIsDraw;
+    }
+//
+//    public boolean isThreefoldRepetition() {
+//        boolean threefoldRepetition = false;
+//        int numberOfMoves = 6;
+//        //numberOfRepetitionsOfCurrentBoardPosition(this);
+//        return threefoldRepetition;
+//    }
+
     public boolean isInsufficientMaterial() {
         boolean insufficientMaterial = false;
         for (ChessPiece chessPiece : this.getAllPieces()) {
 
         }
         return insufficientMaterial;
+    }
+
+    public boolean isFiftyMoveStalemate() {
+        boolean fiftyMoveStalemate = false;
+        int numberOfMoves = 100;
+        List<ChessMove> lastFiftyMoves = getLastNChessMoves(numberOfMoves);
+        if (lastFiftyMoves.size() > 0) {
+            if (!hasPawnAdvanced(lastFiftyMoves) && !hasPieceBeenCaptured(lastFiftyMoves)) {
+                fiftyMoveStalemate = true;
+            }
+        }
+        return fiftyMoveStalemate;
+    }
+
+    public List<ChessMove> getLastNChessMoves(int numberOfMoves) {
+        List<ChessMove> lastFiftyMoves = new ArrayList<>();
+        int moveListToIndex = this.getAllMoves().size() - 1;
+        int moveListFromIndex = moveListToIndex - numberOfMoves;
+        if (moveListFromIndex >= 0) {
+            lastFiftyMoves = this.getAllMoves().subList(moveListFromIndex, moveListToIndex);
+        }
+        return lastFiftyMoves;
+    }
+
+    public boolean hasPawnAdvanced(List<ChessMove> lastFiftyMoves) {
+        boolean pawnHasAdvanced = false;
+        for (ChessMove chessMove : lastFiftyMoves) {
+            if (chessMove.getPieceIdMoved() == ChessPieceId.Pawn) {
+                pawnHasAdvanced = true;
+            }
+        }
+        return pawnHasAdvanced;
+    }
+
+    public boolean hasPieceBeenCaptured(List<ChessMove> lastFiftyMoves) {
+        boolean pieceHasBeenCaptured = false;
+        for (ChessMove chessMove : lastFiftyMoves) {
+            if (chessMove.getPieceIdTaken() != ChessPieceId.NoPiece) {
+                pieceHasBeenCaptured = true;
+            }
+        }
+        return pieceHasBeenCaptured;
+    }
+
+    public boolean isThreefoldRepetition() {
+        boolean threefoldRepetition = false;
+//        int numberOfRepetitions = 0;
+//        if (boardPositions.size() > 0) {
+//            for (Board storedBoard : boardPositions) {
+//                if (areBoardPositionsEqual(storedBoard)) {
+//                    numberOfRepetitions++;
+//                }
+//            }
+//        }
+//        if (numberOfRepetitions >= 3) {
+//            threefoldRepetition = true;
+//        }
+        return threefoldRepetition;
+    }
+
+    private boolean areBoardPositionsEqual(Board storedBoard) {
+        boolean boardPositionsEqual = true;
+        for (ChessPiece storedPiece : storedBoard.getAllPieces()) {
+            int storedX = storedPiece.getParentSquare().getXCoordinate();
+            int storedY = storedPiece.getParentSquare().getYCoordinate();
+            ChessPiece pieceOnCurrentBoard = this.getPieceFromCoordinates(storedX, storedY);
+            if (pieceOnCurrentBoard.getId() != storedPiece.getId()) {
+                boardPositionsEqual = false;
+                break;
+            }
+        }
+        return boardPositionsEqual;
     }
 
     public List<ChessPiece> getAllPieces() {
