@@ -1,12 +1,12 @@
-package com.example.gravity;
+package com.example.pikachess;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.example.gravity.chess.ChessView;
+import com.example.pikachess.chess.ChessView;
 
-public class Gravitactivity extends AppCompatActivity {
+public class ChessActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

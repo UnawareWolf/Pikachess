@@ -1,4 +1,4 @@
-package com.example.gravity;
+package com.example.pikachess;
 
 import org.junit.Test;
 
