@@ -55,4 +55,10 @@ public class ChessMenuActivity extends AppCompatActivity implements AdapterView.
         chessIntent.putExtras(chessBundle);
         startActivity(chessIntent);
     }
+
+    public void startGame(View view) {
+        Intent gameIntent = new Intent(this, GameActivity.class);
+        gameIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(gameIntent);
+    }
 }

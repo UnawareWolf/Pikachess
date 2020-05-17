@@ -33,4 +33,5 @@
         <item>New Game</item>
         <item>Continue</item>
     </string-array>
+    <string name="play_game">(Play Game)</string>
 </resources>
