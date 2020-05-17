@@ -131,4 +131,8 @@ public class ChessSquare implements Serializable {
     public void setBounds(SquareBounds boundary) {
         this.boundary = boundary;
     }
+
+    public PieceColour getColour() {
+        return this.colour;
+    }
 }

@@ -462,7 +462,7 @@ public class Board implements Serializable {
 //        squareTo.getPiece().setHasMoved();
 //        squareTo.getPiece().setParentSquare(squareTo);
 //        squareFrom.setPiece(new Empty());
-                move.getSquareTo().setPiece(move.getSquareFrom().getPiece());
+        move.getSquareTo().setPiece(move.getSquareFrom().getPiece());
         move.getSquareTo().getPiece().setHasMoved();
         move.getSquareTo().getPiece().setParentSquare(move.getSquareTo());
         move.getSquareFrom().setPiece(new Empty());
@@ -533,8 +533,32 @@ public class Board implements Serializable {
 
     private boolean isInsufficientMaterial() {
         boolean insufficientMaterial = false;
-        for (ChessPiece chessPiece : this.getAllPieces()) {
-
+        List<ChessPiece> allPieces = this.getAllPieces();
+        if (allPieces.size() == 2) {
+            insufficientMaterial = true;
+        }
+        else if (allPieces.size() == 3) {
+            for (ChessPiece chessPiece : allPieces) {
+                if (chessPiece.getId() == ChessPieceId.Knight || chessPiece.getId() == ChessPieceId.Bishop) {
+                    insufficientMaterial = true;
+                    break;
+                }
+            }
+        }
+        else if (allPieces.size() == 4) {
+            PieceColour bishopColour = PieceColour.NoColour;
+            PieceColour bishopSquareColour = PieceColour.NoColour;
+            for (ChessPiece chessPiece : this.getAllPieces()) {
+                if (chessPiece.getId() == ChessPieceId.Bishop) {
+                    if (bishopColour == PieceColour.NoColour) {
+                        bishopColour = chessPiece.getColour();
+                        bishopSquareColour = chessPiece.getParentSquare().getColour();
+                    }
+                    else if (chessPiece.getColour() != bishopColour && chessPiece.getParentSquare().getColour() == bishopSquareColour){
+                        insufficientMaterial = true;
+                    }
+                }
+            }
         }
         return insufficientMaterial;
     }
