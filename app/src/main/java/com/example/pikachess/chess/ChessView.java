@@ -63,7 +63,6 @@ public class ChessView extends View {
 
     public ChessView(Context context) {
         super(context);
-        //this.context = context;
         assignSettings();
     }
 
@@ -243,6 +242,7 @@ public class ChessView extends View {
                 gameState = GameState.PromotionMenu;
             }
         }
+        //chessBoard.storeBoardPosition();
         chessBoard.changeTurn();
         touched = false;
         secondTouched = false;
