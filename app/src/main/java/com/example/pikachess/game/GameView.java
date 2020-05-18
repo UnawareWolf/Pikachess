@@ -14,7 +14,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Bitmap background;
     private MainThread thread;
-    private CharacterSpritesheet character;
+    //private CharacterSpritesheet character;
     private PikaGame pikaGame;
     private int canvasWidth;
 
@@ -31,9 +31,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         canvasWidth = getWidth();
-        pikaGame = new PikaGame(this.getContext(), canvasWidth);
-        character = new CharacterSpritesheet(BitmapFactory.decodeResource(getResources(), R.drawable.totodile), 0, 0);
-        background = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
+        pikaGame = new PikaGame(this.getContext(), this);
+        //character = new CharacterSpritesheet(BitmapFactory.decodeResource(getResources(), R.drawable.totodile), 0, 0);
+        //background = BitmapFactory.decodeResource(getResources(), R.drawable.totodile);
         thread.setRunning(true);
         thread.start();
     }
@@ -59,8 +59,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        character.update();
-
+        //character.update();
+        pikaGame.update();
     }
 
     @Override
@@ -76,7 +76,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        pikaGame.onTouchEvent(event);
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            pikaGame.getMainCharacter().setCharacterState(CharacterState.MovingRight);
+//        }
+//        else if (event.getAction() == MotionEvent.ACTION_UP) {
+//            pikaGame.getMainCharacter().setCharacterState(CharacterState.Stationary);
+//        }
 
         return true;
     }

@@ -14,7 +14,7 @@ import java.util.List;
 public class CharacterSpritesheet {
 
     private Bitmap image;
-    private static final int CHARACTER_SIZE = 120;
+    private static final int CHARACTER_SIZE = 240;
     private static final int NUMBER_OF_ANIMATIONS = 5;
     private int x,y;
     private int characterWidth;
@@ -22,6 +22,7 @@ public class CharacterSpritesheet {
     private int canvasWidth;
     Rect characterPos;
     private List<Rect> animationSections;
+    private int drawCount = 0;
     private int animationNumber = 0;
 
     public CharacterSpritesheet(Bitmap bmp,  int x, int y) {
@@ -35,6 +36,7 @@ public class CharacterSpritesheet {
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.peppapigsprites);
         //image.getWidth();
         characterWidth = image.getWidth() / NUMBER_OF_ANIMATIONS;
+        characterHeight = image.getHeight();
         this.x = canvasWidth / 2;
         this.y = canvasWidth / 2;
         animationSections = new ArrayList<>();
@@ -44,26 +46,46 @@ public class CharacterSpritesheet {
             int topLeftX = i*characterWidth;
             int topLeftY = 0;
             int bottomRightX = (i + 1)*characterWidth;
-            int bottomRightY = characterWidth;
+            int bottomRightY = characterHeight;
             Rect animationSection = new Rect();
             animationSection.set(topLeftX, topLeftY, bottomRightX, bottomRightY);
             animationSections.add(animationSection);
         }
     }
 
-    public void draw(Canvas canvas) {
-        canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, null);
-        nextAnimationNumber();
-        canvas.drawBitmap(image, x, y, null);
+    public void draw(Canvas canvas, CharacterState characterState) {
+        if (characterState == CharacterState.MovingRight) {
+            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, null);
+            nextAnimationNumber();
+        }
+        else if (characterState == CharacterState.Stationary) {
+            canvas.drawBitmap(image, animationSections.get(0), characterPos, null);
+        }
+        else {
+            canvas.drawBitmap(image, animationSections.get(0), characterPos, null);
+        }
+
+
+        //canvas.drawBitmap(image, x, y, null);
     }
 
     private void nextAnimationNumber() {
-        if (animationNumber < NUMBER_OF_ANIMATIONS - 1) {
-            animationNumber++;
+        if (drawCount > 3) {
+            if (animationNumber < NUMBER_OF_ANIMATIONS - 1) {
+                animationNumber++;
+            }
+            else {
+                animationNumber = 0;
+            }
+            drawCount = 0;
         }
-        else {
-            animationNumber = 0;
-        }
+        drawCount++;
+//        if (animationNumber < NUMBER_OF_ANIMATIONS - 1) {
+//            animationNumber++;
+//        }
+//        else {
+//            animationNumber = 0;
+//        }
     }
 
     public void update() {
