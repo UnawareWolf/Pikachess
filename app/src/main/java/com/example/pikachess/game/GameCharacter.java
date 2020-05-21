@@ -56,7 +56,7 @@ public class GameCharacter {
         }
         else if (characterState == CharacterState.MovingUp){
             xVel = 0;
-            yVel = 5;
+            yVel = -5;
             y--;
         }
         else if (characterState == CharacterState.MovingRight) {
@@ -66,7 +66,7 @@ public class GameCharacter {
         }
         else if (characterState == CharacterState.MovingDown){
             xVel = 0;
-            yVel = -5;
+            yVel = 5;
             y++;
         }
         else {

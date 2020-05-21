@@ -12,59 +12,97 @@ import static java.lang.Math.abs;
 
 public class JoystickButton {
 
-    private static final int CONTROL_PANEL_HEIGHT = 480;
-    private static final int PANEL_BORDER = 120;
-    private Rect mRect;
-    private Paint mPaint;
+    private static final int OUTER_RADIUS = 140;
+    private static final int INNER_RADIUS = 60;
+    private static final int DEAD_ZONE = 30;
+    //private Rect mRect;
+    private Paint outlinePaint;
+    private Paint innerPaint;
+    private Circle outerCircle;
+    private Circle innerCircle;
+    private Circle deadZoneCircle;
     private int canvasWidth;
     private int centreX;
     private int centreY;
     private boolean initialTouchWithinButton;
 
-    public JoystickButton(Context context, int canvasHeight) {
+    public JoystickButton(Context context, float centreX, float centreY) {
         //this.canvasWidth = canvasWidth;
-        mRect = new Rect();
-        mPaint = new Paint();
-        mPaint.setColor(context.getResources().getColor(R.color.chessBrown));
-        mPaint.setStrokeWidth(12);
-        mPaint.setStyle(Paint.Style.STROKE);
-        int rectLeft = PANEL_BORDER;
-        int rectTop = canvasHeight - CONTROL_PANEL_HEIGHT + PANEL_BORDER;
-        int rectRight = rectLeft + CONTROL_PANEL_HEIGHT - 2*PANEL_BORDER;
-        int rectBottom = canvasHeight - PANEL_BORDER;
-        centreX = (rectRight + rectLeft) / 2;
-        centreY = (rectBottom + rectTop) / 2;
-        mRect.set(rectLeft, rectTop, rectRight, rectBottom);
+//        this.centreX = centreX;
+//        this.centreY = centreY;
+        //mRect = new Rect();
+        outerCircle = new Circle(centreX, centreY, OUTER_RADIUS);
+        outlinePaint = new Paint();
+        outlinePaint.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
+        outlinePaint.setStrokeWidth(12);
+        outlinePaint.setStyle(Paint.Style.STROKE);
+
+        innerCircle = new Circle(centreX, centreY, INNER_RADIUS);
+        innerPaint = new Paint();
+        innerPaint.setColor(context.getResources().getColor(R.color.buttonGrey));
+        innerPaint.setStyle(Paint.Style.FILL);
+
+        deadZoneCircle = new Circle(centreX, centreY, DEAD_ZONE);
+
+        //mRect.set(rectLeft, rectTop, rectRight, rectBottom);
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawRect(mRect, mPaint);
+        outerCircle.draw(canvas, outlinePaint);
+        innerCircle.draw(canvas, innerPaint);
+        //canvas.drawCircle((float) circle.getX(), (float) circle.getY(), (float) circle.getRadius(), mPaint);
+        //canvas.drawRect(mRect, mPaint);
     }
 
-    public Rect getRect() {
-        return mRect;
-    }
+    //public Rect getRect() {
+//        return mRect;
+//    }
 
     public void onTouchEvent(MotionEvent event, GameCharacter mainCharacter) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            fingerMovingJoystick(event, mainCharacter);
+        float xTouch = event.getX();
+        float yTouch = event.getY();
+        if (event.getAction() == MotionEvent.ACTION_DOWN && isTouchWithinButton(xTouch, yTouch)) {
+            fingerMovingJoystick(mainCharacter, xTouch, yTouch);
+            initialTouchWithinButton = true;
+            //initialTouchWithinButton = isTouchWithinButton(xTouch, yTouch);
         }
         if (event.getAction() == MotionEvent.ACTION_MOVE && initialTouchWithinButton) {
-            fingerMovingJoystick(event, mainCharacter);
+            fingerMovingJoystick(mainCharacter, xTouch, yTouch);
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             mainCharacter.setCharacterState(CharacterState.Stationary);
+            innerCircle.setX(outerCircle.getX());
+            innerCircle.setY(outerCircle.getY());
             initialTouchWithinButton = false;
         }
     }
 
-    private void fingerMovingJoystick(MotionEvent event, GameCharacter mainCharacter) {
-        float xTouch = event.getX();
-        float yTouch = event.getY();
-        if(mRect.contains(Math.round(event.getX()), Math.round(event.getY()))) {
-            initialTouchWithinButton = true;
-            int xDif = Math.round(xTouch) - centreX;
-            int yDif = Math.round(yTouch) - centreY;
+    private boolean isTouchWithinButton(float xTouch, float yTouch) {
+        boolean touchWithinButton = false;
+        if (outerCircle.contains(Math.round(xTouch), Math.round(yTouch))) {
+            touchWithinButton = true;
+        }
+        return touchWithinButton;
+    }
+
+    private void fingerMovingJoystick(GameCharacter mainCharacter, float xTouch, float yTouch) {
+
+
+//        if (outerCircle.contains(Math.round(xTouch), Math.round(yTouch))) {
+//            initialTouchWithinButton = true;
+//        }
+        if (isTouchWithinButton(xTouch, yTouch)) {
+            innerCircle.setX(xTouch);
+            innerCircle.setY(yTouch);
+        }
+        else {
+            float[] nearestBoundaryPoints = outerCircle.getNearestBoundaryPoint(xTouch, yTouch);
+            innerCircle.set(nearestBoundaryPoints[0], nearestBoundaryPoints[1]);
+        }
+
+        if (!deadZoneCircle.contains(xTouch, yTouch)) {
+            float xDif = Math.round(xTouch) - outerCircle.getX();
+            float yDif = Math.round(yTouch) - outerCircle.getY();
             if (abs(xDif) >= abs(yDif)) {
                 if (xDif >= 0) {
                     mainCharacter.setCharacterState(CharacterState.MovingRight);
@@ -75,16 +113,48 @@ public class JoystickButton {
             }
             else {
                 if (yDif >= 0 ) {
-                    mainCharacter.setCharacterState(CharacterState.MovingUp);
+                    mainCharacter.setCharacterState(CharacterState.MovingDown);
                 }
                 else {
-                    mainCharacter.setCharacterState(CharacterState.MovingDown);
+                    mainCharacter.setCharacterState(CharacterState.MovingUp);
                 }
             }
         }
         else {
             mainCharacter.setCharacterState(CharacterState.Stationary);
         }
+
+
+
+        //if(mRect.contains(Math.round(event.getX()), Math.round(event.getY()))) {
+//        if (outerCircle.contains(Math.round(xTouch), Math.round(yTouch))) {
+//            innerCircle.setX(xTouch);
+//            innerCircle.setY(yTouch);
+//            initialTouchWithinButton = true;
+//            float xDif = Math.round(xTouch) - outerCircle.getX();
+//            float yDif = Math.round(yTouch) - outerCircle.getY();
+//            if (abs(xDif) >= abs(yDif)) {
+//                if (xDif >= 0) {
+//                    mainCharacter.setCharacterState(CharacterState.MovingRight);
+//                }
+//                else {
+//                    mainCharacter.setCharacterState(CharacterState.MovingLeft);
+//                }
+//            }
+//            else {
+//                if (yDif >= 0 ) {
+//                    mainCharacter.setCharacterState(CharacterState.MovingDown);
+//                }
+//                else {
+//                    mainCharacter.setCharacterState(CharacterState.MovingUp);
+//                }
+//            }
+//        }
+//        else {
+//            mainCharacter.setCharacterState(CharacterState.Stationary);
+//            innerCircle.setX(outerCircle.getX());
+//            innerCircle.setY(outerCircle.getY());
+//        }
     }
 
 }

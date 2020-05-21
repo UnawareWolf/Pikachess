@@ -12,6 +12,7 @@ import java.util.EventListener;
 
 public class PikaGame {
 
+    private static final int CONTROL_PANEL_HEIGHT = 480;
     private PikaGameState gameState;
     private GameCharacter mainCharacter;
     private GameBackground background;
@@ -26,7 +27,8 @@ public class PikaGame {
         mainCharacter = new GameCharacter(context, canvasWidth);
         gameState = PikaGameState.Roam;
         background = new GameBackground(context, canvasWidth);
-        joystickButton = new JoystickButton(context, gameView.getHeight());
+        float joystickY = (float) (gameView.getHeight() - CONTROL_PANEL_HEIGHT * 1.5);
+        joystickButton = new JoystickButton(context, (float) (CONTROL_PANEL_HEIGHT / 1.5), joystickY);
         //background = BitmapFactory.decodeResource(context.getResources(), R.drawable.totodile);
     }
 
