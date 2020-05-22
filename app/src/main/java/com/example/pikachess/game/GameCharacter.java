@@ -13,15 +13,18 @@ public class GameCharacter {
     //private Bitmap coreSpriteSheet;
     private CharacterSpritesheet spritesheet;
     private CharacterState characterState;
+
+
     private int x, y;
     private int xVel, yVel;
+    private int distTravelled;
     private int canvasWidth;
 
     public GameCharacter(Context context, int canvasWidth) {
         this.canvasWidth = canvasWidth;
         //isMoving = false;
         spritesheet = new CharacterSpritesheet(context, canvasWidth);
-        characterState = CharacterState.Stationary;
+        characterState = CharacterState.StationaryDown;
         x = 0;
         y = 0;
         //coreSpriteSheet = BitmapFactory.decodeResource(context.getResources(), R.drawable.peppapigsprites);
@@ -35,8 +38,28 @@ public class GameCharacter {
 //        this.isMoving = isMoving;
 //    }
 
+    public void setStationaryState() {
+        switch (this.characterState) {
+            case MovingUp:
+                this.characterState = CharacterState.StationaryUp;
+                break;
+            case MovingLeft:
+                this.characterState = CharacterState.StationaryLeft;
+                break;
+            case MovingDown:
+                this.characterState = CharacterState.StationaryDown;
+                break;
+            case MovingRight:
+                this.characterState = CharacterState.StationaryRight;
+        }
+    }
+
     public void setCharacterState(CharacterState characterState) {
         this.characterState = characterState;
+    }
+
+    public CharacterState getCharacterState() {
+        return this.characterState;
     }
 
     public void draw(Canvas canvas) {

@@ -70,7 +70,8 @@ public class JoystickButton {
             fingerMovingJoystick(mainCharacter, xTouch, yTouch);
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            mainCharacter.setCharacterState(CharacterState.Stationary);
+            mainCharacter.setStationaryState();
+            //mainCharacter.setCharacterState(CharacterState.Stationary);
             innerCircle.setX(outerCircle.getX());
             innerCircle.setY(outerCircle.getY());
             initialTouchWithinButton = false;
@@ -121,7 +122,7 @@ public class JoystickButton {
             }
         }
         else {
-            mainCharacter.setCharacterState(CharacterState.Stationary);
+            mainCharacter.setStationaryState();
         }
 
 

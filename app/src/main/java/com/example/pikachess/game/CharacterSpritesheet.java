@@ -10,13 +10,18 @@ import android.graphics.Rect;
 import com.example.pikachess.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CharacterSpritesheet {
 
     private Bitmap image;
-    private static final int CHARACTER_SIZE = 480;
-    private static final int NUMBER_OF_ANIMATIONS = 11;
+    private static final int NUMBER_OF_ANIMATIONS = 14;
+    private int stationaryNum = 0;
+    private List<Integer> walkingUp = new ArrayList<>(Arrays.asList(4, 9));
+    private List<Integer> walkingLeft = new ArrayList<>(Arrays.asList(5, 6));
+    private List<Integer> walkingDown = new ArrayList<>(Arrays.asList(3, 10));
+    private List<Integer> walkingRight = new ArrayList<>(Arrays.asList(7, 8));
     private int x,y;
     private int characterWidth;
     private int characterHeight;
@@ -34,21 +39,7 @@ public class CharacterSpritesheet {
 
     public CharacterSpritesheet(Context context, int canvasWidth) {
         this.canvasWidth = canvasWidth;
-        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.pika_character_basic_try_2);
-
-
-
-        //image.getWidth();
-        //int initialCharacterHeight = initialImage.getHeight();
-
-        //int scaleFactor = CHARACTER_SIZE / initialCharacterHeight;
-
-        // CREATE A MATRIX FOR THE MANIPULATION
-        // RESIZE THE BIT MAP
-        //Bitmap resizedBitmap = Bitmap.createBitmap(initialImage, 0, 0, scaleFactor, scaleFactor, matrix, false);
-        //image = Bitmap.createBitmap(initialImage, 0, 0, initialImage.getWidth()*scaleFactor, CHARACTER_SIZE, matrix, false);
-        //image.recycle();
-        //image = getResizedBitmap(initialImage, scaleFactor*initialImage.getWidth(), CHARACTER_SIZE);
+        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.pokemon_fatty);
 
         characterWidth = image.getWidth() / NUMBER_OF_ANIMATIONS;
         characterHeight = image.getHeight();
@@ -68,29 +59,51 @@ public class CharacterSpritesheet {
         }
     }
 
-    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        // CREATE A MATRIX FOR THE MANIPULATION
-        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        // "RECREATE" THE NEW BITMAP
-        Bitmap resizedBitmap = Bitmap.createBitmap(
-                bm, 0, 0, width, height, matrix, false);
-        bm.recycle();
-        return resizedBitmap;
-    }
+//    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+//        int width = bm.getWidth();
+//        int height = bm.getHeight();
+//        float scaleWidth = ((float) newWidth) / width;
+//        float scaleHeight = ((float) newHeight) / height;
+//        // CREATE A MATRIX FOR THE MANIPULATION
+//        Matrix matrix = new Matrix();
+//        // RESIZE THE BIT MAP
+//        matrix.postScale(scaleWidth, scaleHeight);
+//
+//        // "RECREATE" THE NEW BITMAP
+//        Bitmap resizedBitmap = Bitmap.createBitmap(
+//                bm, 0, 0, width, height, matrix, false);
+//        bm.recycle();
+//        return resizedBitmap;
+//    }
 
     public void draw(Canvas canvas, CharacterState characterState) {
         if (characterState == CharacterState.MovingDown) {
             canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, null);
-            nextAnimationNumber();
+            nextFrame(walkingDown);
+            //nextAnimationNumber();
         }
-        else if (characterState == CharacterState.Stationary) {
+        else if (characterState == CharacterState.MovingUp) {
+            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, null);
+            nextFrame(walkingUp);
+        }
+        else if (characterState == CharacterState.MovingLeft) {
+            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, null);
+            nextFrame(walkingLeft);
+        }
+        else if (characterState == CharacterState.MovingRight) {
+            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, null);
+            nextFrame(walkingRight);
+        }
+        else if (characterState == CharacterState.StationaryUp) {
+            canvas.drawBitmap(image, animationSections.get(1), characterPos, null);
+        }
+        else if (characterState == CharacterState.StationaryLeft) {
+            canvas.drawBitmap(image, animationSections.get(2), characterPos, null);
+        }
+        else if (characterState == CharacterState.StationaryRight) {
+            canvas.drawBitmap(image, animationSections.get(11), characterPos, null);
+        }
+        else if (characterState == CharacterState.StationaryDown) {
             canvas.drawBitmap(image, animationSections.get(0), characterPos, null);
         }
         else {
@@ -101,23 +114,36 @@ public class CharacterSpritesheet {
         //canvas.drawBitmap(image, x, y, null);
     }
 
-    private void nextAnimationNumber() {
-        if (drawCount > 3) {
-            if (animationNumber < NUMBER_OF_ANIMATIONS - 1) {
-                animationNumber++;
+    private void nextFrame(List<Integer> walkingDirection) {
+        int animationIndex = walkingDirection.indexOf(animationNumber);
+        if (animationIndex >= 0) {
+            if (drawCount > 8) {
+                if (animationIndex < walkingDirection.size() - 1) {
+                    animationNumber = walkingDirection.get(animationIndex + 1);
+                }
+                else {
+                    animationNumber = walkingDirection.get(0);
+                }
+                drawCount = 0;
             }
-            else {
-                animationNumber = 1;
-            }
-            drawCount = 0;
+            drawCount++;
         }
-        drawCount++;
-//        if (animationNumber < NUMBER_OF_ANIMATIONS - 1) {
-//            animationNumber++;
+        else {
+            animationNumber = walkingDirection.get(0);
+        }
+    }
+
+    private void nextAnimationNumber() {
+//        if (drawCount > 3) {
+//            if (animationNumber < NUMBER_OF_ANIMATIONS - 1) {
+//                animationNumber++;
+//            }
+//            else {
+//                animationNumber = 1;
+//            }
+//            drawCount = 0;
 //        }
-//        else {
-//            animationNumber = 0;
-//        }
+//        drawCount++;
     }
 
     public void update() {

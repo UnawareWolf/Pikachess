@@ -1,7 +1,10 @@
 package com.example.pikachess.game;
 
 public enum CharacterState {
-    Stationary(),
+    StationaryLeft(),
+    StationaryUp(),
+    StationaryRight(),
+    StationaryDown(),
     MovingLeft(),
     MovingUp(),
     MovingRight(),

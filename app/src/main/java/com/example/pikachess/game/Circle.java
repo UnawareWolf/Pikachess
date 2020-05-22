@@ -73,13 +73,11 @@ public class Circle {
         float xDif = xPos - x;
         float yDif = yPos - y;
         float xCircumference = (float) sqrt(Math.pow(radius, 2.0)/(1 + Math.pow(yDif, 2)/Math.pow(xDif, 2)));
-//        float xCircumference = (float) ((radius*xDif)/(yDif));
         float yCircumference = xCircumference*yDif/xDif;
-        if (xDif < 1) {
+        if (xDif <= 0) {
             xCircumference = xCircumference*(-1);
             yCircumference = yCircumference*(-1);
         }
-
         return new float[] {xCircumference + x, yCircumference + y};
     }
 

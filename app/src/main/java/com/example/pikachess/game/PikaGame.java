@@ -13,6 +13,7 @@ import java.util.EventListener;
 public class PikaGame {
 
     private static final int CONTROL_PANEL_HEIGHT = 480;
+    private static final int GRID_SQUARE_SIZE = 40;
     private PikaGameState gameState;
     private GameCharacter mainCharacter;
     private GameBackground background;
