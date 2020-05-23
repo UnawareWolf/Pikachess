@@ -17,6 +17,7 @@ public class CharacterSpritesheet {
 
     private Bitmap image;
     private static final int NUMBER_OF_ANIMATIONS = 14;
+    private int numberOfCyclesPerGridSquare;
     private int stationaryNum = 0;
     private List<Integer> walkingUp = new ArrayList<>(Arrays.asList(4, 9));
     private List<Integer> walkingLeft = new ArrayList<>(Arrays.asList(5, 6));
@@ -39,7 +40,7 @@ public class CharacterSpritesheet {
 
     public CharacterSpritesheet(Context context, int canvasWidth) {
         this.canvasWidth = canvasWidth;
-        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.pokemon_fatty);
+        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.pokemon_fatty_smaller);
 
         characterWidth = image.getWidth() / NUMBER_OF_ANIMATIONS;
         characterHeight = image.getHeight();
@@ -57,6 +58,7 @@ public class CharacterSpritesheet {
             animationSection.set(topLeftX, topLeftY, bottomRightX, bottomRightY);
             animationSections.add(animationSection);
         }
+        numberOfCyclesPerGridSquare = PikaGame.GRID_SQUARE_SIZE / 8;
     }
 
 //    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
@@ -112,6 +114,10 @@ public class CharacterSpritesheet {
 
 
         //canvas.drawBitmap(image, x, y, null);
+    }
+
+    public int getNumberOfCyclesPerGridSquare() {
+        return numberOfCyclesPerGridSquare;
     }
 
     private void nextFrame(List<Integer> walkingDirection) {

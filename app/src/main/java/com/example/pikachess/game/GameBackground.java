@@ -20,7 +20,7 @@ public class GameBackground {
     private Rect framePos;
 
     public GameBackground(Context context, int canvasWidth) {
-        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.totodile);
+        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot);
         x = 0;
         y = 0;
         framePos = new Rect(0, 0, image.getWidth(), image.getHeight() - CONTROL_PANEL_HEIGHT);
@@ -40,12 +40,20 @@ public class GameBackground {
 //    }
 
     public void update(GameCharacter mainCharacter) {
-        int xVel = mainCharacter.getXVel();
-        int yVel = mainCharacter.getYVel();
-        int bLeft = backgroundPos.left + xVel;
-        int bTop = backgroundPos.top + yVel;
-        int bRight = backgroundPos.right + xVel;
-        int bBottom = backgroundPos.bottom + yVel;
+//        int xVel = mainCharacter.getXVel();
+//        int yVel = mainCharacter.getYVel();
+//        int bLeft = backgroundPos.left + xVel;
+//        int bTop = backgroundPos.top + yVel;
+//        int bRight = backgroundPos.right + xVel;
+//        int bBottom = backgroundPos.bottom + yVel;
+
+        int xPos = mainCharacter.getX();
+        int yPos = mainCharacter.getY();
+        int bLeft = framePos.left + xPos;
+        int bTop = framePos.top + yPos;
+        int bRight = framePos.right + xPos;
+        int bBottom = framePos.bottom + yPos;
+
         backgroundPos.setEmpty();
         backgroundPos.set(bLeft, bTop, bRight, bBottom);
     }

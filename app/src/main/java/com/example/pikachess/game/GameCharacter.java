@@ -7,51 +7,50 @@ import android.graphics.Canvas;
 
 import com.example.pikachess.R;
 
+import static java.lang.Math.abs;
+
 public class GameCharacter {
 
     //private boolean isMoving;
     //private Bitmap coreSpriteSheet;
     private CharacterSpritesheet spritesheet;
     private CharacterState characterState;
+    private CharacterState stateAccordingToJoystick;
 
-
-    private int x, y;
+    private int gridSquareSize;
+    private int x, y, speed;
     private int xVel, yVel;
     private int distTravelled;
     private int canvasWidth;
 
-    public GameCharacter(Context context, int canvasWidth) {
-        this.canvasWidth = canvasWidth;
-        //isMoving = false;
+    public GameCharacter(Context context, PikaGame pikaGame) {
+        this.canvasWidth = pikaGame.getCanvasWidth();
+        gridSquareSize = PikaGame.GRID_SQUARE_SIZE;
         spritesheet = new CharacterSpritesheet(context, canvasWidth);
         characterState = CharacterState.StationaryDown;
+        stateAccordingToJoystick = CharacterState.StationaryDown;
+        distTravelled = 0;
+        speed = spritesheet.getNumberOfCyclesPerGridSquare();
         x = 0;
         y = 0;
-        //coreSpriteSheet = BitmapFactory.decodeResource(context.getResources(), R.drawable.peppapigsprites);
     }
 
-//    public boolean getIsMoving() {
-//        return this.isMoving;
-//    }
-
-//    public void setIsMoving(boolean isMoving) {
-//        this.isMoving = isMoving;
-//    }
-
-    public void setStationaryState() {
-        switch (this.characterState) {
+    public CharacterState getStationaryState() {
+        CharacterState stationaryState;
+        switch (characterState) {
             case MovingUp:
-                this.characterState = CharacterState.StationaryUp;
+                stationaryState = CharacterState.StationaryUp;
                 break;
             case MovingLeft:
-                this.characterState = CharacterState.StationaryLeft;
+                stationaryState = CharacterState.StationaryLeft;
                 break;
             case MovingDown:
-                this.characterState = CharacterState.StationaryDown;
+                stationaryState = CharacterState.StationaryDown;
                 break;
-            case MovingRight:
-                this.characterState = CharacterState.StationaryRight;
+            default:
+                stationaryState = CharacterState.StationaryRight;
         }
+        return stationaryState;
     }
 
     public void setCharacterState(CharacterState characterState) {
@@ -63,39 +62,47 @@ public class GameCharacter {
     }
 
     public void draw(Canvas canvas) {
-        //canvas.drawBitmap(coreSpriteSheet, 0, 0, null);
         spritesheet.draw(canvas, characterState);
     }
 
     public void update() {
-        updateCharacterMotion();
+        updateCharacterMotionAndPosition();
+        updateCharacterState();
     }
 
-    private void updateCharacterMotion() {
+    private void updateCharacterState() {
+        if (distTravelled == 0) {
+            characterState = stateAccordingToJoystick;
+        }
+    }
+
+    private void updateCharacterMotionAndPosition() {
         if (characterState == CharacterState.MovingLeft) {
-            xVel = -5;
+            xVel = -speed;
             yVel = 0;
-            x--;
         }
         else if (characterState == CharacterState.MovingUp){
             xVel = 0;
-            yVel = -5;
-            y--;
+            yVel = -speed;
         }
         else if (characterState == CharacterState.MovingRight) {
-            xVel = 5;
+            xVel = speed;
             yVel = 0;
-            x++;
         }
         else if (characterState == CharacterState.MovingDown){
             xVel = 0;
-            yVel = 5;
-            y++;
+            yVel = speed;
         }
         else {
             xVel = 0;
             yVel = 0;
         }
+        distTravelled = distTravelled + xVel + yVel;
+        if (abs(distTravelled) >= gridSquareSize) {
+            distTravelled = 0;
+        }
+        x = x + xVel;
+        y = y + yVel;
     }
 
     public int getX() {
@@ -113,4 +120,65 @@ public class GameCharacter {
     public int getYVel() {
         return yVel;
     }
+
+    public boolean isStationary() {
+        boolean stationary = false;
+        if (characterState == CharacterState.StationaryDown || characterState == CharacterState.StationaryLeft || characterState == CharacterState.StationaryUp || characterState == CharacterState.StationaryRight) {
+            stationary = true;
+        }
+        return stationary;
+    }
+
+    public CharacterState getCharacterStateFromTouch(JoystickButton joystickButton, float xTouch, float yTouch) {
+        CharacterState stateAccordingToTouch;
+        if (!joystickButton.getDeadZoneCircle().contains(xTouch, yTouch)) {
+            float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
+            float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
+            if (abs(xDif) >= abs(yDif)) {
+                if (xDif >= 0) {
+                    stateAccordingToTouch = CharacterState.MovingRight;
+                } else {
+                    stateAccordingToTouch = CharacterState.MovingLeft;
+                }
+            } else {
+                if (yDif >= 0) {
+                    stateAccordingToTouch = CharacterState.MovingDown;
+                } else {
+                    stateAccordingToTouch = CharacterState.MovingUp;
+                }
+            }
+        } else {
+            stateAccordingToTouch = getStationaryState();
+        }
+        return stateAccordingToTouch;
+    }
+
+    public void setStateAccordingToJoystick(CharacterState state) {
+        stateAccordingToJoystick = state;
+    }
+
+//    public void setCharacterStateFromTouch(JoystickButton joystickButton, float xTouch, float yTouch) {
+//        if (distTravelled == 0) {
+//            if (!joystickButton.getDeadZoneCircle().contains(xTouch, yTouch)) {
+//                float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
+//                float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
+//                if (abs(xDif) >= abs(yDif)) {
+//                    if (xDif >= 0) {
+//                        this.setCharacterState(CharacterState.MovingRight);
+//                    } else {
+//                        this.setCharacterState(CharacterState.MovingLeft);
+//                    }
+//                } else {
+//                    if (yDif >= 0) {
+//                        this.setCharacterState(CharacterState.MovingDown);
+//                    } else {
+//                        this.setCharacterState(CharacterState.MovingUp);
+//                    }
+//                }
+//            } else {
+//                this.setStationaryState();
+//            }
+//        }
+
+//    }
 }

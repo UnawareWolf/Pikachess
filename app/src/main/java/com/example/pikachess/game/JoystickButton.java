@@ -70,7 +70,7 @@ public class JoystickButton {
             fingerMovingJoystick(mainCharacter, xTouch, yTouch);
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            mainCharacter.setStationaryState();
+            mainCharacter.setStateAccordingToJoystick(mainCharacter.getStationaryState());
             //mainCharacter.setCharacterState(CharacterState.Stationary);
             innerCircle.setX(outerCircle.getX());
             innerCircle.setY(outerCircle.getY());
@@ -101,37 +101,12 @@ public class JoystickButton {
             innerCircle.set(nearestBoundaryPoints[0], nearestBoundaryPoints[1]);
         }
 
-        if (!deadZoneCircle.contains(xTouch, yTouch)) {
-            float xDif = Math.round(xTouch) - outerCircle.getX();
-            float yDif = Math.round(yTouch) - outerCircle.getY();
-            if (abs(xDif) >= abs(yDif)) {
-                if (xDif >= 0) {
-                    mainCharacter.setCharacterState(CharacterState.MovingRight);
-                }
-                else {
-                    mainCharacter.setCharacterState(CharacterState.MovingLeft);
-                }
-            }
-            else {
-                if (yDif >= 0 ) {
-                    mainCharacter.setCharacterState(CharacterState.MovingDown);
-                }
-                else {
-                    mainCharacter.setCharacterState(CharacterState.MovingUp);
-                }
-            }
-        }
-        else {
-            mainCharacter.setStationaryState();
-        }
+        //if (mainCharacter.isStationary()) {
+            mainCharacter.setStateAccordingToJoystick(mainCharacter.getCharacterStateFromTouch(this, xTouch, yTouch));
+        //}
 
 
-
-        //if(mRect.contains(Math.round(event.getX()), Math.round(event.getY()))) {
-//        if (outerCircle.contains(Math.round(xTouch), Math.round(yTouch))) {
-//            innerCircle.setX(xTouch);
-//            innerCircle.setY(yTouch);
-//            initialTouchWithinButton = true;
+//        if (!deadZoneCircle.contains(xTouch, yTouch)) {
 //            float xDif = Math.round(xTouch) - outerCircle.getX();
 //            float yDif = Math.round(yTouch) - outerCircle.getY();
 //            if (abs(xDif) >= abs(yDif)) {
@@ -152,10 +127,43 @@ public class JoystickButton {
 //            }
 //        }
 //        else {
-//            mainCharacter.setCharacterState(CharacterState.Stationary);
-//            innerCircle.setX(outerCircle.getX());
-//            innerCircle.setY(outerCircle.getY());
+//            mainCharacter.setStationaryState();
 //        }
     }
+
+    public Circle getDeadZoneCircle() {
+        return deadZoneCircle;
+    }
+
+    public Circle getOuterCircle() {
+        return outerCircle;
+    }
+
+    //    private void setCharacterStateFromTouch(GameCharacter mainCharacter, float xTouch, float yTouch) {
+//        if (!deadZoneCircle.contains(xTouch, yTouch)) {
+//            float xDif = Math.round(xTouch) - outerCircle.getX();
+//            float yDif = Math.round(yTouch) - outerCircle.getY();
+//            if (abs(xDif) >= abs(yDif)) {
+//                if (xDif >= 0) {
+//                    mainCharacter.setCharacterState(CharacterState.MovingRight);
+//                }
+//                else {
+//                    mainCharacter.setCharacterState(CharacterState.MovingLeft);
+//                }
+//            }
+//            else {
+//                if (yDif >= 0 ) {
+//                    mainCharacter.setCharacterState(CharacterState.MovingDown);
+//                }
+//                else {
+//                    mainCharacter.setCharacterState(CharacterState.MovingUp);
+//                }
+//            }
+//        }
+//        else {
+//            mainCharacter.setStationaryState();
+//        }
+//
+//    }
 
 }

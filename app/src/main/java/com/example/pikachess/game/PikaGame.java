@@ -13,7 +13,7 @@ import java.util.EventListener;
 public class PikaGame {
 
     private static final int CONTROL_PANEL_HEIGHT = 480;
-    private static final int GRID_SQUARE_SIZE = 40;
+    public static final int GRID_SQUARE_SIZE = 64;
     private PikaGameState gameState;
     private GameCharacter mainCharacter;
     private GameBackground background;
@@ -25,7 +25,7 @@ public class PikaGame {
 
     public PikaGame(Context context, GameView gameView) {
         this.canvasWidth = gameView.getWidth();
-        mainCharacter = new GameCharacter(context, canvasWidth);
+        mainCharacter = new GameCharacter(context, this);
         gameState = PikaGameState.Roam;
         background = new GameBackground(context, canvasWidth);
         float joystickY = (float) (gameView.getHeight() - CONTROL_PANEL_HEIGHT * 1.5);
@@ -58,7 +58,11 @@ public class PikaGame {
     }
 
     public void onTouchEvent(MotionEvent event) {
-        joystickButton.onTouchEvent(event, getMainCharacter());
+        joystickButton.onTouchEvent(event, mainCharacter);
+    }
+
+    public int getCanvasWidth() {
+        return this.canvasWidth;
     }
 
 }
