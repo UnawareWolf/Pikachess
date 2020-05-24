@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.example.pikachess.R;
@@ -13,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CharacterSpritesheet {
+public class CharacterSpriteSheet extends SpriteSheet {
 
-    private Bitmap image;
+    //private Bitmap image;
     private static final int NUMBER_OF_ANIMATIONS = 14;
     private int numberOfCyclesPerGridSquare;
     private int stationaryNum = 0;
@@ -24,6 +25,7 @@ public class CharacterSpritesheet {
     private List<Integer> walkingDown = new ArrayList<>(Arrays.asList(3, 10));
     private List<Integer> walkingRight = new ArrayList<>(Arrays.asList(7, 8));
     private int x,y;
+    private Paint filterPaint;
     private int characterWidth;
     private int characterHeight;
     private int canvasWidth;
@@ -32,16 +34,16 @@ public class CharacterSpritesheet {
     private int drawCount = 0;
     private int animationNumber = 1;
 
-    public CharacterSpritesheet(Bitmap bmp,  int x, int y) {
+    public CharacterSpriteSheet(Bitmap bmp, int x, int y) {
         image = bmp;
         this.x = x;
         this.y = y;
     }
 
-    public CharacterSpritesheet(Context context, int canvasWidth) {
+    public CharacterSpriteSheet(Context context, int canvasWidth) {
         this.canvasWidth = canvasWidth;
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.pokemon_fatty_smaller);
-
+        filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
         characterWidth = image.getWidth() / NUMBER_OF_ANIMATIONS;
         characterHeight = image.getHeight();
         this.x = canvasWidth / 2;
@@ -80,36 +82,36 @@ public class CharacterSpritesheet {
 
     public void draw(Canvas canvas, CharacterState characterState) {
         if (characterState == CharacterState.MovingDown) {
-            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, null);
+            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, filterPaint);
             nextFrame(walkingDown);
             //nextAnimationNumber();
         }
         else if (characterState == CharacterState.MovingUp) {
-            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, null);
+            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, filterPaint);
             nextFrame(walkingUp);
         }
         else if (characterState == CharacterState.MovingLeft) {
-            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, null);
+            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, filterPaint);
             nextFrame(walkingLeft);
         }
         else if (characterState == CharacterState.MovingRight) {
-            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, null);
+            canvas.drawBitmap(image, animationSections.get(animationNumber), characterPos, filterPaint);
             nextFrame(walkingRight);
         }
         else if (characterState == CharacterState.StationaryUp) {
-            canvas.drawBitmap(image, animationSections.get(1), characterPos, null);
+            canvas.drawBitmap(image, animationSections.get(1), characterPos, filterPaint);
         }
         else if (characterState == CharacterState.StationaryLeft) {
-            canvas.drawBitmap(image, animationSections.get(2), characterPos, null);
+            canvas.drawBitmap(image, animationSections.get(2), characterPos, filterPaint);
         }
         else if (characterState == CharacterState.StationaryRight) {
-            canvas.drawBitmap(image, animationSections.get(11), characterPos, null);
+            canvas.drawBitmap(image, animationSections.get(11), characterPos, filterPaint);
         }
         else if (characterState == CharacterState.StationaryDown) {
-            canvas.drawBitmap(image, animationSections.get(0), characterPos, null);
+            canvas.drawBitmap(image, animationSections.get(0), characterPos, filterPaint);
         }
         else {
-            canvas.drawBitmap(image, animationSections.get(0), characterPos, null);
+            canvas.drawBitmap(image, animationSections.get(0), characterPos, filterPaint);
         }
 
 

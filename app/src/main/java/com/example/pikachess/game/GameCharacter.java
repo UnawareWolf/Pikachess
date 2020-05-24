@@ -1,11 +1,7 @@
 package com.example.pikachess.game;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-
-import com.example.pikachess.R;
 
 import static java.lang.Math.abs;
 
@@ -13,24 +9,26 @@ public class GameCharacter {
 
     //private boolean isMoving;
     //private Bitmap coreSpriteSheet;
-    private CharacterSpritesheet spritesheet;
+    private CharacterSpriteSheet spritesheet;
     private CharacterState characterState;
     private CharacterState stateAccordingToJoystick;
 
     private int gridSquareSize;
-    private int x, y, speed;
-    private int xVel, yVel;
-    private int distTravelled;
+    private double x, y, speed;
+    private double xVel, yVel;
+    private double distTravelled;
     private int canvasWidth;
 
     public GameCharacter(Context context, PikaGame pikaGame) {
         this.canvasWidth = pikaGame.getCanvasWidth();
-        gridSquareSize = PikaGame.GRID_SQUARE_SIZE;
-        spritesheet = new CharacterSpritesheet(context, canvasWidth);
+        //gridSquareSize = PikaGame.GRID_SQUARE_SIZE;
+        gridSquareSize = pikaGame.getPixelsAcrossSquare();
+        spritesheet = new CharacterSpriteSheet(context, canvasWidth);
         characterState = CharacterState.StationaryDown;
         stateAccordingToJoystick = CharacterState.StationaryDown;
         distTravelled = 0;
-        speed = spritesheet.getNumberOfCyclesPerGridSquare();
+        //speed = spritesheet.getNumberOfCyclesPerGridSquare();
+        speed = (double) gridSquareSize / 10;
         x = 0;
         y = 0;
     }
@@ -105,19 +103,19 @@ public class GameCharacter {
         y = y + yVel;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public int getXVel() {
+    public double getXVel() {
         return xVel;
     }
 
-    public int getYVel() {
+    public double getYVel() {
         return yVel;
     }
 
@@ -156,29 +154,4 @@ public class GameCharacter {
     public void setStateAccordingToJoystick(CharacterState state) {
         stateAccordingToJoystick = state;
     }
-
-//    public void setCharacterStateFromTouch(JoystickButton joystickButton, float xTouch, float yTouch) {
-//        if (distTravelled == 0) {
-//            if (!joystickButton.getDeadZoneCircle().contains(xTouch, yTouch)) {
-//                float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
-//                float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
-//                if (abs(xDif) >= abs(yDif)) {
-//                    if (xDif >= 0) {
-//                        this.setCharacterState(CharacterState.MovingRight);
-//                    } else {
-//                        this.setCharacterState(CharacterState.MovingLeft);
-//                    }
-//                } else {
-//                    if (yDif >= 0) {
-//                        this.setCharacterState(CharacterState.MovingDown);
-//                    } else {
-//                        this.setCharacterState(CharacterState.MovingUp);
-//                    }
-//                }
-//            } else {
-//                this.setStationaryState();
-//            }
-//        }
-
-//    }
 }
