@@ -13,7 +13,7 @@ import java.util.EventListener;
 public class PikaGame {
 
     private static final int CONTROL_PANEL_HEIGHT = 480;
-    public static final int GRID_SQUARE_SIZE = 64;
+    public static final int GRID_SQUARE_SIZE = 16;
     public static final int SQUARES_ACROSS_SCREEN = 15;
     private PikaGameState gameState;
     private GameCharacter mainCharacter;
@@ -23,14 +23,19 @@ public class PikaGame {
     private boolean newGame;
     private int canvasWidth;
     private int resizedSquareSize;
+    private double bitmapResizeFactor;
 
 
     public PikaGame(Context context, GameView gameView) {
         this.canvasWidth = gameView.getWidth();
         resizedSquareSize = canvasWidth / SQUARES_ACROSS_SCREEN;
+
+        background = new GameBackground(context, canvasWidth);
+        bitmapResizeFactor = background.getBitmapResizeFactor();
+
         mainCharacter = new GameCharacter(context, this);
         gameState = PikaGameState.Roam;
-        background = new GameBackground(context, canvasWidth);
+
         float joystickY = (float) (gameView.getHeight() - CONTROL_PANEL_HEIGHT * 1.5);
         joystickButton = new JoystickButton(context, (float) (CONTROL_PANEL_HEIGHT / 1.5), joystickY);
     }
@@ -69,6 +74,10 @@ public class PikaGame {
 
     public int getCanvasWidth() {
         return this.canvasWidth;
+    }
+
+    public double getBitmapResizeFactor() {
+        return bitmapResizeFactor;
     }
 
 }

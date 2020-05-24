@@ -3,6 +3,7 @@ package com.example.pikachess.game;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -40,9 +41,16 @@ public class CharacterSpriteSheet extends SpriteSheet {
         this.y = y;
     }
 
-    public CharacterSpriteSheet(Context context, int canvasWidth) {
-        this.canvasWidth = canvasWidth;
-        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.pokemon_fatty_smaller);
+    public CharacterSpriteSheet(Context context, GameCharacter mainCharacter) {
+        this.canvasWidth = mainCharacter.getCanvasWidth();
+
+
+        Options options = new Options();
+        options.inScaled = false;
+
+
+        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.pokemon_fatty_not_resized, options);
+        resizeBitmap((float) mainCharacter.getBitmapResizeFactor());
         filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
         characterWidth = image.getWidth() / NUMBER_OF_ANIMATIONS;
         characterHeight = image.getHeight();
@@ -62,23 +70,6 @@ public class CharacterSpriteSheet extends SpriteSheet {
         }
         numberOfCyclesPerGridSquare = PikaGame.GRID_SQUARE_SIZE / 8;
     }
-
-//    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
-//        int width = bm.getWidth();
-//        int height = bm.getHeight();
-//        float scaleWidth = ((float) newWidth) / width;
-//        float scaleHeight = ((float) newHeight) / height;
-//        // CREATE A MATRIX FOR THE MANIPULATION
-//        Matrix matrix = new Matrix();
-//        // RESIZE THE BIT MAP
-//        matrix.postScale(scaleWidth, scaleHeight);
-//
-//        // "RECREATE" THE NEW BITMAP
-//        Bitmap resizedBitmap = Bitmap.createBitmap(
-//                bm, 0, 0, width, height, matrix, false);
-//        bm.recycle();
-//        return resizedBitmap;
-//    }
 
     public void draw(Canvas canvas, CharacterState characterState) {
         if (characterState == CharacterState.MovingDown) {
@@ -139,19 +130,6 @@ public class CharacterSpriteSheet extends SpriteSheet {
         else {
             animationNumber = walkingDirection.get(0);
         }
-    }
-
-    private void nextAnimationNumber() {
-//        if (drawCount > 3) {
-//            if (animationNumber < NUMBER_OF_ANIMATIONS - 1) {
-//                animationNumber++;
-//            }
-//            else {
-//                animationNumber = 1;
-//            }
-//            drawCount = 0;
-//        }
-//        drawCount++;
     }
 
     public void update() {

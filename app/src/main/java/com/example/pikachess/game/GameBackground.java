@@ -18,18 +18,20 @@ public class GameBackground extends SpriteSheet{
     private Bitmap unscaledImage;
     private Paint filterPaint;
     //private Bitmap image;
-    private int x,y;
+    private int x, y;
     private int canvasWidth;
     private Rect backgroundPos;
     private Rect framePos;
+    private double bitmapResizeFactor;
 
     public GameBackground(Context context, int canvasWidth) {
         this.canvasWidth = canvasWidth;
         Options options = new BitmapFactory.Options();
         options.inScaled = false;
         filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
-        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot, options);
-        resizeBitmap((float) getScaleFactor());
+        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_not_resized, options);
+        setBitmapResizeFactor();
+        resizeBitmap((float) bitmapResizeFactor);
         //image = Bitmap.createScaledBitmap(unscaledImage, unscaledImage.getWidth()*2, unscaledImage.getHeight()*2, false);
         x = 0;
         y = 0;
@@ -37,12 +39,17 @@ public class GameBackground extends SpriteSheet{
         backgroundPos = new Rect(framePos);
     }
 
-    private double getScaleFactor() {
+    private void setBitmapResizeFactor() {
 //        int intendedWidth = PikaGame.GRID_SQUARE_SIZE * PikaGame.SQUARES_ACROSS_SCREEN;
 //        return (double) intendedWidth / canvasWidth;
 
         double numberOfSquaresCurrentlyAcrossScreen = (double) canvasWidth / PikaGame.GRID_SQUARE_SIZE;
-        return numberOfSquaresCurrentlyAcrossScreen / PikaGame.SQUARES_ACROSS_SCREEN;
+        bitmapResizeFactor = numberOfSquaresCurrentlyAcrossScreen / PikaGame.SQUARES_ACROSS_SCREEN;
+        //return numberOfSquaresCurrentlyAcrossScreen / PikaGame.SQUARES_ACROSS_SCREEN;
+    }
+
+    public double getBitmapResizeFactor() {
+        return bitmapResizeFactor;
     }
 
     public void draw(Canvas canvas) {

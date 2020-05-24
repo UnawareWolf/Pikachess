@@ -18,12 +18,14 @@ public class GameCharacter {
     private double xVel, yVel;
     private double distTravelled;
     private int canvasWidth;
+    private double bitmapResizeFactor;
 
     public GameCharacter(Context context, PikaGame pikaGame) {
-        this.canvasWidth = pikaGame.getCanvasWidth();
+        canvasWidth = pikaGame.getCanvasWidth();
+        bitmapResizeFactor = pikaGame.getBitmapResizeFactor();
         //gridSquareSize = PikaGame.GRID_SQUARE_SIZE;
         gridSquareSize = pikaGame.getPixelsAcrossSquare();
-        spritesheet = new CharacterSpriteSheet(context, canvasWidth);
+        spritesheet = new CharacterSpriteSheet(context, this);
         characterState = CharacterState.StationaryDown;
         stateAccordingToJoystick = CharacterState.StationaryDown;
         distTravelled = 0;
@@ -66,6 +68,14 @@ public class GameCharacter {
     public void update() {
         updateCharacterMotionAndPosition();
         updateCharacterState();
+    }
+
+    public int getCanvasWidth() {
+        return canvasWidth;
+    }
+
+    public double getBitmapResizeFactor() {
+        return bitmapResizeFactor;
     }
 
     private void updateCharacterState() {
