@@ -140,22 +140,42 @@ public class GameCharacter {
     public CharacterState getCharacterStateFromTouch(JoystickButton joystickButton, float xTouch, float yTouch) {
         CharacterState stateAccordingToTouch;
         if (!joystickButton.getDeadZoneCircle().contains(xTouch, yTouch)) {
-            float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
-            float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
-            if (abs(xDif) >= abs(yDif)) {
-                if (xDif >= 0) {
-                    stateAccordingToTouch = CharacterState.MovingRight;
+            if (joystickButton.getOuterCircle().contains(xTouch, yTouch)) {
+                float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
+                float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
+                if (abs(xDif) >= abs(yDif)) {
+                    if (xDif >= 0) {
+                        stateAccordingToTouch = CharacterState.StationaryRight;
+                    } else {
+                        stateAccordingToTouch = CharacterState.StationaryLeft;
+                    }
                 } else {
-                    stateAccordingToTouch = CharacterState.MovingLeft;
-                }
-            } else {
-                if (yDif >= 0) {
-                    stateAccordingToTouch = CharacterState.MovingDown;
-                } else {
-                    stateAccordingToTouch = CharacterState.MovingUp;
+                    if (yDif >= 0) {
+                        stateAccordingToTouch = CharacterState.StationaryDown;
+                    } else {
+                        stateAccordingToTouch = CharacterState.StationaryUp;
+                    }
                 }
             }
-        } else {
+            else {
+                float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
+                float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
+                if (abs(xDif) >= abs(yDif)) {
+                    if (xDif >= 0) {
+                        stateAccordingToTouch = CharacterState.MovingRight;
+                    } else {
+                        stateAccordingToTouch = CharacterState.MovingLeft;
+                    }
+                } else {
+                    if (yDif >= 0) {
+                        stateAccordingToTouch = CharacterState.MovingDown;
+                    } else {
+                        stateAccordingToTouch = CharacterState.MovingUp;
+                    }
+                }
+            }
+        }
+        else {
             stateAccordingToTouch = getStationaryState();
         }
         return stateAccordingToTouch;

@@ -12,9 +12,9 @@ import static java.lang.Math.abs;
 
 public class JoystickButton {
 
-    private static final int OUTER_RADIUS = 140;
-    private static final int INNER_RADIUS = 60;
-    private static final int DEAD_ZONE = 30;
+    private static final int OUTER_RADIUS = 100;
+    private static final int INNER_RADIUS = 50;
+    private static final int DEAD_ZONE = 20;
     //private Rect mRect;
     private Paint outlinePaint;
     private Paint innerPaint;
@@ -64,14 +64,12 @@ public class JoystickButton {
         if (event.getAction() == MotionEvent.ACTION_DOWN && isTouchWithinButton(xTouch, yTouch)) {
             fingerMovingJoystick(mainCharacter, xTouch, yTouch);
             initialTouchWithinButton = true;
-            //initialTouchWithinButton = isTouchWithinButton(xTouch, yTouch);
         }
         if (event.getAction() == MotionEvent.ACTION_MOVE && initialTouchWithinButton) {
             fingerMovingJoystick(mainCharacter, xTouch, yTouch);
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             mainCharacter.setStateAccordingToJoystick(mainCharacter.getStationaryState());
-            //mainCharacter.setCharacterState(CharacterState.Stationary);
             innerCircle.setX(outerCircle.getX());
             innerCircle.setY(outerCircle.getY());
             initialTouchWithinButton = false;
@@ -88,10 +86,6 @@ public class JoystickButton {
 
     private void fingerMovingJoystick(GameCharacter mainCharacter, float xTouch, float yTouch) {
 
-
-//        if (outerCircle.contains(Math.round(xTouch), Math.round(yTouch))) {
-//            initialTouchWithinButton = true;
-//        }
         if (isTouchWithinButton(xTouch, yTouch)) {
             innerCircle.setX(xTouch);
             innerCircle.setY(yTouch);
@@ -100,35 +94,7 @@ public class JoystickButton {
             float[] nearestBoundaryPoints = outerCircle.getNearestBoundaryPoint(xTouch, yTouch);
             innerCircle.set(nearestBoundaryPoints[0], nearestBoundaryPoints[1]);
         }
-
-        //if (mainCharacter.isStationary()) {
-            mainCharacter.setStateAccordingToJoystick(mainCharacter.getCharacterStateFromTouch(this, xTouch, yTouch));
-        //}
-
-
-//        if (!deadZoneCircle.contains(xTouch, yTouch)) {
-//            float xDif = Math.round(xTouch) - outerCircle.getX();
-//            float yDif = Math.round(yTouch) - outerCircle.getY();
-//            if (abs(xDif) >= abs(yDif)) {
-//                if (xDif >= 0) {
-//                    mainCharacter.setCharacterState(CharacterState.MovingRight);
-//                }
-//                else {
-//                    mainCharacter.setCharacterState(CharacterState.MovingLeft);
-//                }
-//            }
-//            else {
-//                if (yDif >= 0 ) {
-//                    mainCharacter.setCharacterState(CharacterState.MovingDown);
-//                }
-//                else {
-//                    mainCharacter.setCharacterState(CharacterState.MovingUp);
-//                }
-//            }
-//        }
-//        else {
-//            mainCharacter.setStationaryState();
-//        }
+        mainCharacter.setStateAccordingToJoystick(mainCharacter.getCharacterStateFromTouch(this, xTouch, yTouch));
     }
 
     public Circle getDeadZoneCircle() {
@@ -138,32 +104,5 @@ public class JoystickButton {
     public Circle getOuterCircle() {
         return outerCircle;
     }
-
-    //    private void setCharacterStateFromTouch(GameCharacter mainCharacter, float xTouch, float yTouch) {
-//        if (!deadZoneCircle.contains(xTouch, yTouch)) {
-//            float xDif = Math.round(xTouch) - outerCircle.getX();
-//            float yDif = Math.round(yTouch) - outerCircle.getY();
-//            if (abs(xDif) >= abs(yDif)) {
-//                if (xDif >= 0) {
-//                    mainCharacter.setCharacterState(CharacterState.MovingRight);
-//                }
-//                else {
-//                    mainCharacter.setCharacterState(CharacterState.MovingLeft);
-//                }
-//            }
-//            else {
-//                if (yDif >= 0 ) {
-//                    mainCharacter.setCharacterState(CharacterState.MovingDown);
-//                }
-//                else {
-//                    mainCharacter.setCharacterState(CharacterState.MovingUp);
-//                }
-//            }
-//        }
-//        else {
-//            mainCharacter.setStationaryState();
-//        }
-//
-//    }
 
 }
