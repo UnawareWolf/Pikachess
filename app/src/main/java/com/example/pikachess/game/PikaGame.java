@@ -20,21 +20,23 @@ public class PikaGame {
     private GameBackground background;
     private JoystickButton joystickButton;
     private PixelMap pixelMap;
-    //private Bitmap background;
     private boolean newGame;
     private int canvasWidth;
     private int resizedSquareSize;
     private double bitmapResizeFactor;
+    private double[] startingShift;
 
 
     public PikaGame(Context context, GameView gameView) {
         this.canvasWidth = gameView.getWidth();
         resizedSquareSize = canvasWidth / SQUARES_ACROSS_SCREEN;
 
-        background = new GameBackground(context, canvasWidth);
-        bitmapResizeFactor = background.getBitmapResizeFactor();
-
         pixelMap = new PixelMap(context);
+
+        //background = new GameBackground(context, canvasWidth);
+        background = new GameBackground(context, this);
+        bitmapResizeFactor = background.getBitmapResizeFactor();
+        startingShift = background.getStartingShift();
 
         mainCharacter = new GameCharacter(context, this);
         gameState = PikaGameState.Roam;
@@ -73,6 +75,10 @@ public class PikaGame {
 
     public void onTouchEvent(MotionEvent event) {
         joystickButton.onTouchEvent(event, mainCharacter);
+    }
+
+    public double[] getStartingShift() {
+        return startingShift;
     }
 
     public int getCanvasWidth() {

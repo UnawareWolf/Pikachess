@@ -6,14 +6,13 @@ import com.example.pikachess.R;
 
 public class PixelSquare {
 
-    private boolean walkable;
+    private boolean walkable, startingSquare;
     private int x, y;
     private boolean canWalkUp, canWalkLeft, canWalkDown, canWalkRight;
 
-    public PixelSquare(int x, int y, boolean walkable) {
+    public PixelSquare(int x, int y) {
         this.x = x;
         this.y = y;
-        this.walkable = walkable;
     }
 
     public boolean getWalkable() {
@@ -51,6 +50,22 @@ public class PixelSquare {
             canWalk = canWalkDown;
         }
         return canWalk;
+    }
+
+    public void setWalkable(boolean walkable) {
+        this.walkable = walkable;
+    }
+
+    public void setStartingSquare(boolean startingSquare) {
+        this.startingSquare = startingSquare;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public boolean canWalkUp() {

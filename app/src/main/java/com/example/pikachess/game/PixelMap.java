@@ -11,16 +11,20 @@ public class PixelMap {
 
     private Bitmap pixelImage;
     private PixelSquare[][] pixelSquares;
+    private PixelSquare startingSquare;
     private int width, height;
+    private Context context;
 
     public PixelMap(Context context) {
+        this.context = context;
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         pixelImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_pixel_per_square, options);
         width = pixelImage.getWidth();
         height = pixelImage.getHeight();
 
-        populatePixelSquareArray(context);
+        populatePixelSquareArray();
         setCanWalkForEachPixelSquare();
     }
 
@@ -28,14 +32,39 @@ public class PixelMap {
         return pixelSquares[x][y];
     }
 
-    private void populatePixelSquareArray(Context context) {
+    private void populatePixelSquareArray() {
         pixelSquares = new PixelSquare[width][height];
         for (int imageX = 0; imageX < width; imageX++) {
             for (int imageY = 0; imageY < height; imageY++) {
-                boolean walkable = pixelImage.getPixel(imageX, imageY) != context.getResources().getColor(R.color.black);
-                pixelSquares[imageX][imageY] = new PixelSquare(imageX, imageY, walkable);
+//                boolean walkable = pixelImage.getPixel(imageX, imageY) != context.getResources().getColor(R.color.black);
+//                pixelSquares[imageX][imageY] = new PixelSquare(imageX, imageY, walkable);
+                pixelSquares[imageX][imageY] = new PixelSquare(imageX, imageY);
+                setWalkable(pixelSquares[imageX][imageY]);
+                setStartingSquare(pixelSquares[imageX][imageY]);
             }
         }
+    }
+
+    private void setWalkable(PixelSquare pixelSquare) {
+        pixelSquare.setWalkable(pixelImage.getPixel(pixelSquare.getX(), pixelSquare.getY()) != context.getResources().getColor(R.color.black));
+    }
+
+    private void setStartingSquare(PixelSquare pixelSquare) {
+        if (pixelImage.getPixel(pixelSquare.getX(), pixelSquare.getY()) == context.getResources().getColor(R.color.green)) {
+            pixelSquare.setStartingSquare(true);
+            startingSquare = pixelSquare;
+        }
+    }
+
+    public double[] getStartingPixelPosition(double bitmapResizeFactor) {
+        int pixelX = startingSquare.getX();
+        int pixelY = startingSquare.getY();
+        double backgroundCentreX = ((double) pixelX + 1.0/2) * PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor;
+        double backgroundCentreY = ((double) pixelY + 1.0/2) * PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor;
+
+        double originalCentreXY = ((double) PikaGame.SQUARES_ACROSS_SCREEN/2) * PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor;
+
+        return new double[] {originalCentreXY - backgroundCentreX, originalCentreXY - backgroundCentreY};
     }
 
     private void setCanWalkForEachPixelSquare() {

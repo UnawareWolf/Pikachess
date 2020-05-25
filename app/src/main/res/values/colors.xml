@@ -11,4 +11,5 @@
     <color name="chessWhite">#dedede</color>
     <color name="lastMove">#fcba03</color>
     <color name="black">#000000</color>
+    <color name="green">#00ff00</color>
 </resources>

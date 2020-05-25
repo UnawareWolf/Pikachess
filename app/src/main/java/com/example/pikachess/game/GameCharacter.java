@@ -22,12 +22,14 @@ public class GameCharacter {
     private double distTravelled;
     private int canvasWidth;
     private double bitmapResizeFactor;
+    private double[] startingShift;
 
     public GameCharacter(Context context, PikaGame pikaGame) {
         canvasWidth = pikaGame.getCanvasWidth();
         bitmapResizeFactor = pikaGame.getBitmapResizeFactor();
         gridSquareSize = pikaGame.getPixelsAcrossSquare();
         pixelMap = pikaGame.getPixelMap();
+        startingShift = pikaGame.getStartingShift();
 
         spritesheet = new CharacterSpriteSheet(context, this);
         characterState = CharacterState.StationaryDown;
@@ -212,10 +214,10 @@ public class GameCharacter {
     }
 
     private double getXOnMap() {
-        return xOnScreen + x;
+        return xOnScreen + x - startingShift[0];
     }
 
     private double getYOnMap() {
-        return yOnScreen + y;
+        return yOnScreen + y - startingShift[1];
     }
 }

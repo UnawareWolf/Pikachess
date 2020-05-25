@@ -18,25 +18,32 @@ public class GameBackground extends SpriteSheet{
     private static final int CONTROL_PANEL_HEIGHT = 480;
     private Paint filterPaint;
     //private Bitmap image;
-    private int x, y;
+    //private int x, y;
     private int canvasWidth;
     private Rect backgroundPos;
     private Rect framePos;
+    private Rect initialPos;
     private double bitmapResizeFactor;
+    private double[] startingShift;
 
-    public GameBackground(Context context, int canvasWidth) {
-        this.canvasWidth = canvasWidth;
+//    public GameBackground(Context context, int canvasWidth) {
+    public GameBackground(Context context, PikaGame pikaGame) {
+        canvasWidth = pikaGame.getCanvasWidth();
+
         Options options = new BitmapFactory.Options();
         options.inScaled = false;
         filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_no_half_squares, options);
         setBitmapResizeFactor();
         resizeBitmap((float) bitmapResizeFactor);
-        //image = Bitmap.createScaledBitmap(unscaledImage, unscaledImage.getWidth()*2, unscaledImage.getHeight()*2, false);
-        x = 0;
-        y = 0;
+
+//        x = 0;
+//        y = 0;
+        startingShift = pikaGame.getPixelMap().getStartingPixelPosition(bitmapResizeFactor);
         framePos = new Rect(0, 0, image.getWidth(), image.getHeight() - CONTROL_PANEL_HEIGHT);
-        backgroundPos = new Rect(framePos);
+        initialPos = new Rect((int) -startingShift[0], (int) -startingShift[1], image.getWidth() - (int) startingShift[0], image.getHeight() - CONTROL_PANEL_HEIGHT - (int) startingShift[1]);
+        //initialPos = new Rect(framePos);
+        backgroundPos = new Rect(initialPos);
     }
 
     private void setBitmapResizeFactor() {
@@ -56,24 +63,19 @@ public class GameBackground extends SpriteSheet{
         canvas.drawBitmap(image, backgroundPos, framePos, filterPaint);
     }
 
-//    public void changeBackgroundPos(int up, int right) {
-//        int bLeft = backgroundPos.left + right;
-//        int bTop = backgroundPos.top + up;
-//        int bRight = backgroundPos.right - right;
-//        int bBottom = backgroundPos.bottom - up;
-//        backgroundPos.set(bLeft, bTop, bRight, bBottom);
-//    }
-
     public void update(GameCharacter mainCharacter) {
         int xPos = (int) mainCharacter.getX();
         int yPos = (int) mainCharacter.getY();
-        int bLeft = framePos.left + xPos;
-        int bTop = framePos.top + yPos;
-        int bRight = framePos.right + xPos;
-        int bBottom = framePos.bottom + yPos;
+        int bLeft = initialPos.left + xPos;
+        int bTop = initialPos.top + yPos;
+        int bRight = initialPos.right + xPos;
+        int bBottom = initialPos.bottom + yPos;
 
         backgroundPos.setEmpty();
         backgroundPos.set(bLeft, bTop, bRight, bBottom);
     }
 
+    public double[] getStartingShift() {
+        return startingShift;
+    }
 }
