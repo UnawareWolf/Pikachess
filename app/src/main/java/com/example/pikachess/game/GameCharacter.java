@@ -12,10 +12,13 @@ public class GameCharacter {
     private CharacterSpriteSheet spritesheet;
     private CharacterState characterState;
     private CharacterState stateAccordingToJoystick;
+    private PixelMap pixelMap;
+    private PixelSquare currentSquare;
 
     private int gridSquareSize;
-    private double x, y, speed;
+    private double x, y, speed; // change to xMoved, yMoved.
     private double xVel, yVel;
+    private int xOnScreen, yOnScreen;
     private double distTravelled;
     private int canvasWidth;
     private double bitmapResizeFactor;
@@ -23,32 +26,42 @@ public class GameCharacter {
     public GameCharacter(Context context, PikaGame pikaGame) {
         canvasWidth = pikaGame.getCanvasWidth();
         bitmapResizeFactor = pikaGame.getBitmapResizeFactor();
-        //gridSquareSize = PikaGame.GRID_SQUARE_SIZE;
         gridSquareSize = pikaGame.getPixelsAcrossSquare();
+        pixelMap = pikaGame.getPixelMap();
+
         spritesheet = new CharacterSpriteSheet(context, this);
         characterState = CharacterState.StationaryDown;
         stateAccordingToJoystick = CharacterState.StationaryDown;
         distTravelled = 0;
-        //speed = spritesheet.getNumberOfCyclesPerGridSquare();
+
         speed = (double) gridSquareSize / 10;
         x = 0;
         y = 0;
+        xOnScreen = spritesheet.getX();
+        yOnScreen = spritesheet.getY();
+//        pixelMap = new PixelMap(context);
+        updateCurrentSquare();
     }
 
     public CharacterState getStationaryState() {
         CharacterState stationaryState;
-        switch (characterState) {
-            case MovingUp:
-                stationaryState = CharacterState.StationaryUp;
-                break;
-            case MovingLeft:
-                stationaryState = CharacterState.StationaryLeft;
-                break;
-            case MovingDown:
-                stationaryState = CharacterState.StationaryDown;
-                break;
-            default:
-                stationaryState = CharacterState.StationaryRight;
+        if (!isStationary()) {
+            switch (characterState) {
+                case MovingUp:
+                    stationaryState = CharacterState.StationaryUp;
+                    break;
+                case MovingLeft:
+                    stationaryState = CharacterState.StationaryLeft;
+                    break;
+                case MovingDown:
+                    stationaryState = CharacterState.StationaryDown;
+                    break;
+                default:
+                    stationaryState = CharacterState.StationaryRight;
+            }
+        }
+        else {
+            stationaryState = characterState;
         }
         return stationaryState;
     }
@@ -67,6 +80,7 @@ public class GameCharacter {
 
     public void update() {
         updateCharacterMotionAndPosition();
+        updateCurrentSquare();
         updateCharacterState();
     }
 
@@ -81,7 +95,18 @@ public class GameCharacter {
     private void updateCharacterState() {
         if (distTravelled == 0) {
             characterState = stateAccordingToJoystick;
+            if (!stateFromJoystickIsWalkable()) {
+                characterState = getStationaryState();
+            }
         }
+    }
+
+    private boolean stateFromJoystickIsWalkable() {
+        return currentSquare.canWalkInDirection(stateAccordingToJoystick);
+    }
+
+    private void updateCurrentSquare() {
+        currentSquare = pixelMap.getSquareFromBackgroundLocation(getXOnMap(), getYOnMap(), bitmapResizeFactor);
     }
 
     private void updateCharacterMotionAndPosition() {
@@ -140,9 +165,10 @@ public class GameCharacter {
     public CharacterState getCharacterStateFromTouch(JoystickButton joystickButton, float xTouch, float yTouch) {
         CharacterState stateAccordingToTouch;
         if (!joystickButton.getDeadZoneCircle().contains(xTouch, yTouch)) {
+            float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
+            float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
             if (joystickButton.getOuterCircle().contains(xTouch, yTouch)) {
-                float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
-                float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
+
                 if (abs(xDif) >= abs(yDif)) {
                     if (xDif >= 0) {
                         stateAccordingToTouch = CharacterState.StationaryRight;
@@ -158,8 +184,8 @@ public class GameCharacter {
                 }
             }
             else {
-                float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
-                float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
+//                float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
+//                float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
                 if (abs(xDif) >= abs(yDif)) {
                     if (xDif >= 0) {
                         stateAccordingToTouch = CharacterState.MovingRight;
@@ -183,5 +209,13 @@ public class GameCharacter {
 
     public void setStateAccordingToJoystick(CharacterState state) {
         stateAccordingToJoystick = state;
+    }
+
+    private double getXOnMap() {
+        return xOnScreen + x;
+    }
+
+    private double getYOnMap() {
+        return yOnScreen + y;
     }
 }

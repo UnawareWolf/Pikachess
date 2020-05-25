@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -15,7 +16,6 @@ import java.util.List;
 public class GameBackground extends SpriteSheet{
 
     private static final int CONTROL_PANEL_HEIGHT = 480;
-    private Bitmap unscaledImage;
     private Paint filterPaint;
     //private Bitmap image;
     private int x, y;
@@ -29,7 +29,7 @@ public class GameBackground extends SpriteSheet{
         Options options = new BitmapFactory.Options();
         options.inScaled = false;
         filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
-        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_not_resized, options);
+        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_no_half_squares, options);
         setBitmapResizeFactor();
         resizeBitmap((float) bitmapResizeFactor);
         //image = Bitmap.createScaledBitmap(unscaledImage, unscaledImage.getWidth()*2, unscaledImage.getHeight()*2, false);
@@ -65,13 +65,6 @@ public class GameBackground extends SpriteSheet{
 //    }
 
     public void update(GameCharacter mainCharacter) {
-//        int xVel = mainCharacter.getXVel();
-//        int yVel = mainCharacter.getYVel();
-//        int bLeft = backgroundPos.left + xVel;
-//        int bTop = backgroundPos.top + yVel;
-//        int bRight = backgroundPos.right + xVel;
-//        int bBottom = backgroundPos.bottom + yVel;
-
         int xPos = (int) mainCharacter.getX();
         int yPos = (int) mainCharacter.getY();
         int bLeft = framePos.left + xPos;

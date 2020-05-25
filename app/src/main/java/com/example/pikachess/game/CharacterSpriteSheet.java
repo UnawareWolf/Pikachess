@@ -35,12 +35,6 @@ public class CharacterSpriteSheet extends SpriteSheet {
     private int drawCount = 0;
     private int animationNumber = 1;
 
-    public CharacterSpriteSheet(Bitmap bmp, int x, int y) {
-        image = bmp;
-        this.x = x;
-        this.y = y;
-    }
-
     public CharacterSpriteSheet(Context context, GameCharacter mainCharacter) {
         this.canvasWidth = mainCharacter.getCanvasWidth();
 
@@ -54,10 +48,10 @@ public class CharacterSpriteSheet extends SpriteSheet {
         filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
         characterWidth = image.getWidth() / NUMBER_OF_ANIMATIONS;
         characterHeight = image.getHeight();
-        this.x = canvasWidth / 2;
-        this.y = canvasWidth / 2;
+        x = canvasWidth / 2;
+        y = canvasWidth / 2;
         animationSections = new ArrayList<>();
-        characterPos = new Rect(x - characterWidth / 2, y - characterHeight / 2, x + characterWidth / 2, y + characterHeight / 2);
+        characterPos = new Rect(x - characterWidth / 2, y  - characterHeight + characterWidth / 2, x + characterWidth / 2, y + characterWidth / 2);
 
         for (int i = 0; i < NUMBER_OF_ANIMATIONS; i++) {
             int topLeftX = i*characterWidth;
@@ -136,4 +130,11 @@ public class CharacterSpriteSheet extends SpriteSheet {
         //y++;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }

@@ -19,6 +19,7 @@ public class PikaGame {
     private GameCharacter mainCharacter;
     private GameBackground background;
     private JoystickButton joystickButton;
+    private PixelMap pixelMap;
     //private Bitmap background;
     private boolean newGame;
     private int canvasWidth;
@@ -32,6 +33,8 @@ public class PikaGame {
 
         background = new GameBackground(context, canvasWidth);
         bitmapResizeFactor = background.getBitmapResizeFactor();
+
+        pixelMap = new PixelMap(context);
 
         mainCharacter = new GameCharacter(context, this);
         gameState = PikaGameState.Roam;
@@ -78,6 +81,10 @@ public class PikaGame {
 
     public double getBitmapResizeFactor() {
         return bitmapResizeFactor;
+    }
+
+    public PixelMap getPixelMap() {
+        return pixelMap;
     }
 
 }
