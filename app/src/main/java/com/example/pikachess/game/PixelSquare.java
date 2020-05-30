@@ -96,8 +96,6 @@ public class PixelSquare {
         double backgroundCentreX = ((double) x + 1.0/2) * PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor;
         double backgroundCentreY = ((double) y + 1.0/2) * PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor;
 
-        double originalCentreXY = ((double) PikaGame.SQUARES_ACROSS_SCREEN/2) * PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor;
-
-        return new double[] {originalCentreXY - backgroundCentreX, originalCentreXY - backgroundCentreY};
+        return new double[] {backgroundCentreX, backgroundCentreY};
     }
 }

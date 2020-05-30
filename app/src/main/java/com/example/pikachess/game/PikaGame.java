@@ -47,7 +47,7 @@ public class PikaGame {
 
     public void update() {
         mainCharacter.update();
-        //updateNPCs();
+        updateNPCs();
         background.update(mainCharacter);
     }
 
@@ -71,6 +71,7 @@ public class PikaGame {
         //canvas.drawBitmap(background, 0, 0, null);
         background.draw(canvas);
         mainCharacter.draw(canvas);
+        drawNPCs(canvas);
         joystickButton.draw(canvas);
     }
 
@@ -98,6 +99,18 @@ public class PikaGame {
         npcList = new ArrayList<>();
         for (PixelSquare npcSquare : pixelMap.getNPCSquares()) {
             npcList.add(new NPC(context, this, npcSquare));
+        }
+    }
+
+    private void drawNPCs(Canvas canvas) {
+        for (NPC npc : npcList) {
+            npc.draw(canvas);
+        }
+    }
+
+    private void updateNPCs() {
+        for (NPC npc : npcList) {
+            npc.update(mainCharacter);
         }
     }
 
