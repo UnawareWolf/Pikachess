@@ -47,12 +47,7 @@ public class CharacterSpriteSheet extends SpriteSheet {
         filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
         characterWidth = image.getWidth() / NUMBER_OF_ANIMATIONS;
         characterHeight = image.getHeight();
-        if (gameCharacter.getClass() == PlayerCharacter.class) {
-            moveWithBackground = false;
-        }
-        else {
-            moveWithBackground = true;
-        }
+        moveWithBackground = gameCharacter.getClass() != PlayerCharacter.class;
         //x = canvasWidth / 2;
         //y = canvasWidth / 2;
         characterPos = new Rect(centreX - characterWidth / 2, centreY  - characterHeight + characterWidth / 2, centreX + characterWidth / 2, centreY + characterWidth / 2);

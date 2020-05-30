@@ -10,7 +10,7 @@ public class PlayerCharacter extends GameCharacter{
 //    private CharacterSpriteSheet spriteSheet;
 //    private CharacterState characterState;
     private CharacterState stateAccordingToJoystick;
-    private PixelMap pixelMap;
+//    private PixelMap pixelMap;
 //    private PixelSquare currentSquare;
 //
 //    private int gridSquareSize;
@@ -32,7 +32,7 @@ public class PlayerCharacter extends GameCharacter{
 //        canvasWidth = pikaGame.getCanvasWidth();
 //        bitmapResizeFactor = pikaGame.getBitmapResizeFactor();
 //        gridSquareSize = pikaGame.getPixelsAcrossSquare();
-        pixelMap = pikaGame.getPixelMap();
+//        pixelMap = pikaGame.getPixelMap();
 //        startingShift = pikaGame.getStartingShift();
 
 //        spriteSheet = new CharacterSpriteSheet(context, this);
@@ -45,7 +45,7 @@ public class PlayerCharacter extends GameCharacter{
 //        yMoved = 0;
 //        xOnScreen = spriteSheet.getX();
 //        yOnScreen = spriteSheet.getY();
-
+        currentSquare = pixelMap.getSquareFromBackgroundLocation(getXOnMap(), getYOnMap(), bitmapResizeFactor);
         updateCurrentSquare();
     }
 
@@ -110,7 +110,11 @@ public class PlayerCharacter extends GameCharacter{
 
     @Override
     protected void updateCurrentSquare() {
+        if (currentSquare != null) {
+            currentSquare.setWalkable(true);
+        }
         currentSquare = pixelMap.getSquareFromBackgroundLocation(getXOnMap(), getYOnMap(), bitmapResizeFactor);
+        currentSquare.setWalkable(false);
     }
 
 //    private void updateCharacterMotionAndPosition() {

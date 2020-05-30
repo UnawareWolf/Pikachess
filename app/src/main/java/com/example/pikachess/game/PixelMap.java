@@ -132,4 +132,12 @@ public class PixelMap {
         double pixelMapYCoordinate = y / (PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor);
         return getSquare((int) pixelMapXCoordinate, (int) pixelMapYCoordinate);
     }
+
+    public void update(PlayerCharacter mainCharacter, List<NPC> npcList) {
+//        mainCharacter.getCurrentSquare().setWalkable(false);
+//        for (NPC npc : npcList) {
+//            npc.getCurrentSquare().setWalkable(false);
+//        }
+        setCanWalkForEachPixelSquare();
+    }
 }

@@ -10,6 +10,7 @@ public abstract class GameCharacter {
     protected CharacterSpriteSheet spriteSheet;
     protected CharacterState characterState;
     protected PixelSquare currentSquare;
+    protected PixelMap pixelMap;
 
     protected int gridSquareSize;
     protected int canvasWidth;
@@ -36,6 +37,7 @@ public abstract class GameCharacter {
         xMoved = 0;
         yMoved = 0;
 
+        pixelMap = pikaGame.getPixelMap();
 //        updateCurrentSquare();
     }
 
@@ -123,6 +125,10 @@ public abstract class GameCharacter {
         }
         xMoved = xMoved + xVel;
         yMoved = yMoved + yVel;
+    }
+
+    public PixelSquare getCurrentSquare() {
+        return currentSquare;
     }
 
 }
