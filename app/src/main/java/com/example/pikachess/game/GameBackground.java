@@ -1,17 +1,13 @@
 package com.example.pikachess.game;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.example.pikachess.R;
-
-import java.util.List;
 
 public class GameBackground extends SpriteSheet{
 
@@ -40,8 +36,8 @@ public class GameBackground extends SpriteSheet{
 //        x = 0;
 //        y = 0;
         startingShift = pikaGame.getPixelMap().getStartingPixelPosition(bitmapResizeFactor);
-        framePos = new Rect(0, 0, image.getWidth(), image.getHeight() - CONTROL_PANEL_HEIGHT);
-        initialPos = new Rect((int) -startingShift[0], (int) -startingShift[1], image.getWidth() - (int) startingShift[0], image.getHeight() - CONTROL_PANEL_HEIGHT - (int) startingShift[1]);
+        framePos = new Rect(0, 0, image.getWidth(), image.getHeight());
+        initialPos = new Rect((int) -startingShift[0], (int) -startingShift[1], image.getWidth() - (int) startingShift[0], image.getHeight() - (int) startingShift[1]);
         //initialPos = new Rect(framePos);
         backgroundPos = new Rect(initialPos);
     }
@@ -63,9 +59,9 @@ public class GameBackground extends SpriteSheet{
         canvas.drawBitmap(image, backgroundPos, framePos, filterPaint);
     }
 
-    public void update(GameCharacter mainCharacter) {
-        int xPos = (int) mainCharacter.getX();
-        int yPos = (int) mainCharacter.getY();
+    public void update(PlayerCharacter mainCharacter) {
+        int xPos = (int) mainCharacter.getXMoved();
+        int yPos = (int) mainCharacter.getYMoved();
         int bLeft = initialPos.left + xPos;
         int bTop = initialPos.top + yPos;
         int bRight = initialPos.right + xPos;

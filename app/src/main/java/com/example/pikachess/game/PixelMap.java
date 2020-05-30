@@ -7,11 +7,15 @@ import android.graphics.Color;
 
 import com.example.pikachess.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PixelMap {
 
     private Bitmap pixelImage;
     private PixelSquare[][] pixelSquares;
     private PixelSquare startingSquare;
+    private List<PixelSquare> npcSquares;
     private int width, height;
     private Context context;
 
@@ -23,6 +27,7 @@ public class PixelMap {
         pixelImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_pixel_per_square, options);
         width = pixelImage.getWidth();
         height = pixelImage.getHeight();
+        npcSquares = new ArrayList<>();
 
         populatePixelSquareArray();
         setCanWalkForEachPixelSquare();
@@ -30,6 +35,10 @@ public class PixelMap {
 
     public PixelSquare getSquare(int x, int y) {
         return pixelSquares[x][y];
+    }
+
+    public List<PixelSquare> getNPCSquares() {
+        return npcSquares;
     }
 
     private void populatePixelSquareArray() {
@@ -41,6 +50,7 @@ public class PixelMap {
                 pixelSquares[imageX][imageY] = new PixelSquare(imageX, imageY);
                 setWalkable(pixelSquares[imageX][imageY]);
                 setStartingSquare(pixelSquares[imageX][imageY]);
+                setNPCSquare(pixelSquares[imageX][imageY]);
             }
         }
     }
@@ -53,6 +63,13 @@ public class PixelMap {
         if (pixelImage.getPixel(pixelSquare.getX(), pixelSquare.getY()) == context.getResources().getColor(R.color.green)) {
             pixelSquare.setStartingSquare(true);
             startingSquare = pixelSquare;
+        }
+    }
+
+    private void setNPCSquare(PixelSquare pixelSquare) {
+        if (pixelImage.getPixel(pixelSquare.getX(), pixelSquare.getY()) == context.getResources().getColor(R.color.purple)) {
+            pixelSquare.setStartingSquare(true);
+            npcSquares.add(pixelSquare);
         }
     }
 

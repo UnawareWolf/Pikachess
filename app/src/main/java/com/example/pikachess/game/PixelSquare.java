@@ -83,4 +83,21 @@ public class PixelSquare {
     public boolean canWalkRight() {
         return canWalkRight;
     }
+
+    public double getXOnScreen(double bitmapResizeFactor) {
+        return getOnScreenPosition(bitmapResizeFactor)[0];
+    }
+
+    public double getYOnScreen(double bitmapResizeFactor) {
+        return getOnScreenPosition(bitmapResizeFactor)[1];
+    }
+
+    private double[] getOnScreenPosition(double bitmapResizeFactor) {
+        double backgroundCentreX = ((double) x + 1.0/2) * PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor;
+        double backgroundCentreY = ((double) y + 1.0/2) * PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor;
+
+        double originalCentreXY = ((double) PikaGame.SQUARES_ACROSS_SCREEN/2) * PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor;
+
+        return new double[] {originalCentreXY - backgroundCentreX, originalCentreXY - backgroundCentreY};
+    }
 }

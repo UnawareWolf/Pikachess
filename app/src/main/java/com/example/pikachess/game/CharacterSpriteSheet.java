@@ -1,11 +1,9 @@
 package com.example.pikachess.game;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -25,7 +23,7 @@ public class CharacterSpriteSheet extends SpriteSheet {
     private List<Integer> walkingLeft = new ArrayList<>(Arrays.asList(5, 6));
     private List<Integer> walkingDown = new ArrayList<>(Arrays.asList(3, 10));
     private List<Integer> walkingRight = new ArrayList<>(Arrays.asList(7, 8));
-    private int x,y;
+    //private int x,y;
     private Paint filterPaint;
     private int characterWidth;
     private int characterHeight;
@@ -34,24 +32,33 @@ public class CharacterSpriteSheet extends SpriteSheet {
     private List<Rect> animationSections;
     private int drawCount = 0;
     private int animationNumber = 1;
+    private boolean moveWithBackground;
 
-    public CharacterSpriteSheet(Context context, GameCharacter mainCharacter) {
-        this.canvasWidth = mainCharacter.getCanvasWidth();
-
+    public CharacterSpriteSheet(Context context, GameCharacter gameCharacter, int centreX, int centreY) {
+        canvasWidth = gameCharacter.getCanvasWidth();
+//        x = centreX;
+//        y = centreY;
 
         Options options = new Options();
         options.inScaled = false;
 
-
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.pokemon_fatty_not_resized, options);
-        resizeBitmap((float) mainCharacter.getBitmapResizeFactor());
+        resizeBitmap((float) gameCharacter.getBitmapResizeFactor());
         filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
         characterWidth = image.getWidth() / NUMBER_OF_ANIMATIONS;
         characterHeight = image.getHeight();
-        x = canvasWidth / 2;
-        y = canvasWidth / 2;
+        if (gameCharacter.getClass() == PlayerCharacter.class) {
+            moveWithBackground = false;
+        }
+        else {
+            moveWithBackground = true;
+        }
+        //x = canvasWidth / 2;
+        //y = canvasWidth / 2;
+        characterPos = new Rect(centreX - characterWidth / 2, centreY  - characterHeight + characterWidth / 2, centreX + characterWidth / 2, centreY + characterWidth / 2);
+
+
         animationSections = new ArrayList<>();
-        characterPos = new Rect(x - characterWidth / 2, y  - characterHeight + characterWidth / 2, x + characterWidth / 2, y + characterWidth / 2);
 
         for (int i = 0; i < NUMBER_OF_ANIMATIONS; i++) {
             int topLeftX = i*characterWidth;
@@ -63,6 +70,11 @@ public class CharacterSpriteSheet extends SpriteSheet {
             animationSections.add(animationSection);
         }
         numberOfCyclesPerGridSquare = PikaGame.GRID_SQUARE_SIZE / 8;
+    }
+
+    public void setRect(int centreX, int centreY) {
+        characterPos.set(centreX - characterWidth / 2, centreY  - characterHeight + characterWidth / 2, centreX + characterWidth / 2, centreY + characterWidth / 2);
+
     }
 
     public void draw(Canvas canvas, CharacterState characterState) {
@@ -130,11 +142,11 @@ public class CharacterSpriteSheet extends SpriteSheet {
         //y++;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
+//    public int getX() {
+//        return x;
+//    }
+//
+//    public int getY() {
+//        return y;
+//    }
 }

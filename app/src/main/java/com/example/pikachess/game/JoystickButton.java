@@ -3,7 +3,6 @@ package com.example.pikachess.game;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.view.MotionEvent;
 
 import com.example.pikachess.R;
@@ -58,7 +57,7 @@ public class JoystickButton {
 //        return mRect;
 //    }
 
-    public void onTouchEvent(MotionEvent event, GameCharacter mainCharacter) {
+    public void onTouchEvent(MotionEvent event, PlayerCharacter mainCharacter) {
         float xTouch = event.getX();
         float yTouch = event.getY();
         if (event.getAction() == MotionEvent.ACTION_DOWN && isTouchWithinButton(xTouch, yTouch)) {
@@ -84,7 +83,7 @@ public class JoystickButton {
         return touchWithinButton;
     }
 
-    private void fingerMovingJoystick(GameCharacter mainCharacter, float xTouch, float yTouch) {
+    private void fingerMovingJoystick(PlayerCharacter mainCharacter, float xTouch, float yTouch) {
 
         if (isTouchWithinButton(xTouch, yTouch)) {
             innerCircle.setX(xTouch);

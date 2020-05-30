@@ -1,14 +1,11 @@
 package com.example.pikachess.game;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
-import com.example.pikachess.R;
-
-import java.util.EventListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PikaGame {
 
@@ -16,7 +13,8 @@ public class PikaGame {
     public static final int GRID_SQUARE_SIZE = 16;
     public static final int SQUARES_ACROSS_SCREEN = 15;
     private PikaGameState gameState;
-    private GameCharacter mainCharacter;
+    private PlayerCharacter mainCharacter;
+    private List<NPC> npcList;
     private GameBackground background;
     private JoystickButton joystickButton;
     private PixelMap pixelMap;
@@ -38,7 +36,9 @@ public class PikaGame {
         bitmapResizeFactor = background.getBitmapResizeFactor();
         startingShift = background.getStartingShift();
 
-        mainCharacter = new GameCharacter(context, this);
+        mainCharacter = new PlayerCharacter(context, this);
+        initialiseNPCs(context);
+        //npc_1 = new NPC(context, this);
         gameState = PikaGameState.Roam;
 
         float joystickY = (float) (gameView.getHeight() - CONTROL_PANEL_HEIGHT * 1.5);
@@ -47,6 +47,7 @@ public class PikaGame {
 
     public void update() {
         mainCharacter.update();
+        //updateNPCs();
         background.update(mainCharacter);
     }
 
@@ -62,7 +63,7 @@ public class PikaGame {
         return this.gameState;
     }
 
-    public GameCharacter getMainCharacter() {
+    public PlayerCharacter getMainCharacter() {
         return this.mainCharacter;
     }
 
@@ -91,6 +92,13 @@ public class PikaGame {
 
     public PixelMap getPixelMap() {
         return pixelMap;
+    }
+
+    private void initialiseNPCs(Context context) {
+        npcList = new ArrayList<>();
+        for (PixelSquare npcSquare : pixelMap.getNPCSquares()) {
+            npcList.add(new NPC(context, this, npcSquare));
+        }
     }
 
 }
