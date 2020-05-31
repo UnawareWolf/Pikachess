@@ -47,8 +47,9 @@ public class PikaGame {
 
     public void update() {
         mainCharacter.update();
+        pixelMap.update();
         updateNPCs();
-        pixelMap.update(mainCharacter, npcList);
+        pixelMap.update();
         background.update(mainCharacter);
     }
 
@@ -111,7 +112,8 @@ public class PikaGame {
 
     private void updateNPCs() {
         for (NPC npc : npcList) {
-            npc.update(mainCharacter);
+            npc.update();
+            pixelMap.update();
         }
     }
 

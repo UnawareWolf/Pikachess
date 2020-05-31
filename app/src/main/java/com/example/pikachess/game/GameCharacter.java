@@ -10,7 +10,10 @@ public abstract class GameCharacter {
     protected CharacterSpriteSheet spriteSheet;
     protected CharacterState characterState;
     protected PixelSquare currentSquare;
+    protected PixelSquare nextSquare;
+    protected PixelSquare lastSquare;
     protected PixelMap pixelMap;
+    protected CharacterState stateAccordingToJoystick;
 
     protected int gridSquareSize;
     protected int canvasWidth;
@@ -20,8 +23,10 @@ public abstract class GameCharacter {
     protected double bitmapResizeFactor;
     protected double[] startingShift;
 
+    public abstract void update();
     protected abstract void updateCharacterState();
-    protected abstract void updateCurrentSquare();
+    //protected abstract void updateCurrentSquare();
+    protected abstract PixelSquare getCurrentSquareFromPixelMap();
 
     public GameCharacter(Context context, PikaGame pikaGame) {
         canvasWidth = pikaGame.getCanvasWidth();
@@ -37,14 +42,36 @@ public abstract class GameCharacter {
         xMoved = 0;
         yMoved = 0;
 
+        stateAccordingToJoystick = CharacterState.StationaryDown;
+
         pixelMap = pikaGame.getPixelMap();
 //        updateCurrentSquare();
     }
 
-    public void update() {
-        updateCharacterMotionAndPosition();
-        updateCurrentSquare();
-        updateCharacterState();
+//    public void update() {
+//
+//        updateCharacterState();
+//        updateCharacterMotionAndPosition();
+//
+//        updateCurrentSquare();
+////        updateCharacterState();
+//    }
+
+//    protected void updateCharacterState() {
+//        if (distTravelled == 0) {
+//            //characterState = stateAccordingToJoystick;
+//            if (stateFromJoystickIsWalkable()) {
+//                characterState = stateAccordingToJoystick;
+//
+//            }
+//            else {
+//                characterState = getStationaryState();
+//            }
+//        }
+//    }
+
+    protected boolean stateFromJoystickIsWalkable() {
+        return currentSquare.canWalkInDirection(stateAccordingToJoystick);
     }
 
     public int getCanvasWidth() {
@@ -129,6 +156,31 @@ public abstract class GameCharacter {
 
     public PixelSquare getCurrentSquare() {
         return currentSquare;
+    }
+
+    protected void updateCurrentSquare() {
+        if (currentSquare != null) {
+            currentSquare = getCurrentSquareFromPixelMap();
+            currentSquare.setWalkable(false);
+            if (distTravelled == 0) {
+
+
+                if (lastSquare != currentSquare) {
+                    lastSquare.setWalkable(true);
+                    lastSquare = nextSquare;
+                }
+
+                nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
+                nextSquare.setWalkable(false);
+            }
+
+        }
+        else {
+            currentSquare = getCurrentSquareFromPixelMap();
+            lastSquare = currentSquare;
+            nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
+            currentSquare.setWalkable(false);
+        }
     }
 
 }
