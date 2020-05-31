@@ -29,7 +29,7 @@ public class GameBackground extends SpriteSheet{
         Options options = new BitmapFactory.Options();
         options.inScaled = false;
         filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
-        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_no_half_squares, options);
+        image = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_route_101, options);
         setBitmapResizeFactor();
         resizeBitmap((float) bitmapResizeFactor);
 

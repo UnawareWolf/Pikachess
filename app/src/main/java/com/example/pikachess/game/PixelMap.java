@@ -24,7 +24,7 @@ public class PixelMap {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
-        pixelImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_pixel_per_square, options);
+        pixelImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_route_101_pixels, options);
         width = pixelImage.getWidth();
         height = pixelImage.getHeight();
         npcSquares = new ArrayList<>();
