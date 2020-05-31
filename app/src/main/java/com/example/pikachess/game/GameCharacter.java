@@ -3,6 +3,8 @@ package com.example.pikachess.game;
 import android.content.Context;
 import android.graphics.Canvas;
 
+import java.util.Random;
+
 import static java.lang.Math.abs;
 
 public abstract class GameCharacter {
@@ -14,9 +16,12 @@ public abstract class GameCharacter {
     protected PixelSquare lastSquare;
     protected PixelMap pixelMap;
     protected CharacterState stateAccordingToJoystick;
+    protected Random rand;
 
     protected int gridSquareSize;
     protected int canvasWidth;
+    protected int waitTime;
+    protected int timeToWait;
     protected double xMoved, yMoved, speed;
     protected double xVel, yVel;
     protected double distTravelled;
@@ -34,7 +39,10 @@ public abstract class GameCharacter {
         gridSquareSize = pikaGame.getPixelsAcrossSquare();
         startingShift = pikaGame.getStartingShift();
 
+        rand = new Random();
+        timeToWait = rand.nextInt(40);
 
+        waitTime = 0;
         characterState = CharacterState.StationaryDown;
         distTravelled = 0;
 
@@ -113,6 +121,14 @@ public abstract class GameCharacter {
         return stationary;
     }
 
+    protected boolean stateFromJoystickIsStationary() {
+        boolean stationary = false;
+        if (stateAccordingToJoystick == CharacterState.StationaryDown || stateAccordingToJoystick == CharacterState.StationaryLeft || stateAccordingToJoystick == CharacterState.StationaryUp || stateAccordingToJoystick == CharacterState.StationaryRight) {
+            stationary = true;
+        }
+        return stationary;
+    }
+
     public double getXMoved() {
         return xMoved;
     }
@@ -129,23 +145,33 @@ public abstract class GameCharacter {
         if (characterState == CharacterState.MovingLeft) {
             xVel = -speed;
             yVel = 0;
+            waitTime = 0;
         }
         else if (characterState == CharacterState.MovingUp){
             xVel = 0;
             yVel = -speed;
+            waitTime = 0;
         }
         else if (characterState == CharacterState.MovingRight) {
             xVel = speed;
             yVel = 0;
+            waitTime = 0;
         }
         else if (characterState == CharacterState.MovingDown){
             xVel = 0;
             yVel = speed;
+            waitTime = 0;
         }
         else {
+            waitTime++;
             xVel = 0;
             yVel = 0;
         }
+        if (waitTime >= timeToWait) {
+            waitTime = 0;
+            timeToWait = rand.nextInt(40);
+        }
+
         distTravelled = distTravelled + xVel + yVel;
         if (abs(distTravelled) >= gridSquareSize) {
             distTravelled = 0;

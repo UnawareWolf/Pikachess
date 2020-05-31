@@ -2,6 +2,8 @@ package com.example.pikachess.game;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static java.lang.Math.abs;
@@ -14,23 +16,26 @@ public class NPC extends GameCharacter {
     private int startingY;
     private int xNew;
     private int yNew;
-    private Random rand;
+    private int walkStateIndex;
+
+    List<CharacterState> walkStates;
 
     public NPC(Context context, PikaGame pikaGame, PixelSquare npcSquare) {
         super(context, pikaGame);
 
+        walkStates = new ArrayList<>();
+        initialiseWalkInSquareStates();
+        walkStateIndex = 0;
+        stateAccordingToJoystick = walkStates.get(walkStateIndex);
         //characterState = CharacterState.MovingDown;
-        rand = new Random();
+
         startingX = (int) npcSquare.getXOnScreen(pikaGame.getBitmapResizeFactor());
         startingY = (int) npcSquare.getYOnScreen(pikaGame.getBitmapResizeFactor());
         xNew = startingX;
         yNew = startingY;
-        int halfWidth = canvasWidth / 2;
 
-        //spriteSheet = new CharacterSpriteSheet(context, this, (int) npcSquare.getXOnScreen(pikaGame.getBitmapResizeFactor()), (int) npcSquare.getYOnScreen(pikaGame.getBitmapResizeFactor()));
         spriteSheet = new CharacterSpriteSheet(context, this, startingX - (int) startingShift[0], startingY - (int) startingShift[1]);
 
-        //spriteSheet = new CharacterSpriteSheet(context, this, canvasWidth / 2, canvasWidth / 2);
         mainCharacter = pikaGame.getMainCharacter();
 
         updateCurrentSquare();
@@ -54,7 +59,8 @@ public class NPC extends GameCharacter {
     @Override
     public void update() {
         //stateAccordingToJoystick = CharacterState.MovingDown;
-        setRandomNextState();
+        //setRandomNextState();
+        nextWalkInSquareState();
 
         updateCharacterMotionAndPosition();
         updateSpritePosition();
@@ -81,8 +87,44 @@ public class NPC extends GameCharacter {
                 case 3:
                     stateAccordingToJoystick = CharacterState.MovingDown;
                     break;
+                case 4:
+                    stateAccordingToJoystick = CharacterState.StationaryLeft;
+                    break;
+                case 5:
+                    stateAccordingToJoystick = CharacterState.StationaryUp;
+                    break;
+                case 6:
+                    stateAccordingToJoystick = CharacterState.StationaryRight;
+                    break;
                 default:
                     stateAccordingToJoystick = CharacterState.StationaryDown;
+            }
+        }
+    }
+
+    private void initialiseWalkInSquareStates() {
+        walkStates.add(CharacterState.MovingLeft);
+        walkStates.add(CharacterState.MovingLeft);
+        walkStates.add(CharacterState.MovingDown);
+        walkStates.add(CharacterState.MovingDown);
+        walkStates.add(CharacterState.MovingDown);
+        walkStates.add(CharacterState.MovingRight);
+        walkStates.add(CharacterState.MovingRight);
+        walkStates.add(CharacterState.MovingRight);
+        walkStates.add(CharacterState.MovingUp);
+        walkStates.add(CharacterState.MovingUp);
+        walkStates.add(CharacterState.MovingUp);
+        walkStates.add(CharacterState.MovingLeft);
+    }
+
+    private void nextWalkInSquareState() {
+        if (distTravelled == 0) {
+            stateAccordingToJoystick = walkStates.get(walkStateIndex);
+            if (walkStateIndex == walkStates.size() - 1) {
+                walkStateIndex = 0;
+            }
+            else {
+                walkStateIndex++;
             }
         }
     }
@@ -98,6 +140,11 @@ public class NPC extends GameCharacter {
     protected void updateCharacterState() {
         if (distTravelled == 0) {
             if (stateFromJoystickIsWalkable()) {
+                //nextWalkInSquareState();
+                //setRandomNextState();
+                characterState = stateAccordingToJoystick;
+            }
+            else if (stateFromJoystickIsStationary()) {
                 characterState = stateAccordingToJoystick;
             }
             else {
