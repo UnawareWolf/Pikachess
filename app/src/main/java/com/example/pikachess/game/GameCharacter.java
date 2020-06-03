@@ -184,7 +184,7 @@ public abstract class GameCharacter {
         return currentSquare;
     }
 
-    protected void updateCurrentSquare() {
+    public void updateCurrentSquare() {
         if (currentSquare != null) {
             currentSquare = getCurrentSquareFromPixelMap();
             currentSquare.setWalkable(false);
@@ -207,6 +207,10 @@ public abstract class GameCharacter {
             nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
             currentSquare.setWalkable(false);
         }
+    }
+
+    public double getDistTravelled() {
+        return distTravelled;
     }
 
 }

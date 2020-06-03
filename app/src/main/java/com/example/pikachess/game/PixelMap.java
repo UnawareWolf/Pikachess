@@ -51,8 +51,13 @@ public class PixelMap {
                 setWalkable(pixelSquares[imageX][imageY]);
                 setStartingSquare(pixelSquares[imageX][imageY]);
                 setNPCSquare(pixelSquares[imageX][imageY]);
+                setEncounterSquare(pixelSquares[imageX][imageY]);
             }
         }
+    }
+
+    private void setEncounterSquare(PixelSquare pixelSquare) {
+        pixelSquare.setEncounterSquare(pixelImage.getPixel(pixelSquare.getX(), pixelSquare.getY()) == context.getResources().getColor(R.color.red));
     }
 
     private void setWalkable(PixelSquare pixelSquare) {

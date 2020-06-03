@@ -1,76 +1,27 @@
 package com.example.pikachess.game;
 
 import android.content.Context;
-import android.graphics.Canvas;
 
 import static java.lang.Math.abs;
 
 public class PlayerCharacter extends GameCharacter{
 
-//    private CharacterSpriteSheet spriteSheet;
-//    private CharacterState characterState;
-//    private CharacterState stateAccordingToJoystick;
-//    private PixelMap pixelMap;
-//    private PixelSquare currentSquare;
-//
-//    private int gridSquareSize;
-//    private double xMoved, yMoved, speed;
-//    private double xVel, yVel;
     private int xOnScreen, yOnScreen;
-//    private double distTravelled;
-//    private int canvasWidth;
-//    private double bitmapResizeFactor;
-//    private double[] startingShift;
+    private boolean newSquare;
+    private boolean encounterAllowed;
 
     public PlayerCharacter(Context context, PikaGame pikaGame) {
         super(context, pikaGame);
+        encounterAllowed = true;
+        newSquare = true;
 
         xOnScreen = canvasWidth / 2;
         yOnScreen = canvasWidth / 2;
 
         spriteSheet = new CharacterSpriteSheet(context, this, xOnScreen, yOnScreen);
-//        canvasWidth = pikaGame.getCanvasWidth();
-//        bitmapResizeFactor = pikaGame.getBitmapResizeFactor();
-//        gridSquareSize = pikaGame.getPixelsAcrossSquare();
-//        pixelMap = pikaGame.getPixelMap();
-//        startingShift = pikaGame.getStartingShift();
 
-//        spriteSheet = new CharacterSpriteSheet(context, this);
-//        characterState = CharacterState.StationaryDown;
-//        stateAccordingToJoystick = CharacterState.StationaryDown;
-//        distTravelled = 0;
-
-//        speed = (double) gridSquareSize / 10;
-//        xMoved = 0;
-//        yMoved = 0;
-//        xOnScreen = spriteSheet.getX();
-//        yOnScreen = spriteSheet.getY();
-        //currentSquare = pixelMap.getSquareFromBackgroundLocation(getXOnMap(), getYOnMap(), bitmapResizeFactor);
         updateCurrentSquare();
     }
-
-//    public CharacterState getStationaryState() {
-//        CharacterState stationaryState;
-//        if (!isStationary()) {
-//            switch (characterState) {
-//                case MovingUp:
-//                    stationaryState = CharacterState.StationaryUp;
-//                    break;
-//                case MovingLeft:
-//                    stationaryState = CharacterState.StationaryLeft;
-//                    break;
-//                case MovingDown:
-//                    stationaryState = CharacterState.StationaryDown;
-//                    break;
-//                default:
-//                    stationaryState = CharacterState.StationaryRight;
-//            }
-//        }
-//        else {
-//            stationaryState = characterState;
-//        }
-//        return stationaryState;
-//    }
 
     public void setCharacterState(CharacterState characterState) {
         this.characterState = characterState;
@@ -82,27 +33,16 @@ public class PlayerCharacter extends GameCharacter{
 
     @Override
     public void update() {
-
+//        updateCurrentSquare();
         updateCharacterMotionAndPosition();
         updateCharacterState();
+        setEncounterAllowed();
         updateCurrentSquare();
 
     }
 
-//    public int getCanvasWidth() {
-//        return canvasWidth;
-//    }
-//
-//    public double getBitmapResizeFactor() {
-//        return bitmapResizeFactor;
-//    }
-
-//    private boolean stateFromJoystickIsWalkable() {
-//        return currentSquare.canWalkInDirection(stateAccordingToJoystick);
-//    }
-
     @Override
-    protected void updateCharacterState() {
+    public void updateCharacterState() {
         if (distTravelled == 0) {
             characterState = stateAccordingToJoystick;
             if (!stateFromJoystickIsWalkable()) {
@@ -111,100 +51,10 @@ public class PlayerCharacter extends GameCharacter{
         }
     }
 
-//    @Override
-//    protected void updateCurrentSquare() {
-//        if (currentSquare != null) {
-//            currentSquare.setWalkable(true);
-//        }
-//        currentSquare = pixelMap.getSquareFromBackgroundLocation(getXOnMap(), getYOnMap(), bitmapResizeFactor);
-//        currentSquare.setWalkable(false);
-//
-////        if (currentSquare!= null) {
-////            if (distTravelled == 0) {
-////                if (lastSquare != null) {
-////                    lastSquare.setWalkable(true);
-////                    lastSquare = null;
-////                }
-////                else {
-////                    lastSquare = currentSquare;
-////                }
-////                nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
-////                nextSquare.setWalkable(false);
-////            }
-////            else if ((int) abs(distTravelled) == gridSquareSize / 2) {
-////                lastSquare = currentSquare;
-////                //currentSquare = nextSquare;
-////            }
-//////            currentSquare.setWalkable(true);
-//////            currentSquare = nextSquare;
-////            currentSquare = pixelMap.getSquareFromBackgroundLocation(getXOnMap(), getYOnMap(), bitmapResizeFactor);
-////            currentSquare.setWalkable(false);
-////        }
-////        else {
-////            currentSquare = pixelMap.getSquareFromBackgroundLocation(getXOnMap(), getYOnMap(), bitmapResizeFactor);
-////            currentSquare.setWalkable(false);
-////        }
-//
-////        if (currentSquare != null) {
-////            currentSquare = pixelMap.getSquareFromBackgroundLocation(getXOnMap(), getYOnMap(), bitmapResizeFactor);
-////            currentSquare.setWalkable(false);
-////            if (distTravelled == 0) {
-////
-////                nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
-////                nextSquare.setWalkable(false);
-////
-////                if (lastSquare != currentSquare) {
-////                    lastSquare.setWalkable(true);
-////                    lastSquare = currentSquare;
-////                }
-////
-//////                nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
-//////                nextSquare.setWalkable(false);
-////            }
-////
-////        }
-////        else {
-////            currentSquare = pixelMap.getSquareFromBackgroundLocation(getXOnMap(), getYOnMap(), bitmapResizeFactor);
-////            lastSquare = currentSquare;
-////            nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
-////            currentSquare.setWalkable(false);
-////        }
-//    }
-
-
     @Override
     protected PixelSquare getCurrentSquareFromPixelMap() {
         return pixelMap.getSquareFromBackgroundLocation(getXOnMap(), getYOnMap(), bitmapResizeFactor);
     }
-
-//    private void updateCharacterMotionAndPosition() {
-//        if (characterState == CharacterState.MovingLeft) {
-//            xVel = -speed;
-//            yVel = 0;
-//        }
-//        else if (characterState == CharacterState.MovingUp){
-//            xVel = 0;
-//            yVel = -speed;
-//        }
-//        else if (characterState == CharacterState.MovingRight) {
-//            xVel = speed;
-//            yVel = 0;
-//        }
-//        else if (characterState == CharacterState.MovingDown){
-//            xVel = 0;
-//            yVel = speed;
-//        }
-//        else {
-//            xVel = 0;
-//            yVel = 0;
-//        }
-//        distTravelled = distTravelled + xVel + yVel;
-//        if (abs(distTravelled) >= gridSquareSize) {
-//            distTravelled = 0;
-//        }
-//        xMoved = xMoved + xVel;
-//        yMoved = yMoved + yVel;
-//    }
 
     public double getXVel() {
         return xVel;
@@ -213,14 +63,6 @@ public class PlayerCharacter extends GameCharacter{
     public double getYVel() {
         return yVel;
     }
-
-//    public boolean isStationary() {
-//        boolean stationary = false;
-//        if (characterState == CharacterState.StationaryDown || characterState == CharacterState.StationaryLeft || characterState == CharacterState.StationaryUp || characterState == CharacterState.StationaryRight) {
-//            stationary = true;
-//        }
-//        return stationary;
-//    }
 
     public CharacterState getCharacterStateFromTouch(JoystickButton joystickButton, float xTouch, float yTouch) {
         CharacterState stateAccordingToTouch;
@@ -268,11 +110,29 @@ public class PlayerCharacter extends GameCharacter{
         stateAccordingToJoystick = state;
     }
 
+    private void setEncounterAllowed() {
+        if (distTravelled == 0 && newSquare && rand.nextInt(PikaGame.ENCOUNTER_CHANCE - 1) == 0 && currentSquare.isEncounterSquare()) {
+            characterState = getStationaryState();
+            encounterAllowed = true;
+            newSquare = false;
+        }
+        else {
+            encounterAllowed = false;
+        }
+        if (distTravelled != 0){
+            newSquare = true;
+        }
+    }
+
     private double getXOnMap() {
         return xOnScreen + xMoved - startingShift[0];
     }
 
     private double getYOnMap() {
         return yOnScreen + yMoved - startingShift[1];
+    }
+
+    public boolean isEncounterAllowed() {
+        return encounterAllowed;
     }
 }

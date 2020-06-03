@@ -68,11 +68,19 @@ public class JoystickButton {
             fingerMovingJoystick(mainCharacter, xTouch, yTouch);
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            mainCharacter.setStateAccordingToJoystick(mainCharacter.getStationaryState());
-            innerCircle.setX(outerCircle.getX());
-            innerCircle.setY(outerCircle.getY());
-            initialTouchWithinButton = false;
+//            mainCharacter.setStateAccordingToJoystick(mainCharacter.getStationaryState());
+//            innerCircle.setX(outerCircle.getX());
+//            innerCircle.setY(outerCircle.getY());
+//            initialTouchWithinButton = false;
+            release(mainCharacter);
         }
+    }
+
+    public void release(PlayerCharacter mainCharacter) {
+        mainCharacter.setStateAccordingToJoystick(mainCharacter.getStationaryState());
+        innerCircle.setX(outerCircle.getX());
+        innerCircle.setY(outerCircle.getY());
+        initialTouchWithinButton = false;
     }
 
     private boolean isTouchWithinButton(float xTouch, float yTouch) {

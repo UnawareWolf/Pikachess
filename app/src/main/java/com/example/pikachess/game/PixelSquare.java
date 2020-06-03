@@ -9,6 +9,7 @@ public class PixelSquare {
     private boolean walkable, startingSquare;
     private int x, y;
     private boolean canWalkUp, canWalkLeft, canWalkDown, canWalkRight;
+    private boolean encounterSquare;
 
     public PixelSquare(int x, int y) {
         this.x = x;
@@ -97,5 +98,13 @@ public class PixelSquare {
         double backgroundCentreY = ((double) y + 1.0/2) * PikaGame.GRID_SQUARE_SIZE * bitmapResizeFactor;
 
         return new double[] {backgroundCentreX, backgroundCentreY};
+    }
+
+    public void setEncounterSquare(boolean encounterSquare) {
+        this.encounterSquare = encounterSquare;
+    }
+
+    public boolean isEncounterSquare() {
+        return encounterSquare;
     }
 }

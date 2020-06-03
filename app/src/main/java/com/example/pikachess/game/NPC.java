@@ -120,12 +120,18 @@ public class NPC extends GameCharacter {
     private void nextWalkInSquareState() {
         if (distTravelled == 0) {
             stateAccordingToJoystick = walkStates.get(walkStateIndex);
-            if (walkStateIndex == walkStates.size() - 1) {
-                walkStateIndex = 0;
-            }
-            else {
-                walkStateIndex++;
-            }
+//            if (currentSquare.canWalkInDirection(stateAccordingToJoystick)) {
+                if (walkStateIndex == walkStates.size() - 1) {
+                    walkStateIndex = 0;
+                }
+                else {
+                    walkStateIndex++;
+                }
+//            }
+//            else {
+//                stateAccordingToJoystick = getStationaryState();
+//            }
+
         }
     }
 
@@ -140,8 +146,6 @@ public class NPC extends GameCharacter {
     protected void updateCharacterState() {
         if (distTravelled == 0) {
             if (stateFromJoystickIsWalkable()) {
-                //nextWalkInSquareState();
-                //setRandomNextState();
                 characterState = stateAccordingToJoystick;
             }
             else if (stateFromJoystickIsStationary()) {
@@ -152,79 +156,6 @@ public class NPC extends GameCharacter {
             }
         }
     }
-
-//    protected void updateCurrentSquare(PlayerCharacter mainCharacter) {
-//        if (currentSquare != null) {
-//            currentSquare.setWalkable(true);
-//        }
-//        currentSquare = pixelMap.getSquareFromBackgroundLocation(xNew + mainCharacter.getXMoved(), yNew + mainCharacter.getYMoved(), bitmapResizeFactor);
-//        currentSquare.setWalkable(false);
-//    }
-
-
-//    @Override
-//    protected void updateCurrentSquare() {
-////        if (currentSquare!= null) {
-////            if (distTravelled == 0) {
-////                nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
-////                nextSquare.setWalkable(false);
-////            }
-////            else if ((int) abs(distTravelled) == gridSquareSize / 2) {
-////                currentSquare.setWalkable(true);
-////                currentSquare = nextSquare;
-////            }
-////        }
-////        else {
-////            currentSquare = pixelMap.getSquareFromBackgroundLocation(xNew + mainCharacter.getXMoved(), yNew + mainCharacter.getYMoved(), bitmapResizeFactor);
-////            currentSquare.setWalkable(false);
-////        }
-//
-////        if (currentSquare!= null) {
-////            if (distTravelled == 0) {
-////                if (lastSquare != null) {
-////                    lastSquare.setWalkable(false);
-////                }
-////                nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
-////                nextSquare.setWalkable(false);
-////            }
-////            else if ((int) abs(distTravelled) == gridSquareSize / 2) {
-////                lastSquare.setWalkable(true);
-////                lastSquare = currentSquare;
-////            }
-//////            currentSquare.setWalkable(true);
-//////            currentSquare = nextSquare;
-////            currentSquare.setWalkable(true);
-////            currentSquare = pixelMap.getSquareFromBackgroundLocation(xNew + mainCharacter.getXMoved(), yNew + mainCharacter.getYMoved(), bitmapResizeFactor);
-////            currentSquare.setWalkable(false);
-////        }
-////        else {
-////            currentSquare = pixelMap.getSquareFromBackgroundLocation(xNew + mainCharacter.getXMoved(), yNew + mainCharacter.getYMoved(), bitmapResizeFactor);
-////            currentSquare.setWalkable(false);
-////        }
-//
-//        if (currentSquare != null) {
-//            currentSquare = pixelMap.getSquareFromBackgroundLocation(xNew + mainCharacter.getXMoved(), yNew + mainCharacter.getYMoved(), bitmapResizeFactor);
-//            currentSquare.setWalkable(false);
-//            if (distTravelled == 0) {
-//
-//
-//                if (lastSquare != currentSquare) {
-//                    lastSquare.setWalkable(true);
-//                    lastSquare = nextSquare;
-//                }
-//
-//                nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
-//                nextSquare.setWalkable(false);
-//            }
-//
-//        }
-//        else {
-//            currentSquare = pixelMap.getSquareFromBackgroundLocation(xNew + mainCharacter.getXMoved(), yNew + mainCharacter.getYMoved(), bitmapResizeFactor);
-//            lastSquare = currentSquare;
-//            nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
-//            currentSquare.setWalkable(false);
-//        }
-//    }
 
     @Override
     protected PixelSquare getCurrentSquareFromPixelMap() {
