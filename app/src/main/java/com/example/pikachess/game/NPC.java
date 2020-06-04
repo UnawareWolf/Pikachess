@@ -120,18 +120,21 @@ public class NPC extends GameCharacter {
     private void nextWalkInSquareState() {
         if (distTravelled == 0) {
             stateAccordingToJoystick = walkStates.get(walkStateIndex);
-//            if (currentSquare.canWalkInDirection(stateAccordingToJoystick)) {
-                if (walkStateIndex == walkStates.size() - 1) {
-                    walkStateIndex = 0;
-                }
-                else {
-                    walkStateIndex++;
-                }
+//            if (walkStateIndex == walkStates.size() - 1) {
+//                walkStateIndex = 0;
 //            }
 //            else {
-//                stateAccordingToJoystick = getStationaryState();
+//                walkStateIndex++;
 //            }
+        }
+    }
 
+    private void updateWalkStateIndex() {
+        if (walkStateIndex == walkStates.size() - 1) {
+            walkStateIndex = 0;
+        }
+        else {
+            walkStateIndex++;
         }
     }
 
@@ -147,11 +150,13 @@ public class NPC extends GameCharacter {
         if (distTravelled == 0) {
             if (stateFromJoystickIsWalkable()) {
                 characterState = stateAccordingToJoystick;
+                updateWalkStateIndex();
             }
-            else if (stateFromJoystickIsStationary()) {
-                characterState = stateAccordingToJoystick;
-            }
+//            else if (stateFromJoystickIsStationary()) {
+//                characterState = stateAccordingToJoystick;
+//            }
             else {
+                characterState = stateAccordingToJoystick;
                 characterState = getStationaryState();
             }
         }
