@@ -12,18 +12,19 @@ import com.example.pikachess.R;
 public class GameBackground extends SpriteSheet{
 
     private static final int CONTROL_PANEL_HEIGHT = 480;
-    private Paint filterPaint;
+//    private Paint filterPaint;
     //private Bitmap image;
     //private int x, y;
     private int canvasWidth;
-    private Rect backgroundPos;
-    private Rect framePos;
+//    private Rect backgroundPos;
+//    private Rect framePos;
     private Rect initialPos;
     private double bitmapResizeFactor;
     private double[] startingShift;
 
 //    public GameBackground(Context context, int canvasWidth) {
     public GameBackground(Context context, PikaGame pikaGame) {
+        super();
         canvasWidth = pikaGame.getCanvasWidth();
 
         Options options = new BitmapFactory.Options();
@@ -31,7 +32,7 @@ public class GameBackground extends SpriteSheet{
         filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_route_101, options);
         setBitmapResizeFactor();
-        resizeBitmap((float) bitmapResizeFactor);
+        resizeBitmap((float) bitmapResizeFactor, (float) bitmapResizeFactor);
 
 //        x = 0;
 //        y = 0;
@@ -55,9 +56,9 @@ public class GameBackground extends SpriteSheet{
         return bitmapResizeFactor;
     }
 
-    public void draw(Canvas canvas) {
-        canvas.drawBitmap(image, backgroundPos, framePos, filterPaint);
-    }
+//    public void draw(Canvas canvas) {
+//        canvas.drawBitmap(image, backgroundPos, framePos, filterPaint);
+//    }
 
     public void update(PlayerCharacter mainCharacter) {
         int xPos = (int) mainCharacter.getXMoved();

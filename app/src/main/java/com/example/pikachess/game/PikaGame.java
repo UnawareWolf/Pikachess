@@ -4,6 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
+import com.example.pikachess.game.battle.PikaBattle;
+import com.example.pikachess.game.battle.Pikamon;
+import com.example.pikachess.game.battle.pikamen.Pikamuno;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,15 +25,20 @@ public class PikaGame {
     private JoystickButton joystickButton;
     private PixelMap pixelMap;
     private Random rand;
+    private PikaBattle pikaBattle;
     private boolean newGame;
     private int canvasWidth;
+    private int canvasHeight;
     private int resizedSquareSize;
     private double bitmapResizeFactor;
     private double[] startingShift;
+    private Context context;
 
 
     public PikaGame(Context context, GameView gameView) {
+        this.context = context;
         canvasWidth = gameView.getWidth();
+        canvasHeight = gameView.getHeight();
         resizedSquareSize = canvasWidth / SQUARES_ACROSS_SCREEN;
         gameState = PikaGameState.Roam;
 
@@ -62,6 +71,9 @@ public class PikaGame {
             updateEncounterGameState();
         }
         else if (gameState == PikaGameState.Battle) {
+            if (pikaBattle.getBattleOver()) {
+                gameState = PikaGameState.Roam;
+            }
             //joystickButton.release(mainCharacter);
             //mainCharacter.updateCharacterState();
 //            mainCharacter.updateCurrentSquare();
@@ -70,11 +82,9 @@ public class PikaGame {
 
     private void updateEncounterGameState() {
         if (mainCharacter.isEncounterAllowed()) {
-//            if (rand.nextInt(ENCOUNTER_CHANCE - 1) == 0) {
-                gameState = PikaGameState.Battle;
-                joystickButton.release(mainCharacter);
-//                mainCharacter.updateCharacterState();
-            //}
+            gameState = PikaGameState.Battle;
+            joystickButton.release(mainCharacter);
+            pikaBattle = new PikaBattle(context, new Pikamuno(), new Pikamuno(), canvasWidth, canvasHeight);
         }
     }
 
@@ -101,6 +111,9 @@ public class PikaGame {
             drawNPCs(canvas);
             joystickButton.draw(canvas);
         }
+        else if (gameState == PikaGameState.Battle) {
+            pikaBattle.draw(canvas);
+        }
     }
 
     public void onTouchEvent(MotionEvent event) {
@@ -108,7 +121,8 @@ public class PikaGame {
             joystickButton.onTouchEvent(event, mainCharacter);
         }
         else if (gameState == PikaGameState.Battle && event.getAction() == MotionEvent.ACTION_DOWN) {
-            gameState = PikaGameState.Roam;
+            //gameState = PikaGameState.Roam;
+            pikaBattle.onTouch();
         }
     }
 

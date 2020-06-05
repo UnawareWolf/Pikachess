@@ -56,28 +56,6 @@ public abstract class GameCharacter {
 //        updateCurrentSquare();
     }
 
-//    public void update() {
-//
-//        updateCharacterState();
-//        updateCharacterMotionAndPosition();
-//
-//        updateCurrentSquare();
-////        updateCharacterState();
-//    }
-
-//    protected void updateCharacterState() {
-//        if (distTravelled == 0) {
-//            //characterState = stateAccordingToJoystick;
-//            if (stateFromJoystickIsWalkable()) {
-//                characterState = stateAccordingToJoystick;
-//
-//            }
-//            else {
-//                characterState = getStationaryState();
-//            }
-//        }
-//    }
-
     protected boolean stateFromJoystickIsWalkable() {
         return currentSquare.canWalkInDirection(stateAccordingToJoystick);
     }

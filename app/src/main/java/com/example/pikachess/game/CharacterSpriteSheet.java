@@ -24,7 +24,7 @@ public class CharacterSpriteSheet extends SpriteSheet {
     private List<Integer> walkingDown = new ArrayList<>(Arrays.asList(3, 10));
     private List<Integer> walkingRight = new ArrayList<>(Arrays.asList(7, 8));
     //private int x,y;
-    private Paint filterPaint;
+//    private Paint filterPaint;
     private int characterWidth;
     private int characterHeight;
     private int canvasWidth;
@@ -35,6 +35,7 @@ public class CharacterSpriteSheet extends SpriteSheet {
     private boolean moveWithBackground;
 
     public CharacterSpriteSheet(Context context, GameCharacter gameCharacter, int centreX, int centreY) {
+        super();
         canvasWidth = gameCharacter.getCanvasWidth();
 //        x = centreX;
 //        y = centreY;
@@ -43,7 +44,7 @@ public class CharacterSpriteSheet extends SpriteSheet {
         options.inScaled = false;
 
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.pokemon_fatty_not_resized, options);
-        resizeBitmap((float) gameCharacter.getBitmapResizeFactor());
+        resizeBitmap((float) gameCharacter.getBitmapResizeFactor(), (float) gameCharacter.getBitmapResizeFactor());
         filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
         characterWidth = image.getWidth() / NUMBER_OF_ANIMATIONS;
         characterHeight = image.getHeight();
