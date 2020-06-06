@@ -1,14 +1,10 @@
 package com.example.pikachess.game.battle;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-import com.example.pikachess.R;
 import com.example.pikachess.game.BattleBackground;
-import com.example.pikachess.game.battle.pikamen.BattleMenu;
 
 public class PikaBattle {
 
@@ -53,6 +49,8 @@ public class PikaBattle {
     public void draw(Canvas canvas) {
 //        canvas.drawBitmap(grassBattleBackground, 0, 0, null);
         grassBattleBackground.draw(canvas);
+        playerPikamon.draw(canvas);
+        opponentPikamon.draw(canvas);
         drawHealthBars(canvas);
     }
 

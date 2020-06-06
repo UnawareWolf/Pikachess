@@ -59,11 +59,12 @@ public class HealthBar {
 
     private void setPositionValues() {
         if (isPlayer) {
-            xLeft = canvasWidth - DIST_FROM_EDGE - WIDTH;
-            yTop = canvasWidth;
+//            xLeft = canvasWidth - DIST_FROM_EDGE - WIDTH;
+            xLeft = canvasWidth / 2 + DIST_FROM_EDGE;
+            yTop = canvasWidth / 2;
         }
         else {
-            xLeft = DIST_FROM_EDGE;
+            xLeft = canvasWidth / 2 - DIST_FROM_EDGE;
             yTop = DIST_FROM_EDGE;
         }
     }

@@ -84,7 +84,7 @@ public class PikaGame {
         if (mainCharacter.isEncounterAllowed()) {
             gameState = PikaGameState.Battle;
             joystickButton.release(mainCharacter);
-            pikaBattle = new PikaBattle(context, new Pikamuno(), new Pikamuno(), canvasWidth, canvasHeight);
+            pikaBattle = new PikaBattle(context, new Pikamuno(context, true, canvasWidth, canvasHeight), new Pikamuno(context, false, canvasWidth, canvasHeight), canvasWidth, canvasHeight);
         }
     }
 
