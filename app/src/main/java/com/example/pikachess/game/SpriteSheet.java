@@ -9,17 +9,43 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class SpriteSheet {
+
+    protected int numberOfAnimations;
+    protected int sectionWidth, sectionHeight;
+    protected int canvasWidth, canvasHeight;
 
     protected Bitmap image;
     protected Rect backgroundPos;
     protected Rect framePos;
     protected Paint filterPaint;
+    protected List<Rect> animationSections;
+
     private Matrix matrix;
-    private Options options;
+    protected Options options;
 
     protected SpriteSheet() {
         matrix = new Matrix();
+        filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
+        options = new BitmapFactory.Options();
+        options.inScaled = false;
+    }
+
+    protected void createAnimationSections() {
+        animationSections = new ArrayList<>();
+
+        for (int i = 0; i < numberOfAnimations; i++) {
+            int topLeftX = i*sectionWidth;
+            int topLeftY = 0;
+            int bottomRightX = (i + 1)*sectionWidth;
+            int bottomRightY = sectionHeight;
+            Rect animationSection = new Rect();
+            animationSection.set(topLeftX, topLeftY, bottomRightX, bottomRightY);
+            animationSections.add(animationSection);
+        }
     }
 
     public void resizeBitmap(float xScaleFactor, float yScaleFactor) {

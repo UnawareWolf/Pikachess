@@ -15,7 +15,7 @@ public class GameBackground extends SpriteSheet{
 //    private Paint filterPaint;
     //private Bitmap image;
     //private int x, y;
-    private int canvasWidth;
+//    private int canvasWidth;
 //    private Rect backgroundPos;
 //    private Rect framePos;
     private Rect initialPos;
@@ -27,9 +27,9 @@ public class GameBackground extends SpriteSheet{
         super();
         canvasWidth = pikaGame.getCanvasWidth();
 
-        Options options = new BitmapFactory.Options();
-        options.inScaled = false;
-        filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
+//        Options options = new BitmapFactory.Options();
+//        options.inScaled = false;
+//        filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.littleroot_route_101, options);
         setBitmapResizeFactor();
         resizeBitmap((float) bitmapResizeFactor, (float) bitmapResizeFactor);

@@ -27,11 +27,11 @@ public class HealthBar {
     private Paint healthPaint;
     private Paint greyPaint;
 
-    public HealthBar(Context context, int maxHp, boolean isPlayer, int canvasWidth) {
+    public HealthBar(Context context, int maxHp, boolean isPlayer, int[] canvasDims) {
         this.maxHp = maxHp;
         //this.currentHp = maxHp;
         this.isPlayer = isPlayer;
-        this.canvasWidth = canvasWidth;
+        canvasWidth = canvasDims[0];
         setPositionValues();
         borderRect = new Rect(xLeft - BORDER_WIDTH, yTop - BORDER_WIDTH, xLeft + WIDTH + BORDER_WIDTH, yTop + HEIGHT + BORDER_WIDTH);
         healthRect = new Rect(xLeft, yTop, xLeft + WIDTH, yTop + HEIGHT);

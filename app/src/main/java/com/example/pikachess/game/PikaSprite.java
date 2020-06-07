@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.example.pikachess.R;
+import com.example.pikachess.game.battle.Pikamon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,39 +15,37 @@ import java.util.List;
 public class PikaSprite extends SpriteSheet {
 
     private static final int NUMBER_OF_ANIMATIONS = 14;
-    private int characterWidth, characterHeight;
-    private List<Rect> animationSections;
     int centreX, centreY;
+    private boolean playerPikamon;
 
-    public PikaSprite(Context context, int resourceID, boolean playerPikamon, int canvasWidth, int canvasHeight) {
+
+    public PikaSprite(Context context, Pikamon pikamon) {
         super();
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inScaled = false;
-        image = BitmapFactory.decodeResource(context.getResources(), resourceID, options);
+        numberOfAnimations = NUMBER_OF_ANIMATIONS;
+        playerPikamon = pikamon.isPlayerPikamon();
+        canvasWidth = pikamon.getCanvasDims()[0];
+        canvasHeight = pikamon.getCanvasDims()[1];
+
+        image = BitmapFactory.decodeResource(context.getResources(), pikamon.getImageID(), options);
         double targetWidth = canvasWidth / (float) 6;
-        double currentWidth = image.getWidth() / (float) NUMBER_OF_ANIMATIONS;
+        double currentWidth = image.getWidth() / (float) numberOfAnimations;
         double resizeFactor = targetWidth / currentWidth;
         resizeBitmap((int) resizeFactor, (int) resizeFactor);
 
 
-        filterPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
-
-        characterWidth = image.getWidth() / NUMBER_OF_ANIMATIONS;
-        characterHeight = image.getHeight();
 
 
-        animationSections = new ArrayList<>();
+        sectionWidth = image.getWidth() / numberOfAnimations;
+        sectionHeight = image.getHeight();
 
-        for (int i = 0; i < NUMBER_OF_ANIMATIONS; i++) {
-            int topLeftX = i*characterWidth;
-            int topLeftY = 0;
-            int bottomRightX = (i + 1)*characterWidth;
-            int bottomRightY = characterHeight;
-            Rect animationSection = new Rect();
-            animationSection.set(topLeftX, topLeftY, bottomRightX, bottomRightY);
-            animationSections.add(animationSection);
-        }
+        createAnimationSections();
+        setPositionAndOrientation();
 
+        framePos = new Rect(centreX - sectionWidth / 2, centreY  - sectionHeight + sectionWidth / 2, centreX + sectionWidth / 2, centreY + sectionWidth / 2);
+
+    }
+
+    private void setPositionAndOrientation() {
         if (playerPikamon) {
             centreX = (int) (canvasWidth / (float) 4);
             centreY = (int) (canvasHeight / (float) 4);
@@ -57,13 +56,6 @@ public class PikaSprite extends SpriteSheet {
             centreY = (int) (canvasHeight / (float) 8);
             backgroundPos = animationSections.get(0);
         }
-
-
-        framePos = new Rect(centreX - characterWidth / 2, centreY  - characterHeight + characterWidth / 2, centreX + characterWidth / 2, centreY + characterWidth / 2);
-
-
-
-
     }
 
 }

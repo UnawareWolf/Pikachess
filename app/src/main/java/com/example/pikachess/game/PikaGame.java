@@ -9,7 +9,9 @@ import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.battle.pikamen.Pikamuno;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class PikaGame {
@@ -27,19 +29,22 @@ public class PikaGame {
     private Random rand;
     private PikaBattle pikaBattle;
     private boolean newGame;
-    private int canvasWidth;
-    private int canvasHeight;
+//    private int canvasWidth;
+//    private int canvasHeight;
+    private int[] canvasDims;
     private int resizedSquareSize;
     private double bitmapResizeFactor;
     private double[] startingShift;
     private Context context;
 
-
     public PikaGame(Context context, GameView gameView) {
         this.context = context;
-        canvasWidth = gameView.getWidth();
-        canvasHeight = gameView.getHeight();
-        resizedSquareSize = canvasWidth / SQUARES_ACROSS_SCREEN;
+//        canvasWidth = gameView.getWidth();
+//        canvasHeight = gameView.getHeight();
+        canvasDims = new int[2];
+        canvasDims[0] = gameView.getWidth();
+        canvasDims[1] = gameView.getHeight();
+        resizedSquareSize = canvasDims[0] / SQUARES_ACROSS_SCREEN;
         gameState = PikaGameState.Roam;
 
         pixelMap = new PixelMap(context);
@@ -84,7 +89,7 @@ public class PikaGame {
         if (mainCharacter.isEncounterAllowed()) {
             gameState = PikaGameState.Battle;
             joystickButton.release(mainCharacter);
-            pikaBattle = new PikaBattle(context, new Pikamuno(context, true, canvasWidth, canvasHeight), new Pikamuno(context, false, canvasWidth, canvasHeight), canvasWidth, canvasHeight);
+            pikaBattle = new PikaBattle(context, new Pikamuno(context, true, canvasDims), new Pikamuno(context, false, canvasDims), canvasDims);
         }
     }
 
@@ -122,7 +127,7 @@ public class PikaGame {
         }
         else if (gameState == PikaGameState.Battle && event.getAction() == MotionEvent.ACTION_DOWN) {
             //gameState = PikaGameState.Roam;
-            pikaBattle.onTouch();
+            pikaBattle.onTouch(event);
         }
     }
 
@@ -131,7 +136,7 @@ public class PikaGame {
     }
 
     public int getCanvasWidth() {
-        return this.canvasWidth;
+        return this.canvasDims[0];
     }
 
     public double getBitmapResizeFactor() {

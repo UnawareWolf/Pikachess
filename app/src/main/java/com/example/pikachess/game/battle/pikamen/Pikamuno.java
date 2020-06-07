@@ -17,13 +17,15 @@ public class Pikamuno extends Pikamon {
     private static final int ATTACK_DAMAGE = 25;
     private static final int SPEED_AVERAGE = 30;
 
-    public Pikamuno(Context context, boolean playerPikamon, int canvasWidth, int canvasHeight) {
+    public Pikamuno(Context context, boolean playerPikamon, int[] canvasDims) {
+        super(playerPikamon, canvasDims);
         this.playerPikamon = playerPikamon;
         rand = new Random();
         hp = HP;
         attackDamage = ATTACK_DAMAGE;
         speed = SPEED_AVERAGE - 6 + rand.nextInt(13);
-        image = new PikaSprite(context, R.drawable.pokemon_fatty_not_resized, playerPikamon, canvasWidth, canvasHeight);
+        imageID = R.drawable.pokemon_fatty_not_resized;
+        image = new PikaSprite(context, this);
     }
 
 }
