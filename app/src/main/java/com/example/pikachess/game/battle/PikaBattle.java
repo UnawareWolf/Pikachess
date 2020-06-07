@@ -3,10 +3,16 @@ package com.example.pikachess.game.battle;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.StaticLayout.Builder;
+import android.text.TextPaint;
 import android.view.MotionEvent;
 
+import com.example.pikachess.R;
 import com.example.pikachess.game.BattleBackground;
 import com.example.pikachess.game.Button;
+import com.example.pikachess.game.StaticText;
 
 public class PikaBattle {
 
@@ -16,17 +22,25 @@ public class PikaBattle {
     private HealthBar opponentHealthBar;
 //    private BattleMenu battleMenu;
 //    private Bitmap grassBattleBackground;
-    private Rect backgroundRect;
     private BattleBackground grassBattleBackground;
     private BattleState battleState;
     private Button attackButton;
+    private StaticText staticTextA;
+    private StaticText staticTextB;
+    private StaticText staticTextC;
+    private StaticText staticTextD;
 
     private boolean playerTurn;
     private boolean battleOver;
+    private boolean playerWon;
+    private boolean bothAttacksDone;
+    private boolean displayedFinalAttack;
 
     public PikaBattle(Context context, Pikamon playerPikamon, Pikamon opponentPikamon, int[] canvasDims) {
         this.playerPikamon = playerPikamon;
         this.opponentPikamon = opponentPikamon;
+        bothAttacksDone = false;
+        displayedFinalAttack = false;
         //battleMenu = new BattleMenu();
         battleState = BattleState.Action;
         playerTurn = playerPikamon.getSpeed() > opponentPikamon.getSpeed();
@@ -37,43 +51,110 @@ public class PikaBattle {
 
         attackButton = new Button(context, "ATTACK!", new int[]{canvasDims[0] / 3, canvasDims[1] / 2});
 
+        staticTextA = new StaticText(context, "Cletus' Fatty used Fat Pat!",new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
+        staticTextB = new StaticText(context, "Wild Fatty used Fat Pat!",new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
+        staticTextC = new StaticText(context, "Cletus' Fatty fainted!",new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
+        staticTextD = new StaticText(context, "Wild Fatty fainted!",new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
+
     }
 
     public void onTouch(MotionEvent event) {
         if (battleState == BattleState.Action) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 if (attackButton.contains((int) event.getX(), (int) event.getY())){
-                    if (playerTurn) {
-                        executePlayerTurn();
+                    executeTurn();
+                    if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
+                        playerWon = playerPikamon.getHp() <= 0;
+                        battleState = BattleState.BattleOver;
                     }
                     else {
-                        executeOpponentTurn();
+                        battleState = BattleState.DisplayText;
                     }
-                    if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
-                        battleOver = true;
-                    }
-                    playerHealthBar.update(playerPikamon.getHp());
-                    opponentHealthBar.update(opponentPikamon.getHp());
-
 
                 }
             }
+        }
+        else if (battleState == BattleState.DisplayText) {
+            if (bothAttacksDone) {
+                battleState = BattleState.Action;
+                bothAttacksDone = !bothAttacksDone;
+            }
+            else  {
+                bothAttacksDone = !bothAttacksDone;
+                executeTurn();
+            }
+
+
+
+            if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
+                playerWon = playerPikamon.getHp() <= 0;
+                battleState = BattleState.BattleOver;
+            }
+
 
         }
-
-
+        else if (battleState == BattleState.BattleOver) {
+            if (displayedFinalAttack) {
+                battleOver = true;
+            }
+            else {
+                displayedFinalAttack = true;
+            }
+        }
     }
 
     public void draw(Canvas canvas) {
         grassBattleBackground.draw(canvas);
         playerPikamon.draw(canvas);
         opponentPikamon.draw(canvas);
-        attackButton.draw(canvas);
+        if (battleState == BattleState.Action) {
+            attackButton.draw(canvas);
+        }
+        else if (battleState == BattleState.DisplayText) {
+            if (!playerTurn) {
+                staticTextA.draw(canvas);
+            }
+            else {
+                staticTextB.draw(canvas);
+            }
+
+        }
+        else if (battleState == BattleState.BattleOver) {
+            if (displayedFinalAttack) {
+                if (playerWon) {
+                    staticTextC.draw(canvas);
+                }
+                else {
+                    staticTextD.draw(canvas);
+                }
+            }
+            else {
+                if (!playerTurn) {
+                    staticTextA.draw(canvas);
+                }
+                else {
+                    staticTextB.draw(canvas);
+                }
+            }
+
+
+        }
         drawHealthBars(canvas);
     }
 
     public boolean getBattleOver() {
         return battleOver;
+    }
+
+    public void executeTurn() {
+        if (playerTurn) {
+            executePlayerTurn();
+        }
+        else {
+            executeOpponentTurn();
+        }
+        playerHealthBar.update(playerPikamon.getHp());
+        opponentHealthBar.update(opponentPikamon.getHp());
     }
 
     private void executePlayerTurn() {

@@ -3,7 +3,7 @@ package com.example.pikachess.game.battle;
 public enum BattleState {
 
     Action(),
-    Turns(),
+    DisplayText(),
     BattleOver();
 
 }

@@ -25,6 +25,9 @@ public abstract class Pikamon {
 
     public void attackedBy(Pikamon attackingPikamon) {
         hp = hp - attackingPikamon.getAttackDamage();
+        if (hp < 0) {
+            hp = 0;
+        }
     }
 
     public int getAttackDamage() {
