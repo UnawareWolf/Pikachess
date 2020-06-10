@@ -107,38 +107,7 @@ public class PikaBattle {
         grassBattleBackground.draw(canvas);
         playerPikamon.draw(canvas);
         opponentPikamon.draw(canvas);
-        if (battleState == BattleState.Action) {
-            attackButton.draw(canvas);
-        }
-        else if (battleState == BattleState.DisplayText) {
-            if (!playerTurn) {
-                staticTextA.draw(canvas);
-            }
-            else {
-                staticTextB.draw(canvas);
-            }
-
-        }
-        else if (battleState == BattleState.BattleOver) {
-            if (displayedFinalAttack) {
-                if (playerWon) {
-                    staticTextC.draw(canvas);
-                }
-                else {
-                    staticTextD.draw(canvas);
-                }
-            }
-            else {
-                if (!playerTurn) {
-                    staticTextA.draw(canvas);
-                }
-                else {
-                    staticTextB.draw(canvas);
-                }
-            }
-
-
-        }
+        drawStateDependentContent(canvas);
         drawHealthBars(canvas);
     }
 
@@ -171,8 +140,52 @@ public class PikaBattle {
         playerTurn = !playerTurn;
     }
 
+    private void drawStateDependentContent(Canvas canvas) {
+        if (battleState == BattleState.Action) {
+            drawAttackMenu(canvas);
+        }
+        else if (battleState == BattleState.DisplayText) {
+            drawAttackText(canvas);
+        }
+        else if (battleState == BattleState.BattleOver) {
+            drawAttackOrBattleOverText(canvas);
+        }
+    }
+
     private void drawHealthBars(Canvas canvas) {
         playerHealthBar.draw(canvas);
         opponentHealthBar.draw(canvas);
     }
+
+    private void drawAttackMenu(Canvas canvas) {
+        attackButton.draw(canvas);
+    }
+
+    private void drawAttackText(Canvas canvas) {
+        if (!playerTurn) {
+            staticTextA.draw(canvas);
+        }
+        else {
+            staticTextB.draw(canvas);
+        }
+    }
+
+    private void drawBattleOverText(Canvas canvas) {
+        if (playerWon) {
+            staticTextC.draw(canvas);
+        }
+        else {
+            staticTextD.draw(canvas);
+        }
+    }
+
+    private void drawAttackOrBattleOverText(Canvas canvas) {
+        if (!displayedFinalAttack) {
+            drawAttackText(canvas);
+        }
+        else {
+            drawBattleOverText(canvas);
+        }
+    }
+
 }

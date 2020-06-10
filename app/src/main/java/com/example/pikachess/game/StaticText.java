@@ -22,7 +22,7 @@ public class StaticText {
         yShift = location[1];
         staticTextPaint = new TextPaint();
         staticTextPaint.setAntiAlias(true);
-        staticTextPaint.setTextSize(30);
+        staticTextPaint.setTextSize(50);
         staticTextPaint.setColor(context.getResources().getColor(R.color.black));
         textString = content;
         staticLayout = new StaticLayout(textString, staticTextPaint, WIDTH, Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
@@ -34,6 +34,10 @@ public class StaticText {
         staticLayout.draw(canvas);
         canvas.restore();
 
+    }
+
+    public void setText() {
+//        staticLayout.
     }
 
 }
