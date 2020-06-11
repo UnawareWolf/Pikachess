@@ -7,11 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.example.pikachess.R;
+import com.example.pikachess.game.battle.AttackMove;
 
 public class Button {
 
-    private static final int HEIGHT = 100;
-    private static final int WIDTH = 300;
+    private static final int HEIGHT = 60;
+    public static final int WIDTH = 150;
 
     private Paint borderPaint;
     private Paint fillPaint;
@@ -20,10 +21,12 @@ public class Button {
     private int buttonLeft, buttonTop, buttonRight, buttonBottom;
     private String content;
     private int[] location;
+    private AttackMove attack;
 
-    public Button(Context context, String content, int[] location) {
-        this.content = content;
+    public Button(Context context, AttackMove attack, int[] location) {
+        this.content = attack.getName();
         this.location = location;
+        this.attack = attack;
         buttonLeft = location[0] - WIDTH / 2;
         buttonTop = location[1] - HEIGHT / 2;
         buttonRight = location[0] + WIDTH / 2;
@@ -55,30 +58,8 @@ public class Button {
         canvas.drawText(content, buttonLeft + (HEIGHT / (float) 3), buttonBottom - (HEIGHT / (float) 3), textPaint);
     }
 
-
-//    buttonWidth = canvasWidth/4;
-//    buttonHeight = buttonWidth/3;
-//    buttonLeft = OFFSET + BORDER_WIDTH/2;
-//    buttonTop = canvasWidth + BORDER_WIDTH/2;
-//    buttonRight = buttonLeft + buttonWidth;
-//    buttonBottom = buttonTop + buttonHeight;
-//        confirmMoveButtonBounds.set(buttonLeft, buttonTop, buttonRight, buttonBottom);
-//        mRect.set(buttonLeft, buttonTop, buttonRight, buttonBottom);
-//        mPaint.setColor(getResources().getColor(R.color.buttonGrey));
-//        if (greyOutConfirmMoveButton) {
-//        mPaint.setAlpha(40);
-//    }
-//        else {
-//        mPaint.setAlpha(255);
-//    }
-//        mPaint.setStyle(Paint.Style.FILL);
-//        canvas.drawRect(mRect, mPaint);
-//        mPaint.setColor(Color.BLACK);
-//        mPaint.setStyle(Paint.Style.STROKE);
-//        mPaint.setStrokeWidth(BORDER_WIDTH);
-//        canvas.drawRect(mRect, mPaint);
-//        mPaint.setStyle(Paint.Style.FILL);
-//        mPaint.setTextSize(80 - 2*BORDER_WIDTH);
-//        canvas.drawText("Confirm", buttonLeft + BORDER_WIDTH, buttonBottom - 2*BORDER_WIDTH, mPaint);
+    public AttackMove getAttack() {
+        return attack;
+    }
 
 }

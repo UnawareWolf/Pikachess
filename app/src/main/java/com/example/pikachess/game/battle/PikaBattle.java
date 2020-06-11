@@ -9,6 +9,7 @@ import com.example.pikachess.game.Button;
 
 public class PikaBattle {
 
+    private Context context;
     private Pikamon playerPikamon;
     private Pikamon opponentPikamon;
     private HealthBar playerHealthBar;
@@ -16,18 +17,24 @@ public class PikaBattle {
 //    private BattleMenu battleMenu;
     private BattleBackground grassBattleBackground;
     private BattleState battleState;
-    private Button attackButton;
+//    private Button attackButton;
+    private Button[] attackButtons;
+    private AttackMove playerAttack;
     private BattleText battleText;
+    private String currentAttackName;
 
+    private int[] canvasDims;
     private boolean playerTurn;
     private boolean battleOver;
-    private boolean playerWon;
+//    private boolean playerWon;
     private boolean bothAttacksDone;
     private boolean displayedFinalAttack;
 
     public PikaBattle(Context context, Pikamon playerPikamon, Pikamon opponentPikamon, int[] canvasDims) {
+        this.context = context;
         this.playerPikamon = playerPikamon;
         this.opponentPikamon = opponentPikamon;
+        this.canvasDims = canvasDims;
         bothAttacksDone = false;
         displayedFinalAttack = false;
         //battleMenu = new BattleMenu();
@@ -38,24 +45,25 @@ public class PikaBattle {
         opponentHealthBar = new HealthBar(context, opponentPikamon.getHp(), false, canvasDims);
         grassBattleBackground = new BattleBackground(context, canvasDims);
 
-        attackButton = new Button(context, "ATTACK!", new int[]{canvasDims[0] / 3, canvasDims[1] / 2});
-
+        initialiseAttackButtons();
         battleText = new BattleText(context, new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
     }
 
     public void onTouch(MotionEvent event) {
         if (battleState == BattleState.Action) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                if (attackButton.contains((int) event.getX(), (int) event.getY())){
-                    executeTurn();
-                    if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
-                        playerWon = playerPikamon.getHp() <= 0;
-                        battleState = BattleState.BattleOver;
+                for (Button attackButton : attackButtons) {
+                    if (attackButton.contains((int) event.getX(), (int) event.getY())){
+                        playerAttack = attackButton.getAttack();
+                        executeTurn();
+                        if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
+//                            playerWon = playerPikamon.getHp() <= 0;
+                            battleState = BattleState.BattleOver;
+                        }
+                        else {
+                            battleState = BattleState.DisplayText;
+                        }
                     }
-                    else {
-                        battleState = BattleState.DisplayText;
-                    }
-
                 }
             }
         }
@@ -72,7 +80,7 @@ public class PikaBattle {
 
 
             if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
-                playerWon = playerPikamon.getHp() <= 0;
+//                playerWon = playerPikamon.getHp() <= 0;
                 battleState = BattleState.BattleOver;
             }
 
@@ -111,13 +119,25 @@ public class PikaBattle {
         opponentHealthBar.update(opponentPikamon.getHp());
     }
 
+    private void initialiseAttackButtons() {
+        attackButtons = new Button[playerPikamon.getAttacks().length];
+        int attackIndex = 0;
+        for (AttackMove attack : playerPikamon.getAttacks()) {
+            attackButtons[attackIndex] = new Button(context, attack, new int[]{attackIndex * (int) ((float) Button.WIDTH * 1.2) + canvasDims[0] / 3, canvasDims[1] / 2});
+            attackIndex++;
+        }
+    }
+
     private void executePlayerTurn() {
-        opponentPikamon.attackedBy(playerPikamon);
+        opponentPikamon.attackedBy(playerPikamon, playerAttack);
+        currentAttackName = playerAttack.getName();
         changeTurn();
     }
 
     private void executeOpponentTurn() {
-        playerPikamon.attackedBy(opponentPikamon);
+        AttackMove opponentAttack = opponentPikamon.getRandomAttack();
+        playerPikamon.attackedBy(opponentPikamon, opponentAttack);
+        currentAttackName = opponentAttack.getName();
         changeTurn();
     }
 
@@ -143,11 +163,13 @@ public class PikaBattle {
     }
 
     private void drawAttackMenu(Canvas canvas) {
-        attackButton.draw(canvas);
+        for (Button attackButton : attackButtons) {
+            attackButton.draw(canvas);
+        }
     }
 
     private void drawAttackText(Canvas canvas) {
-        battleText.draw(canvas, BattleText.TextType.AttackTurn, !playerTurn, "Fat Pat");
+        battleText.draw(canvas, BattleText.TextType.AttackTurn, !playerTurn, currentAttackName);
     }
 
     private void drawBattleOverText(Canvas canvas) {
