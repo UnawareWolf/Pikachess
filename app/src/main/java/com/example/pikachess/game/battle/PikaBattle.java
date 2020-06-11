@@ -2,17 +2,10 @@ package com.example.pikachess.game.battle;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.StaticLayout.Builder;
-import android.text.TextPaint;
 import android.view.MotionEvent;
 
-import com.example.pikachess.R;
 import com.example.pikachess.game.BattleBackground;
 import com.example.pikachess.game.Button;
-import com.example.pikachess.game.StaticText;
 
 public class PikaBattle {
 
@@ -21,14 +14,10 @@ public class PikaBattle {
     private HealthBar playerHealthBar;
     private HealthBar opponentHealthBar;
 //    private BattleMenu battleMenu;
-//    private Bitmap grassBattleBackground;
     private BattleBackground grassBattleBackground;
     private BattleState battleState;
     private Button attackButton;
-    private StaticText staticTextA;
-    private StaticText staticTextB;
-    private StaticText staticTextC;
-    private StaticText staticTextD;
+    private BattleText battleText;
 
     private boolean playerTurn;
     private boolean battleOver;
@@ -51,11 +40,7 @@ public class PikaBattle {
 
         attackButton = new Button(context, "ATTACK!", new int[]{canvasDims[0] / 3, canvasDims[1] / 2});
 
-        staticTextA = new StaticText(context, "Cletus' Fatty used Fat Pat!",new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
-        staticTextB = new StaticText(context, "Wild Fatty used Fat Pat!",new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
-        staticTextC = new StaticText(context, "Cletus' Fatty fainted!",new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
-        staticTextD = new StaticText(context, "Wild Fatty fainted!",new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
-
+        battleText = new BattleText(context, new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
     }
 
     public void onTouch(MotionEvent event) {
@@ -162,21 +147,11 @@ public class PikaBattle {
     }
 
     private void drawAttackText(Canvas canvas) {
-        if (!playerTurn) {
-            staticTextA.draw(canvas);
-        }
-        else {
-            staticTextB.draw(canvas);
-        }
+        battleText.draw(canvas, BattleText.TextType.AttackTurn, !playerTurn, "Fat Pat");
     }
 
     private void drawBattleOverText(Canvas canvas) {
-        if (playerWon) {
-            staticTextC.draw(canvas);
-        }
-        else {
-            staticTextD.draw(canvas);
-        }
+        battleText.draw(canvas, BattleText.TextType.Faint, playerTurn);
     }
 
     private void drawAttackOrBattleOverText(Canvas canvas) {
