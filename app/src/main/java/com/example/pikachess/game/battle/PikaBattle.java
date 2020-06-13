@@ -57,7 +57,7 @@ public class PikaBattle {
                         playerAttack = attackButton.getAttack();
                         executeTurn();
                         if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
-                            battleState = BattleState.BattleOver;
+                            setBattleStateOver();
                         }
                         else {
                             battleState = BattleState.DisplayText;
@@ -79,7 +79,7 @@ public class PikaBattle {
 
 
             if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
-                battleState = BattleState.BattleOver;
+                setBattleStateOver();
             }
 
 
@@ -115,6 +115,15 @@ public class PikaBattle {
         }
         playerHealthBar.update(playerPikamon.getHp());
         opponentHealthBar.update(opponentPikamon.getHp());
+    }
+
+    private void setBattleStateOver() {
+        if (opponentPikamon.getHp() <= 0 && playerPikamon.getHp() > 0) {
+            playerPikamon.updateExp(opponentPikamon.getExpGain());
+        }
+
+        battleState = BattleState.BattleOver;
+
     }
 
     private void initialiseAttackButtons() {

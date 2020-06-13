@@ -30,6 +30,7 @@ public class HealthBar {
     private Paint greyPaint;
     private Paint hpTextPaint;
     private Context context;
+    private Pikamon pikamon;
 
     public HealthBar(Context context, Pikamon pikamon) {
         maxHp = pikamon.getMaxHP();

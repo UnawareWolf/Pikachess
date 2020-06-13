@@ -31,7 +31,7 @@ public class Pikamuno extends Pikamon {
         baseAttack = ATTACK;
         baseDefense = DEFENSE;
         baseSpeed = SPEED;
-
+        exp = 0;
         type = PikaType.Normal;
         imageID = R.drawable.pokemon_fatty_not_resized;
         image = new PikaSprite(context, this);

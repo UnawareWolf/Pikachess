@@ -14,6 +14,7 @@ public abstract class Pikamon {
     protected int maxHP;
     protected int baseHP, baseAttack, baseDefense, baseSpeed;
     protected int baseEXP;
+    protected int exp, targetExp;
     protected boolean playerPikamon;
     protected int imageID;
     protected int[] canvasDims;
@@ -96,7 +97,20 @@ public abstract class Pikamon {
         return 1.0;
     }
 
-    public void increaseLevel() {
+    public int getExpGain() {
+        return baseEXP * level / 7;
+    }
+
+    public void updateExp(int expGain) {
+        exp = exp + expGain;
+        if (exp >= targetExp) {
+            exp = exp - targetExp;
+            increaseLevel();
+            updateExp(0);
+        }
+    }
+
+    private void increaseLevel() {
         level++;
         calculateStats();
     }
@@ -106,6 +120,7 @@ public abstract class Pikamon {
         attack = (int) getStatFromIVs("Attack", baseAttack);
         defense = (int) getStatFromIVs("Defense", baseDefense);
         speed = (int) getStatFromIVs("Speed", baseSpeed);
+        targetExp = (int) (Math.pow(level, 3) - Math.pow(level - 1, 3));
         maxHP = hp;
     }
 
@@ -127,6 +142,14 @@ public abstract class Pikamon {
 
     public boolean getIsPlayer() {
         return playerPikamon;
+    }
+
+    public int getBaseExp() {
+        return baseEXP;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
 }

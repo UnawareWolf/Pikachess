@@ -120,7 +120,8 @@ public class PlayerCharacter extends GameCharacter{
     }
 
     private void setEncounterAllowed() {
-        if (distTravelled == 0 && newSquare && rand.nextInt(PikaGame.ENCOUNTER_CHANCE - 1) == 0 && currentSquare.isEncounterSquare()) {
+        if (distTravelled == 0 && newSquare && rand.nextInt(PikaGame.ENCOUNTER_CHANCE - 1) == 0
+                && currentSquare.isEncounterSquare() && pikamen.get(0).getHp() > 0) {
             characterState = getStationaryState();
             encounterAllowed = true;
             newSquare = false;
