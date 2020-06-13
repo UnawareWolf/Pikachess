@@ -18,8 +18,9 @@ public abstract class GameCharacter {
     protected CharacterState stateAccordingToJoystick;
     protected Random rand;
 
+    protected Context context;
     protected int gridSquareSize;
-    protected int canvasWidth;
+    protected int canvasWidth, canvasHeight;
     protected int waitTime;
     protected int timeToWait;
     protected double xMoved, yMoved, speed;
@@ -35,9 +36,11 @@ public abstract class GameCharacter {
 
     public GameCharacter(Context context, PikaGame pikaGame) {
         canvasWidth = pikaGame.getCanvasWidth();
+        canvasHeight = pikaGame.getCanvasHeight();
         bitmapResizeFactor = pikaGame.getBitmapResizeFactor();
         gridSquareSize = pikaGame.getPixelsAcrossSquare();
         startingShift = pikaGame.getStartingShift();
+        this.context = context;
 
         rand = new Random();
         timeToWait = rand.nextInt(40);

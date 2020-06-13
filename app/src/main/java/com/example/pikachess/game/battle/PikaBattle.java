@@ -57,7 +57,6 @@ public class PikaBattle {
                         playerAttack = attackButton.getAttack();
                         executeTurn();
                         if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
-//                            playerWon = playerPikamon.getHp() <= 0;
                             battleState = BattleState.BattleOver;
                         }
                         else {
@@ -80,7 +79,6 @@ public class PikaBattle {
 
 
             if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
-//                playerWon = playerPikamon.getHp() <= 0;
                 battleState = BattleState.BattleOver;
             }
 

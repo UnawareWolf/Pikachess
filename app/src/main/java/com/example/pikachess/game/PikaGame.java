@@ -89,7 +89,7 @@ public class PikaGame {
         if (mainCharacter.isEncounterAllowed()) {
             gameState = PikaGameState.Battle;
             joystickButton.release(mainCharacter);
-            pikaBattle = new PikaBattle(context, new Pikamuno(context, true, canvasDims), new Pikamuno(context, false, canvasDims), canvasDims);
+            pikaBattle = new PikaBattle(context, mainCharacter.getPikamen().get(0), new Pikamuno(context, false, canvasDims, 2), canvasDims);
         }
     }
 
@@ -137,6 +137,10 @@ public class PikaGame {
 
     public int getCanvasWidth() {
         return this.canvasDims[0];
+    }
+
+    public int getCanvasHeight() {
+        return this.canvasDims[1];
     }
 
     public double getBitmapResizeFactor() {

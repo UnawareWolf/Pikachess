@@ -2,6 +2,12 @@ package com.example.pikachess.game;
 
 import android.content.Context;
 
+import com.example.pikachess.game.battle.Pikamon;
+import com.example.pikachess.game.battle.pikamen.Pikamuno;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Math.abs;
 
 public class PlayerCharacter extends GameCharacter{
@@ -9,6 +15,7 @@ public class PlayerCharacter extends GameCharacter{
     private int xOnScreen, yOnScreen;
     private boolean newSquare;
     private boolean encounterAllowed;
+    private List<Pikamon> pikamen;
 
     public PlayerCharacter(Context context, PikaGame pikaGame) {
         super(context, pikaGame);
@@ -19,8 +26,10 @@ public class PlayerCharacter extends GameCharacter{
         yOnScreen = canvasWidth / 2;
 
         spriteSheet = new CharacterSpriteSheet(context, this, xOnScreen, yOnScreen);
+        pikamen = new ArrayList<>();
 
         updateCurrentSquare();
+        addPikamon();
     }
 
     public void setCharacterState(CharacterState characterState) {
@@ -135,4 +144,14 @@ public class PlayerCharacter extends GameCharacter{
     public boolean isEncounterAllowed() {
         return encounterAllowed;
     }
+
+    public void addPikamon() {
+        Pikamuno pikamuno = new Pikamuno(context, true, new int[]{canvasWidth, canvasHeight}, 5);
+        pikamen.add(pikamuno);
+    }
+
+    public List<Pikamon> getPikamen() {
+        return pikamen;
+    }
+
 }
