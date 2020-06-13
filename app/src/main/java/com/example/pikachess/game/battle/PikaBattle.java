@@ -41,8 +41,8 @@ public class PikaBattle {
         battleState = BattleState.Action;
         playerTurn = playerPikamon.getSpeed() > opponentPikamon.getSpeed();
         battleOver = false;
-        playerHealthBar = new HealthBar(context, playerPikamon.getHp(), true, canvasDims);
-        opponentHealthBar = new HealthBar(context, opponentPikamon.getHp(), false, canvasDims);
+        playerHealthBar = new HealthBar(context, playerPikamon);
+        opponentHealthBar = new HealthBar(context, opponentPikamon);
         grassBattleBackground = new BattleBackground(context, canvasDims);
 
         initialiseAttackButtons();

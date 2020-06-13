@@ -11,6 +11,7 @@ import java.util.Random;
 public abstract class Pikamon {
 
     protected int hp, attack, defense, speed;
+    protected int maxHP;
     protected int baseHP, baseAttack, baseDefense, baseSpeed;
     protected int baseEXP;
     protected boolean playerPikamon;
@@ -105,6 +106,7 @@ public abstract class Pikamon {
         attack = (int) getStatFromIVs("Attack", baseAttack);
         defense = (int) getStatFromIVs("Defense", baseDefense);
         speed = (int) getStatFromIVs("Speed", baseSpeed);
+        maxHP = hp;
     }
 
     private double getStatFromIVs(String ivKey, int baseStat) {
@@ -117,6 +119,14 @@ public abstract class Pikamon {
         ivs.put("Attack", rand.nextInt(32));
         ivs.put("Defense", rand.nextInt(32));
         ivs.put("Speed", rand.nextInt(32));
+    }
+
+    public int getMaxHP() {
+        return maxHP;
+    }
+
+    public boolean getIsPlayer() {
+        return playerPikamon;
     }
 
 }

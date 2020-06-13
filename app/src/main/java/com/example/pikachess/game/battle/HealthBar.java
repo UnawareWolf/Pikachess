@@ -31,15 +31,16 @@ public class HealthBar {
     private Paint hpTextPaint;
     private Context context;
 
-    public HealthBar(Context context, int maxHp, boolean isPlayer, int[] canvasDims) {
-        this.maxHp = maxHp;
-        this.currentHp = maxHp;
-        this.isPlayer = isPlayer;
+    public HealthBar(Context context, Pikamon pikamon) {
+        maxHp = pikamon.getMaxHP();
+        currentHp = pikamon.getHp();
+        isPlayer = pikamon.getIsPlayer();
         this.context = context;
-        canvasWidth = canvasDims[0];
+        canvasWidth = pikamon.getCanvasDims()[0];
         setPositionValues();
         borderRect = new Rect(xLeft - BORDER_WIDTH, yTop - BORDER_WIDTH, xLeft + WIDTH + BORDER_WIDTH, yTop + HEIGHT + BORDER_WIDTH);
-        healthRect = new Rect(xLeft, yTop, xLeft + WIDTH, yTop + HEIGHT);
+        healthRect = new Rect();
+
         //greyRect = new Rect();
         borderPaint = new Paint();
         borderPaint.setStyle(Paint.Style.STROKE);
@@ -54,6 +55,7 @@ public class HealthBar {
         hpTextPaint.setTextSize(3 * HEIGHT / (float) 2);
         hpTextPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         //greyPaint = new Paint();
+        update(currentHp);
         updateHPText();
     }
 
