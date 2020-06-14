@@ -36,8 +36,8 @@ public abstract class Pikamon {
     }
 
     public void attackedBy(Pikamon attackingPikamon, AttackMove attackMove) {
-        int damage = (int) (((((2 * level / 5 + 2) * attackingPikamon.getAttackStat() * attackMove.getDamage() / defense)
-                        / 50) + 2) * attackingPikamon.getSTAB(attackMove) * getEffectiveness() * (85 + rand.nextInt(15)) / 100);
+        int damage = (int) (((((2 * attackingPikamon.getLevel() / 5 + 2) * attackingPikamon.getAttackStat() * attackMove.getDamage() / defense)
+                        / 50) + 2) * attackingPikamon.getSTAB(attackMove) * getEffectiveness() * (85 + rand.nextInt(16)) / 100);
         hp = hp - damage;
 //        hp = hp - attackMove.getDamage();
         if (hp < 0) {
@@ -116,12 +116,13 @@ public abstract class Pikamon {
     }
 
     protected void calculateStats() {
-        hp = (int) getStatFromIVs("HP", baseHP) + 5 + level;
+        int oldMaxHP = maxHP;
+        maxHP = (int) getStatFromIVs("HP", baseHP) + 5 + level;
         attack = (int) getStatFromIVs("Attack", baseAttack);
         defense = (int) getStatFromIVs("Defense", baseDefense);
         speed = (int) getStatFromIVs("Speed", baseSpeed);
         targetExp = (int) (Math.pow(level, 3) - Math.pow(level - 1, 3));
-        maxHP = hp;
+        hp += maxHP - oldMaxHP;
     }
 
     private double getStatFromIVs(String ivKey, int baseStat) {

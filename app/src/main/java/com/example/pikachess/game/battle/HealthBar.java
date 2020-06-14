@@ -48,7 +48,7 @@ public class HealthBar {
         canvasWidth = pikamon.getCanvasDims()[0];
         setPositionValues();
         borderRect = new Rect(xLeft , yTop, xLeft + WIDTH, yTop + HEIGHT);
-        expBorderRect = new Rect(xLeft, yTop + HEIGHT + BORDER_WIDTH, xLeft + WIDTH, yTop + (3 * HEIGHT / 2) + BORDER_WIDTH);
+        expBorderRect = new Rect(xLeft, yTop + HEIGHT, xLeft + WIDTH, yTop + (3 * HEIGHT / 2));
         healthRect = new Rect();
         expRect = new Rect();
 
@@ -93,7 +93,7 @@ public class HealthBar {
         xHp = (currentHp / (float) maxHp) * WIDTH;
         xEXP = (currentEXP / (float) targetEXP) * WIDTH;
         healthRect.set(xLeft, yTop, xLeft + (int) xHp, yTop + HEIGHT);
-        expRect.set(xLeft, yTop + HEIGHT - BORDER_WIDTH, xLeft + (int) xEXP, yTop + (3 * HEIGHT / 2) + BORDER_WIDTH);
+        expRect.set(xLeft, yTop + HEIGHT, xLeft + (int) xEXP, yTop + (3 * HEIGHT / 2));
         updateHealthColour();
         updateHPText();
     }

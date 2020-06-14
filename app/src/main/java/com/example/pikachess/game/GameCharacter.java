@@ -119,7 +119,7 @@ public abstract class GameCharacter {
     }
 
     public void draw(Canvas canvas) {
-        spriteSheet.draw(canvas, characterState);
+        spriteSheet.draw(canvas, characterState);//Separate update next sprite from draw. Put it in update somewhere.
     }
 
     protected void updateCharacterMotionAndPosition() {
