@@ -10,6 +10,7 @@ public class PixelSquare {
     private int x, y;
     private boolean canWalkUp, canWalkLeft, canWalkDown, canWalkRight;
     private boolean encounterSquare;
+    private GameCharacter gameCharacter;
 
     public PixelSquare(int x, int y) {
         this.x = x;
@@ -107,4 +108,13 @@ public class PixelSquare {
     public boolean isEncounterSquare() {
         return encounterSquare;
     }
+
+    public void setGameCharacter(GameCharacter gameCharacter) {
+        this.gameCharacter = gameCharacter;
+    }
+
+    public GameCharacter getGameCharacter() {
+        return gameCharacter;
+    }
+
 }

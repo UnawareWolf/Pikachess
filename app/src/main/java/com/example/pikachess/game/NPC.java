@@ -162,6 +162,32 @@ public class NPC extends GameCharacter {
         }
     }
 
+//    @Override
+//    public void updateCurrentSquare() {
+//        if (currentSquare != null) {
+//            currentSquare = getCurrentSquareFromPixelMap();
+//            currentSquare.setWalkable(false);
+//            if (distTravelled == 0) {
+//
+//
+//                if (lastSquare != currentSquare) {
+//                    lastSquare.setWalkable(true);
+//                    lastSquare = nextSquare;
+//                }
+//
+//                nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
+//                nextSquare.setWalkable(false);
+//            }
+//
+//        }
+//        else {
+//            currentSquare = getCurrentSquareFromPixelMap();
+//            lastSquare = currentSquare;
+//            nextSquare = pixelMap.getNextSquare(currentSquare, characterState);
+//            currentSquare.setWalkable(false);
+//        }
+//    }
+
     @Override
     protected PixelSquare getCurrentSquareFromPixelMap() {
         return pixelMap.getSquareFromBackgroundLocation(xNew + mainCharacter.getXMoved(), yNew + mainCharacter.getYMoved(), bitmapResizeFactor);

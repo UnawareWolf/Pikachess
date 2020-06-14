@@ -113,8 +113,8 @@ public class PikaBattle {
         else {
             executeOpponentTurn();
         }
-        playerHealthBar.update(playerPikamon.getHp());
-        opponentHealthBar.update(opponentPikamon.getHp());
+        playerHealthBar.update();
+        opponentHealthBar.update();
     }
 
     private void setBattleStateOver() {

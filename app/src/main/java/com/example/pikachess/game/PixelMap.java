@@ -176,4 +176,40 @@ public class PixelMap {
         }
         return nextSquare;
     }
+
+    public PixelSquare getFacingSquare(GameCharacter gameCharacter) {
+        int currentX = gameCharacter.getCurrentSquare().getX();
+        int currentY = gameCharacter.getCurrentSquare().getY();
+        PixelSquare nextSquare = null;
+        switch (gameCharacter.getCharacterState()) {
+            case MovingLeft:
+            case StationaryLeft:
+                if (currentX > 0) {
+                    nextSquare = pixelSquares[currentX - 1][currentY];
+                }
+                break;
+            case MovingUp:
+            case StationaryUp:
+                if (currentY > 0) {
+                    nextSquare = pixelSquares[currentX][currentY - 1];
+                }
+                break;
+            case MovingRight:
+            case StationaryRight:
+                if (currentX + 1 < width) {
+                    nextSquare = pixelSquares[currentX + 1][currentY];
+                }
+                break;
+            case MovingDown:
+            case StationaryDown:
+                if (currentY + 1 < height) {
+                    nextSquare = pixelSquares[currentX][currentY + 1];
+                }
+                break;
+            default:
+                nextSquare = gameCharacter.getCurrentSquare();
+        }
+        return nextSquare;
+    }
+
 }

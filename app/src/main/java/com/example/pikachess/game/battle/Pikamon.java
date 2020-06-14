@@ -152,4 +152,16 @@ public abstract class Pikamon {
         return level;
     }
 
+    public void restoreHP() {
+        hp = maxHP;
+    }
+
+    public int getExp() {
+        return exp;
+    }
+
+    public int getTargetEXP() {
+        return targetExp;
+    }
+
 }

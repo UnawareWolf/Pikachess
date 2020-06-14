@@ -25,6 +25,7 @@ public class PikaGame {
     private List<NPC> npcList;
     private GameBackground background;
     private JoystickButton joystickButton;
+    private ControllerButton aButton;
     private PixelMap pixelMap;
     private Random rand;
     private PikaBattle pikaBattle;
@@ -36,6 +37,7 @@ public class PikaGame {
     private double bitmapResizeFactor;
     private double[] startingShift;
     private Context context;
+    private TextBox fattyHealTextBox;
 
     public PikaGame(Context context, GameView gameView) {
         this.context = context;
@@ -50,7 +52,8 @@ public class PikaGame {
         pixelMap = new PixelMap(context);
 
         rand = new Random();
-
+        fattyHealTextBox = new TextBox(context, new int[]{canvasDims[0] / 4, 2 * canvasDims[1] / 3}, "Sure, I can heal your Pokes.");
+        aButton = new ControllerButton(context, (float) 2 * canvasDims[0] / 3, (float) 2 * canvasDims[1] / 3);
         //background = new GameBackground(context, canvasWidth);
         background = new GameBackground(context, this);
         bitmapResizeFactor = background.getBitmapResizeFactor();
@@ -111,23 +114,42 @@ public class PikaGame {
 
     public void drawGame(Canvas canvas) {
         if (gameState == PikaGameState.Roam) {
-            background.draw(canvas);
-            mainCharacter.draw(canvas);
-            drawNPCs(canvas);
-            joystickButton.draw(canvas);
+//            background.draw(canvas);
+//            mainCharacter.draw(canvas);
+//            drawNPCs(canvas);
+//            joystickButton.draw(canvas);
+//            aButton.draw(canvas);
+            drawRoamContent(canvas);
         }
         else if (gameState == PikaGameState.Battle) {
             pikaBattle.draw(canvas);
         }
+        else if (gameState == PikaGameState.Talk) {
+            drawRoamContent(canvas);
+            fattyHealTextBox.draw(canvas);
+        }
+    }
+
+    private void drawRoamContent(Canvas canvas) {
+        background.draw(canvas);
+        mainCharacter.draw(canvas);
+        drawNPCs(canvas);
+        joystickButton.draw(canvas);
+        aButton.draw(canvas);
     }
 
     public void onTouchEvent(MotionEvent event) {
         if (gameState == PikaGameState.Roam) {
             joystickButton.onTouchEvent(event, mainCharacter);
+            aButton.onTouchEvent(event, this, mainCharacter, pixelMap);
         }
         else if (gameState == PikaGameState.Battle && event.getAction() == MotionEvent.ACTION_DOWN) {
             //gameState = PikaGameState.Roam;
             pikaBattle.onTouch(event);
+        }
+        else if (gameState == PikaGameState.Talk && event.getAction() == MotionEvent.ACTION_DOWN) {
+            mainCharacter.getPikamen().get(0).restoreHP();
+            gameState = PikaGameState.Roam;
         }
     }
 

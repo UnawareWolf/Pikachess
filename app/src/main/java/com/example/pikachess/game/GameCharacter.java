@@ -166,14 +166,16 @@ public abstract class GameCharacter {
     }
 
     public void updateCurrentSquare() {
-        if (currentSquare != null) {
+        if (currentSquare != null) {// doesn't this only happen the very first time?
             currentSquare = getCurrentSquareFromPixelMap();
             currentSquare.setWalkable(false);
+            currentSquare.setGameCharacter(this);
             if (distTravelled == 0) {
 
 
                 if (lastSquare != currentSquare) {
                     lastSquare.setWalkable(true);
+                    lastSquare.setGameCharacter(null);// double check this
                     lastSquare = nextSquare;
                 }
 
@@ -192,6 +194,10 @@ public abstract class GameCharacter {
 
     public double getDistTravelled() {
         return distTravelled;
+    }
+
+    public CharacterState getCharacterState() {
+        return characterState;
     }
 
 }
