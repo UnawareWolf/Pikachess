@@ -9,14 +9,13 @@ import com.example.pikachess.R;
 
 public class ControllerButton {
 
-    private static final int RADIUS = 100;
     private Paint paint;
     private Circle circle;
 
-    public ControllerButton(Context context, float centreX, float centreY) {
-        circle = new Circle(centreX, centreY, RADIUS);
+    public ControllerButton(Context context, float centreX, float centreY, int radius, int colourID) {
+        circle = new Circle(centreX, centreY, radius);
         paint = new Paint();
-        paint.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
+        paint.setColor(context.getResources().getColor(colourID));
         paint.setStrokeWidth(12);
         paint.setStyle(Paint.Style.FILL);
 

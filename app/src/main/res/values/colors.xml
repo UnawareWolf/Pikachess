@@ -16,4 +16,6 @@
     <color name="red">#ff0000</color>
     <color name="orange">#ff9900</color>
     <color name="expBlue">#00aeff</color>
+    <color name="greenGCA">#8ce6bd</color>
+    <color name="redGCB">#e62412</color>
 </resources>

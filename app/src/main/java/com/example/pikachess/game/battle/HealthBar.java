@@ -78,11 +78,12 @@ public class HealthBar {
         if (isPlayer) {
             canvas.drawRect(expRect, expPaint);
             canvas.drawRect(expBorderRect, borderPaint);
+            canvas.drawText(hpText, xLeft + WIDTH * 2 / (float) 3, yTop + (float) (3.5 * HEIGHT), hpTextPaint);
         }
         canvas.drawRect(borderRect, borderPaint);
 
         //canvas.drawRect(greyRect, greyPaint);
-        canvas.drawText(hpText, xLeft + WIDTH * 2 / (float) 3, yTop + (float) (3.5 * HEIGHT), hpTextPaint);
+
         canvas.drawText("Lv" + level, xLeft + WIDTH * 3 / (float) 4, yTop - 2 * HEIGHT / (float) 3, hpTextPaint);
     }
 

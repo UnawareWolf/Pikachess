@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
+import com.example.pikachess.R;
 import com.example.pikachess.game.battle.PikaBattle;
 import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.battle.pikamen.Pikamuno;
@@ -25,7 +26,7 @@ public class PikaGame {
     private List<NPC> npcList;
     private GameBackground background;
     private JoystickButton joystickButton;
-    private ControllerButton aButton;
+    private ControllerButton aButton, bButton;
     private PixelMap pixelMap;
     private Random rand;
     private PikaBattle pikaBattle;
@@ -53,7 +54,8 @@ public class PikaGame {
 
         rand = new Random();
         fattyHealTextBox = new TextBox(context, new int[]{canvasDims[0] / 4, 2 * canvasDims[1] / 3}, "Sure, I can heal your Pokes.");
-        aButton = new ControllerButton(context, (float) 2 * canvasDims[0] / 3, (float) 2 * canvasDims[1] / 3);
+        aButton = new ControllerButton(context, (float) 2 * canvasDims[0] / 3, (float) 2 * canvasDims[1] / 3, 80, R.color.greenGCA);
+        bButton = new ControllerButton(context, (float) 16 * canvasDims[0] / 30, (float) 22 * canvasDims[1] / 30, 40, R.color.redGCB);
         //background = new GameBackground(context, canvasWidth);
         background = new GameBackground(context, this);
         bitmapResizeFactor = background.getBitmapResizeFactor();
@@ -120,6 +122,9 @@ public class PikaGame {
 //            joystickButton.draw(canvas);
 //            aButton.draw(canvas);
             drawRoamContent(canvas);
+            joystickButton.draw(canvas);
+            aButton.draw(canvas);
+            bButton.draw(canvas);
         }
         else if (gameState == PikaGameState.Battle) {
             pikaBattle.draw(canvas);
@@ -134,8 +139,6 @@ public class PikaGame {
         background.draw(canvas);
         mainCharacter.draw(canvas);
         drawNPCs(canvas);
-        joystickButton.draw(canvas);
-        aButton.draw(canvas);
     }
 
     public void onTouchEvent(MotionEvent event) {
