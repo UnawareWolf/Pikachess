@@ -10,7 +10,10 @@ public class Circle {
 
     private float radius, x, y;
 
-    public Circle() {
+    public Circle(Circle circle) {
+        radius = circle.radius;
+        x = circle.x;
+        y = circle.y;
     }
 
     public Circle(float x, float y, float radius) {

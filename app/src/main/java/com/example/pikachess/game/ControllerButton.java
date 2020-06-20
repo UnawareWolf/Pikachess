@@ -10,19 +10,24 @@ import com.example.pikachess.R;
 public class ControllerButton {
 
     private Paint paint;
+    private Paint borderPaint;
     private Circle circle;
 
     public ControllerButton(Context context, float centreX, float centreY, int radius, int colourID) {
         circle = new Circle(centreX, centreY, radius);
         paint = new Paint();
         paint.setColor(context.getResources().getColor(colourID));
-        paint.setStrokeWidth(12);
-        paint.setStyle(Paint.Style.FILL);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
+        borderPaint = new Paint();
+        borderPaint.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setStrokeWidth(6);
     }
 
     public void draw(Canvas canvas) {
         circle.draw(canvas, paint);
+        circle.draw(canvas, borderPaint);
     }
 
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame, PlayerCharacter mainCharacter, PixelMap pixelMap) {

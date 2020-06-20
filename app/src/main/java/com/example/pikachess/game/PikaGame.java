@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.view.MotionEvent;
 
 import com.example.pikachess.R;
+import com.example.pikachess.game.battle.GamePad;
 import com.example.pikachess.game.battle.PikaBattle;
 import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.battle.pikamen.Pikamuno;
@@ -39,6 +40,7 @@ public class PikaGame {
     private double[] startingShift;
     private Context context;
     private TextBox fattyHealTextBox;
+    private GamePad gamePad;
 
     public PikaGame(Context context, GameView gameView) {
         this.context = context;
@@ -56,6 +58,8 @@ public class PikaGame {
         fattyHealTextBox = new TextBox(context, new int[]{canvasDims[0] / 4, 2 * canvasDims[1] / 3}, "Sure, I can heal your Pokes.");
         aButton = new ControllerButton(context, (float) 2 * canvasDims[0] / 3, (float) 2 * canvasDims[1] / 3, 80, R.color.greenGCA);
         bButton = new ControllerButton(context, (float) 16 * canvasDims[0] / 30, (float) 22 * canvasDims[1] / 30, 40, R.color.redGCB);
+        gamePad = new GamePad(context, canvasDims);
+
         //background = new GameBackground(context, canvasWidth);
         background = new GameBackground(context, this);
         bitmapResizeFactor = background.getBitmapResizeFactor();
@@ -116,15 +120,11 @@ public class PikaGame {
 
     public void drawGame(Canvas canvas) {
         if (gameState == PikaGameState.Roam) {
-//            background.draw(canvas);
-//            mainCharacter.draw(canvas);
-//            drawNPCs(canvas);
+            drawRoamContent(canvas);
 //            joystickButton.draw(canvas);
 //            aButton.draw(canvas);
-            drawRoamContent(canvas);
-            joystickButton.draw(canvas);
-            aButton.draw(canvas);
-            bButton.draw(canvas);
+//            bButton.draw(canvas);
+            gamePad.draw(canvas);
         }
         else if (gameState == PikaGameState.Battle) {
             pikaBattle.draw(canvas);
@@ -143,8 +143,9 @@ public class PikaGame {
 
     public void onTouchEvent(MotionEvent event) {
         if (gameState == PikaGameState.Roam) {
-            joystickButton.onTouchEvent(event, mainCharacter);
-            aButton.onTouchEvent(event, this, mainCharacter, pixelMap);
+            gamePad.onTouchEvent(event, this, mainCharacter, pixelMap);
+//            joystickButton.onTouchEvent(event, mainCharacter);
+//            aButton.onTouchEvent(event, this, mainCharacter, pixelMap);
         }
         else if (gameState == PikaGameState.Battle && event.getAction() == MotionEvent.ACTION_DOWN) {
             //gameState = PikaGameState.Roam;

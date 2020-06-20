@@ -5,8 +5,10 @@ import android.graphics.Canvas;
 import com.example.pikachess.game.SpriteSheet;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public abstract class Pikamon {
 
@@ -19,9 +21,10 @@ public abstract class Pikamon {
     protected int imageID;
     protected int[] canvasDims;
     protected int level;
-    protected PikaType type;
+    //protected PikaTypeID type;
     protected Map<String, Integer> ivs;
 
+    protected Set<PikaType> types;
     protected SpriteSheet image;
     protected Random rand;
     protected AttackMove[] attacks;
@@ -32,12 +35,13 @@ public abstract class Pikamon {
         this.playerPikamon = playerPikamon;
         this.canvasDims = canvasDims;
         rand = new Random();
+        types = new HashSet<>();
         createIVs();
     }
 
     public void attackedBy(Pikamon attackingPikamon, AttackMove attackMove) {
         int damage = (int) (((((2 * attackingPikamon.getLevel() / 5 + 2) * attackingPikamon.getAttackStat() * attackMove.getDamage() / defense)
-                        / 50) + 2) * attackingPikamon.getSTAB(attackMove) * getEffectiveness() * (85 + rand.nextInt(16)) / 100);
+                        / 50) + 2) * attackingPikamon.getSTAB(attackMove) * getEffectiveness(attackMove) * (85 + rand.nextInt(16)) / 100);
         hp = hp - damage;
 //        hp = hp - attackMove.getDamage();
         if (hp < 0) {
@@ -87,14 +91,21 @@ public abstract class Pikamon {
 
     public double getSTAB(AttackMove attackMove) {
         double stab = 1;
-        if (type == attackMove.getType()) {
-            stab = 1.5;
+        for (PikaType type : types) {
+            if (type.getID() == attackMove.getTypeID()) {
+                stab = 1.5;
+                break;
+            }
         }
         return stab;
     }
 
-    public double getEffectiveness() {
-        return 1.0;
+    public double getEffectiveness(AttackMove attackMove) {
+        double effectiveness = 1.0;
+        for (PikaType type : types) {
+            effectiveness *= type.getEffectivenessMultiplier(attackMove.getTypeID());
+        }
+        return effectiveness;
     }
 
     public int getExpGain() {

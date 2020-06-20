@@ -1,19 +1,15 @@
 package com.example.pikachess.game.battle.pikamen;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 
 import com.example.pikachess.R;
-import com.example.pikachess.game.PikaGame;
 import com.example.pikachess.game.PikaSprite;
-import com.example.pikachess.game.SpriteSheet;
 import com.example.pikachess.game.battle.AttackMove;
-import com.example.pikachess.game.battle.AttackMoves.FatPat;
-import com.example.pikachess.game.battle.AttackMoves.TreadmillTrod;
-import com.example.pikachess.game.battle.PikaType;
+import com.example.pikachess.game.battle.attackMoves.FatPat;
+import com.example.pikachess.game.battle.attackMoves.TreadmillTrod;
+import com.example.pikachess.game.battle.PikaTypeID;
 import com.example.pikachess.game.battle.Pikamon;
-
-import java.util.Random;
+import com.example.pikachess.game.battle.types.Normal;
 
 public class Pikamuno extends Pikamon {
 
@@ -32,7 +28,7 @@ public class Pikamuno extends Pikamon {
         baseDefense = DEFENSE;
         baseSpeed = SPEED;
         exp = 0;
-        type = PikaType.Normal;
+        types.add(new Normal());
         imageID = R.drawable.pokemon_fatty_not_resized;
         image = new PikaSprite(context, this);
 

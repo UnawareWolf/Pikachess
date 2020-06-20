@@ -11,7 +11,7 @@ import static java.lang.Math.abs;
 
 public class JoystickButton {
 
-    private static final int OUTER_RADIUS = 100;
+    public static final int OUTER_RADIUS = 100;
     private static final int INNER_RADIUS = 50;
     private static final int DEAD_ZONE = 20;
     //private Rect mRect;
@@ -33,7 +33,7 @@ public class JoystickButton {
         outerCircle = new Circle(centreX, centreY, OUTER_RADIUS);
         outlinePaint = new Paint();
         outlinePaint.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
-        outlinePaint.setStrokeWidth(12);
+        outlinePaint.setStrokeWidth(6);
         outlinePaint.setStyle(Paint.Style.STROKE);
 
         innerCircle = new Circle(centreX, centreY, INNER_RADIUS);
