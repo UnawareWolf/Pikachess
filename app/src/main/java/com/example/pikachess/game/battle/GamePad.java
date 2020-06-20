@@ -31,19 +31,13 @@ public class GamePad {
         xRight = canvasDims[0] - xLeft;
         y = canvasDims[1] * 2 / (float) 3;
         int aRadius = canvasDims[0] / 16;
-        int bRadius = aRadius / 2;
+        int bRadius = aRadius * 2 / 3;
         buttonOffset = bRadius + aRadius * 3 / (float) 2;
-
-
-
-//        float bX = xRight - buttonOffset;
-//        float bY = y + buttonOffset;
-//        float yY = y - buttonOffset;
 
         aButton = new ControllerButton(context, xRight, y, aRadius, R.color.greenGCA);
         bButton = new ControllerButton(context, xRight + calculateXOffset(B_ANGLE), y + calculateYOffset(B_ANGLE), bRadius, R.color.redGCB);
         yButton = new ControllerButton(context, xRight + calculateXOffset(Y_ANGLE), y + calculateYOffset(Y_ANGLE), bRadius, R.color.buttonGrey);
-        joystick = new JoystickButton(context, xLeft, y);
+        joystick = new JoystickButton(context, xLeft + JoystickButton.OUTER_RADIUS, y);
     }
 
     private float calculateXOffset(int angle) {
@@ -63,6 +57,12 @@ public class GamePad {
 
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame, PlayerCharacter mainCharacter, PixelMap pixelMap) {
         joystick.onTouchEvent(event, mainCharacter);
-        aButton.onTouchEvent(event, pikaGame, mainCharacter, pixelMap);
+        aButton.onTouchEventA(event, pikaGame, mainCharacter, pixelMap);
+        bButton.onTouchEventB(event, mainCharacter);
+        yButton.onTouchEventY(event, pikaGame);
+    }
+
+    public void release(PlayerCharacter mainCharacter) {
+        joystick.release(mainCharacter);
     }
 }

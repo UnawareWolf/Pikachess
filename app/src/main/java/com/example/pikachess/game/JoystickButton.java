@@ -11,7 +11,7 @@ import static java.lang.Math.abs;
 
 public class JoystickButton {
 
-    public static final int OUTER_RADIUS = 100;
+    public static final int OUTER_RADIUS = 150;
     private static final int INNER_RADIUS = 50;
     private static final int DEAD_ZONE = 20;
     //private Rect mRect;

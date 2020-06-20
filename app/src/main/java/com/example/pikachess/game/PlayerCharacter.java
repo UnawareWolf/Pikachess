@@ -16,11 +16,14 @@ public class PlayerCharacter extends GameCharacter{
     private boolean newSquare;
     private boolean encounterAllowed;
     private List<Pikamon> pikamen;
+    private boolean running;
 
     public PlayerCharacter(Context context, PikaGame pikaGame) {
         super(context, pikaGame);
         encounterAllowed = true;
         newSquare = true;
+
+        speed = gridSquareSize / 20d;
 
         xOnScreen = canvasWidth / 2;
         yOnScreen = canvasWidth / 2;
@@ -153,6 +156,11 @@ public class PlayerCharacter extends GameCharacter{
 
     public List<Pikamon> getPikamen() {
         return pikamen;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
+        speed = running ? gridSquareSize / 10d : gridSquareSize / 20d;
     }
 
 }

@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 
+import androidx.core.view.MotionEventCompat;
+
 import com.example.pikachess.R;
 
 public class ControllerButton {
@@ -30,11 +32,54 @@ public class ControllerButton {
         circle.draw(canvas, borderPaint);
     }
 
-    public void onTouchEvent(MotionEvent event, PikaGame pikaGame, PlayerCharacter mainCharacter, PixelMap pixelMap) {
+    public void onTouchEventA(MotionEvent event, PikaGame pikaGame, PlayerCharacter mainCharacter, PixelMap pixelMap) {
         float xTouch = event.getX();
         float yTouch = event.getY();
         if (event.getAction() == MotionEvent.ACTION_DOWN && isTouchWithinButton(xTouch, yTouch)) {
             touchAction(pikaGame, mainCharacter, pixelMap);
+        }
+    }
+
+    public void onTouchEventB(MotionEvent event, PlayerCharacter mainCharacter) {
+        float xTouch;
+        float yTouch;
+        int pointerCount = event.getPointerCount();
+        if (pointerCount > 1) {
+            xTouch = event.getX(1);
+            yTouch = event.getY(1);
+        }
+        else {
+            xTouch = event.getX();
+            yTouch = event.getY();
+        }
+//        int pointerCount = event.getPointerCount();
+//        int normalAction = event.getActionIndex();
+//        int action = event.getActionMasked();
+//        int expectedAction = MotionEvent.ACTION_POINTER_DOWN;
+//        if (pointerCount > 1) {
+//            System.out.println();
+//        }
+//        if (isTouchWithinButton(xTouch, yTouch)) {
+//            System.out.println();
+//
+//        }
+
+        if (event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN && isTouchWithinButton(xTouch, yTouch)) {
+            mainCharacter.setRunning(true);
+        }
+        else if (event.getAction() == MotionEvent.ACTION_UP) {
+            mainCharacter.setRunning(false);
+        }
+    }
+
+    public void onTouchEventY(MotionEvent event, PikaGame pikaGame) {
+        float xTouch = event.getX();
+        float yTouch = event.getY();
+        if (event.getAction() == MotionEvent.ACTION_DOWN && isTouchWithinButton(xTouch, yTouch)) {
+            pikaGame.setGameState(PikaGameState.Menu);
+            for (NPC npc : pikaGame.getNPCs()) {
+                npc.getSpriteSheet().setPause(true);
+            }
         }
     }
 

@@ -49,7 +49,7 @@ public abstract class GameCharacter {
         characterState = CharacterState.StationaryDown;
         distTravelled = 0;
 
-        speed = (double) gridSquareSize / 10;
+        //speed = (double) gridSquareSize / 10;
         xMoved = 0;
         yMoved = 0;
 
@@ -198,6 +198,10 @@ public abstract class GameCharacter {
 
     public CharacterState getCharacterState() {
         return characterState;
+    }
+
+    public CharacterSpriteSheet getSpriteSheet() {
+        return spriteSheet;
     }
 
 }

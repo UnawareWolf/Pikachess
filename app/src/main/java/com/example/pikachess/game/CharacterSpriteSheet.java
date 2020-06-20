@@ -29,9 +29,11 @@ public class CharacterSpriteSheet extends SpriteSheet {
     private int drawCount = 0;
     private int animationNumber = 1;
     private boolean moveWithBackground;
+    private boolean pause;
 
     public CharacterSpriteSheet(Context context, GameCharacter gameCharacter, int centreX, int centreY) {
         super();
+        pause = false;
         canvasWidth = gameCharacter.getCanvasWidth();
         numberOfAnimations = NUMBER_OF_ANIMATIONS;
 
@@ -58,7 +60,6 @@ public class CharacterSpriteSheet extends SpriteSheet {
         if (characterState == CharacterState.MovingDown) {
             canvas.drawBitmap(image, animationSections.get(animationNumber), spritePosition, filterPaint);
             nextFrame(walkingDown);
-            //nextAnimationNumber();
         }
         else if (characterState == CharacterState.MovingUp) {
             canvas.drawBitmap(image, animationSections.get(animationNumber), spritePosition, filterPaint);
@@ -94,6 +95,9 @@ public class CharacterSpriteSheet extends SpriteSheet {
     }
 
     private void nextFrame(List<Integer> walkingDirection) {
+        if (pause) { // REWORK THIS THIS IS NOT GOOD
+            return;
+        }
         int animationIndex = walkingDirection.indexOf(animationNumber);
         if (animationIndex >= 0) {
             if (drawCount > 8) {
@@ -114,6 +118,10 @@ public class CharacterSpriteSheet extends SpriteSheet {
 
     public void update() {
         //y++;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
     }
 
 }

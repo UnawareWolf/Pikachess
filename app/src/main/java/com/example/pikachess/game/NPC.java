@@ -23,6 +23,8 @@ public class NPC extends GameCharacter {
     public NPC(Context context, PikaGame pikaGame, PixelSquare npcSquare) {
         super(context, pikaGame);
 
+        speed = (double) gridSquareSize / 10;
+
         walkStates = new ArrayList<>();
         initialiseWalkInSquareStates();
         walkStateIndex = 0;

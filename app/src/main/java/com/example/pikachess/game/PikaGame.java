@@ -26,8 +26,8 @@ public class PikaGame {
     private PlayerCharacter mainCharacter;
     private List<NPC> npcList;
     private GameBackground background;
-    private JoystickButton joystickButton;
-    private ControllerButton aButton, bButton;
+//    private JoystickButton joystickButton;
+//    private ControllerButton aButton, bButton;
     private PixelMap pixelMap;
     private Random rand;
     private PikaBattle pikaBattle;
@@ -56,8 +56,8 @@ public class PikaGame {
 
         rand = new Random();
         fattyHealTextBox = new TextBox(context, new int[]{canvasDims[0] / 4, 2 * canvasDims[1] / 3}, "Sure, I can heal your Pokes.");
-        aButton = new ControllerButton(context, (float) 2 * canvasDims[0] / 3, (float) 2 * canvasDims[1] / 3, 80, R.color.greenGCA);
-        bButton = new ControllerButton(context, (float) 16 * canvasDims[0] / 30, (float) 22 * canvasDims[1] / 30, 40, R.color.redGCB);
+//        aButton = new ControllerButton(context, (float) 2 * canvasDims[0] / 3, (float) 2 * canvasDims[1] / 3, 80, R.color.greenGCA);
+//        bButton = new ControllerButton(context, (float) 16 * canvasDims[0] / 30, (float) 22 * canvasDims[1] / 30, 40, R.color.redGCB);
         gamePad = new GamePad(context, canvasDims);
 
         //background = new GameBackground(context, canvasWidth);
@@ -69,8 +69,8 @@ public class PikaGame {
         initialiseNPCs(context);
         //npc_1 = new NPC(context, this);
 
-        float joystickY = (float) (gameView.getHeight() - CONTROL_PANEL_HEIGHT * 1.5);
-        joystickButton = new JoystickButton(context, (float) (CONTROL_PANEL_HEIGHT / 1.5), joystickY);
+//        float joystickY = (float) (gameView.getHeight() - CONTROL_PANEL_HEIGHT * 1.5);
+//        joystickButton = new JoystickButton(context, (float) (CONTROL_PANEL_HEIGHT / 1.5), joystickY);
     }
 
     public void update() {
@@ -97,7 +97,7 @@ public class PikaGame {
     private void updateEncounterGameState() {
         if (mainCharacter.isEncounterAllowed()) {
             gameState = PikaGameState.Battle;
-            joystickButton.release(mainCharacter);
+            gamePad.release(mainCharacter);
             pikaBattle = new PikaBattle(context, mainCharacter.getPikamen().get(0), new Pikamuno(context, false, canvasDims, 2), canvasDims);
         }
     }
@@ -121,9 +121,6 @@ public class PikaGame {
     public void drawGame(Canvas canvas) {
         if (gameState == PikaGameState.Roam) {
             drawRoamContent(canvas);
-//            joystickButton.draw(canvas);
-//            aButton.draw(canvas);
-//            bButton.draw(canvas);
             gamePad.draw(canvas);
         }
         else if (gameState == PikaGameState.Battle) {
@@ -132,6 +129,9 @@ public class PikaGame {
         else if (gameState == PikaGameState.Talk) {
             drawRoamContent(canvas);
             fattyHealTextBox.draw(canvas);
+        }
+        else if (gameState == PikaGameState.Menu) {
+            drawRoamContent(canvas);
         }
     }
 
@@ -154,6 +154,12 @@ public class PikaGame {
         else if (gameState == PikaGameState.Talk && event.getAction() == MotionEvent.ACTION_DOWN) {
             mainCharacter.getPikamen().get(0).restoreHP();
             gameState = PikaGameState.Roam;
+        }
+        else if (gameState == PikaGameState.Menu && event.getAction() == MotionEvent.ACTION_DOWN) {
+            gameState = PikaGameState.Roam;
+            for (NPC npc : npcList) {
+                npc.getSpriteSheet().setPause(false);
+            }
         }
     }
 
@@ -195,6 +201,10 @@ public class PikaGame {
             npc.update();
             pixelMap.update();
         }
+    }
+
+    public List<NPC> getNPCs() {
+        return npcList;
     }
 
 }
