@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.view.MotionEvent;
 
 import com.example.pikachess.game.BattleBackground;
-import com.example.pikachess.game.Button;
 
 public class PikaBattle {
 
@@ -18,7 +17,7 @@ public class PikaBattle {
     private BattleBackground grassBattleBackground;
     private BattleState battleState;
 //    private Button attackButton;
-    private Button[] attackButtons;
+    private AttackButton[] attackButtons;
     private AttackMove playerAttack;
     private BattleText battleText;
     private String currentAttackName;
@@ -52,7 +51,7 @@ public class PikaBattle {
     public void onTouch(MotionEvent event) {
         if (battleState == BattleState.Action) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                for (Button attackButton : attackButtons) {
+                for (AttackButton attackButton : attackButtons) {
                     if (attackButton.contains((int) event.getX(), (int) event.getY())){
                         playerAttack = attackButton.getAttack();
                         executeTurn();
@@ -127,10 +126,10 @@ public class PikaBattle {
     }
 
     private void initialiseAttackButtons() {
-        attackButtons = new Button[playerPikamon.getAttacks().length];
+        attackButtons = new AttackButton[playerPikamon.getAttacks().length];
         int attackIndex = 0;
         for (AttackMove attack : playerPikamon.getAttacks()) {
-            attackButtons[attackIndex] = new Button(context, attack, new int[]{attackIndex * (int) ((float) Button.WIDTH * 1.2) + canvasDims[0] / 3, canvasDims[1] / 2});
+            attackButtons[attackIndex] = new AttackButton(context, attack, new int[]{attackIndex * (int) ((float) AttackButton.WIDTH * 1.2) + canvasDims[0] / 3, canvasDims[1] / 2});
             attackIndex++;
         }
     }
@@ -170,7 +169,7 @@ public class PikaBattle {
     }
 
     private void drawAttackMenu(Canvas canvas) {
-        for (Button attackButton : attackButtons) {
+        for (AttackButton attackButton : attackButtons) {
             attackButton.draw(canvas);
         }
     }

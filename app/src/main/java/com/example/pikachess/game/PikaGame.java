@@ -144,11 +144,8 @@ public class PikaGame {
     public void onTouchEvent(MotionEvent event) {
         if (gameState == PikaGameState.Roam) {
             gamePad.onTouchEvent(event, this, mainCharacter, pixelMap);
-//            joystickButton.onTouchEvent(event, mainCharacter);
-//            aButton.onTouchEvent(event, this, mainCharacter, pixelMap);
         }
         else if (gameState == PikaGameState.Battle && event.getAction() == MotionEvent.ACTION_DOWN) {
-            //gameState = PikaGameState.Roam;
             pikaBattle.onTouch(event);
         }
         else if (gameState == PikaGameState.Talk && event.getAction() == MotionEvent.ACTION_DOWN) {
