@@ -9,11 +9,11 @@ import com.example.pikachess.game.PikaGame;
 import com.example.pikachess.game.PikaGameState;
 import com.example.pikachess.game.pause.PauseState;
 
-public class BackButton extends Button {
+public class PikamonMenuButton extends Button {
 
-    private static final String TEXT = "Back";
+    private static final String TEXT = "Pikamon";
 
-    public BackButton(Context context, int[] location, int width, int height) {
+    public PikamonMenuButton(Context context, int[] location, int width, int height) {
         super(context, TEXT, location, width, height);
     }
 
@@ -22,19 +22,7 @@ public class BackButton extends Button {
         float xTouch = event.getX();
         float yTouch = event.getY();
         if (contains((int) xTouch, (int) yTouch)) {
-
-            if (pikaGame.getPikaPause().getState() == PauseState.Menu) {
-                pikaGame.setGameState(PikaGameState.Roam);
-            }
-            else {
-                pikaGame.getPikaPause().setPauseState(PauseState.Menu);
-            }
-//            pikaGame.setGameState(PikaGameState.Roam);
-            for (NPC npc : pikaGame.getNPCs()) {
-                npc.getSpriteSheet().setPause(false);
-            }
+            pikaGame.getPikaPause().setPauseState(PauseState.Pikamon);
         }
     }
-
-
 }

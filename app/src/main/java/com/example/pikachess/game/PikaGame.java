@@ -9,6 +9,7 @@ import com.example.pikachess.game.battle.GamePad;
 import com.example.pikachess.game.battle.PikaBattle;
 import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.battle.pikamen.Pikamuno;
+import com.example.pikachess.game.pause.StartMenu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,9 +48,9 @@ public class PikaGame {
         this.context = context;
 //        canvasWidth = gameView.getWidth();
 //        canvasHeight = gameView.getHeight();
-        canvasDims = new int[2];
-        canvasDims[0] = gameView.getWidth();
-        canvasDims[1] = gameView.getHeight();
+        canvasDims = new int[] {gameView.getWidth(), gameView.getHeight()};
+//        canvasDims[0] = gameView.getWidth();
+//        canvasDims[1] = gameView.getHeight();
         resizedSquareSize = canvasDims[0] / SQUARES_ACROSS_SCREEN;
         gameState = PikaGameState.Roam;
 
@@ -67,7 +68,7 @@ public class PikaGame {
         mainCharacter = new PlayerCharacter(context, this);
         initialiseNPCs(context);
 
-        pikaPause = new PikaPause(context, canvasDims);
+        pikaPause = new PikaPause(context, canvasDims, mainCharacter);
     }
 
     public void update() {
@@ -203,4 +204,7 @@ public class PikaGame {
         return npcList;
     }
 
+    public PikaPause getPikaPause() {
+        return pikaPause;
+    }
 }

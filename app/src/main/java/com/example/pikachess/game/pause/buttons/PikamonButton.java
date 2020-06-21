@@ -5,13 +5,16 @@ import android.view.MotionEvent;
 
 import com.example.pikachess.game.Button;
 import com.example.pikachess.game.PikaGame;
+import com.example.pikachess.game.battle.Pikamon;
 
 public class PikamonButton extends Button {
 
-    private static final String TEXT = "Pikamon";
+    Pikamon pikamon;
 
-    public PikamonButton(Context context, int[] location, int width, int height) {
-        super(context, TEXT, location, width, height);
+    public PikamonButton(Context context, Pikamon pikamon, int[] location, int width, int height) {
+        super(context, location, width, height);
+        setText(pikamon.getClass().getName());
+
     }
 
     @Override

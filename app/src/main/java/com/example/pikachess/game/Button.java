@@ -21,29 +21,35 @@ public abstract class Button {
     protected int[] location;
     private float roundX;
 
-    public Button(Context context, String content, int[] location, int width, int height) {
+    public Button(Context context, int[] location, int width, int height) {
         this.location = location;
         this.width = width;
         this.height = height;
-        this.content = content;
         buttonLeft = location[0] - width / 2;
         buttonTop = location[1] - height / 2;
         buttonRight = location[0] + width / 2;
         buttonBottom = location[1] + height /2;
         roundX = height / 4f;
+
         borderPaint = new Paint();
         borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setStrokeWidth(height / 30f);
+        borderPaint.setStrokeWidth(4);
         borderPaint.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
+
         fillPaint = new Paint();
         fillPaint.setStyle(Paint.Style.FILL);
         fillPaint.setColor(context.getResources().getColor(R.color.buttonGrey));
+
         textPaint = new Paint();
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setTextSize(height / 3f);
 
         buttonRect = new RectF(buttonLeft, buttonTop, buttonRight, buttonBottom);
+    }
 
+    public Button(Context context, String content, int[] location, int width, int height) {
+        this(context, location, width, height);
+        this.content = content;
     }
 
     public boolean contains(int x, int y) {
@@ -57,5 +63,9 @@ public abstract class Button {
     }
 
     public abstract void onTouchEvent(MotionEvent event, PikaGame pikaGame);
+
+    public void setText(String content) {
+        this.content = content;
+    }
 
 }
