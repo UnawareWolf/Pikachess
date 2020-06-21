@@ -41,6 +41,7 @@ public class PikaGame {
     private Context context;
     private TextBox fattyHealTextBox;
     private GamePad gamePad;
+    private PikaPause pikaPause;
 
     public PikaGame(Context context, GameView gameView) {
         this.context = context;
@@ -56,21 +57,17 @@ public class PikaGame {
 
         rand = new Random();
         fattyHealTextBox = new TextBox(context, new int[]{canvasDims[0] / 4, 2 * canvasDims[1] / 3}, "Sure, I can heal your Pokes.");
-//        aButton = new ControllerButton(context, (float) 2 * canvasDims[0] / 3, (float) 2 * canvasDims[1] / 3, 80, R.color.greenGCA);
-//        bButton = new ControllerButton(context, (float) 16 * canvasDims[0] / 30, (float) 22 * canvasDims[1] / 30, 40, R.color.redGCB);
+
         gamePad = new GamePad(context, canvasDims);
 
-        //background = new GameBackground(context, canvasWidth);
         background = new GameBackground(context, this);
         bitmapResizeFactor = background.getBitmapResizeFactor();
         startingShift = background.getStartingShift();
 
         mainCharacter = new PlayerCharacter(context, this);
         initialiseNPCs(context);
-        //npc_1 = new NPC(context, this);
 
-//        float joystickY = (float) (gameView.getHeight() - CONTROL_PANEL_HEIGHT * 1.5);
-//        joystickButton = new JoystickButton(context, (float) (CONTROL_PANEL_HEIGHT / 1.5), joystickY);
+        pikaPause = new PikaPause(context, canvasDims);
     }
 
     public void update() {
@@ -132,6 +129,7 @@ public class PikaGame {
         }
         else if (gameState == PikaGameState.Menu) {
             drawRoamContent(canvas);
+            pikaPause.draw(canvas);
         }
     }
 
@@ -153,10 +151,11 @@ public class PikaGame {
             gameState = PikaGameState.Roam;
         }
         else if (gameState == PikaGameState.Menu && event.getAction() == MotionEvent.ACTION_DOWN) {
-            gameState = PikaGameState.Roam;
-            for (NPC npc : npcList) {
-                npc.getSpriteSheet().setPause(false);
-            }
+            pikaPause.onTouchEvent(event, this);
+//            gameState = PikaGameState.Roam;
+//            for (NPC npc : npcList) {
+//                npc.getSpriteSheet().setPause(false);
+//            }
         }
     }
 

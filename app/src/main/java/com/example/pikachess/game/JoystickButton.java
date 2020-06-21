@@ -12,12 +12,13 @@ import static java.lang.Math.abs;
 public class JoystickButton {
 
     public static final int OUTER_RADIUS = 150;
+    private static final int MOVEMENT_RADIUS = 80;
     private static final int INNER_RADIUS = 50;
     private static final int DEAD_ZONE = 20;
     //private Rect mRect;
-    private Paint outlinePaint;
+    private Paint outlinePaint, innerShadePaint, outerShadePaint;
     private Paint innerPaint;
-    private Circle outerCircle;
+    private Circle outerCircle, movementCircle;
     private Circle innerCircle;
     private Circle deadZoneCircle;
     private int canvasWidth;
@@ -30,11 +31,19 @@ public class JoystickButton {
 //        this.centreX = centreX;
 //        this.centreY = centreY;
         //mRect = new Rect();
+        movementCircle = new Circle(centreX, centreY, MOVEMENT_RADIUS);
         outerCircle = new Circle(centreX, centreY, OUTER_RADIUS);
         outlinePaint = new Paint();
         outlinePaint.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
         outlinePaint.setStrokeWidth(6);
         outlinePaint.setStyle(Paint.Style.STROKE);
+        innerShadePaint = new Paint();
+        innerShadePaint.setStyle(Paint.Style.FILL);
+        innerShadePaint.setColor(context.getResources().getColor(R.color.buttonGrey));
+        innerShadePaint.setAlpha(180);
+
+        outerShadePaint = new Paint(innerShadePaint);
+        outerShadePaint.setAlpha(100);
 
         innerCircle = new Circle(centreX, centreY, INNER_RADIUS);
         innerPaint = new Paint();
@@ -47,8 +56,12 @@ public class JoystickButton {
     }
 
     public void draw(Canvas canvas) {
+        outerCircle.draw(canvas, outerShadePaint);
+        movementCircle.draw(canvas, innerShadePaint);
         outerCircle.draw(canvas, outlinePaint);
         innerCircle.draw(canvas, innerPaint);
+        innerCircle.draw(canvas, outlinePaint);
+
         //canvas.drawCircle((float) circle.getX(), (float) circle.getY(), (float) circle.getRadius(), mPaint);
         //canvas.drawRect(mRect, mPaint);
     }
@@ -110,6 +123,10 @@ public class JoystickButton {
 
     public Circle getOuterCircle() {
         return outerCircle;
+    }
+
+    public Circle getMovementCircle() {
+        return movementCircle;
     }
 
 }

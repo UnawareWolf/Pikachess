@@ -81,7 +81,7 @@ public class PlayerCharacter extends GameCharacter{
         if (!joystickButton.getDeadZoneCircle().contains(xTouch, yTouch)) {
             float xDif = Math.round(xTouch) - joystickButton.getOuterCircle().getX();
             float yDif = Math.round(yTouch) - joystickButton.getOuterCircle().getY();
-            if (joystickButton.getOuterCircle().contains(xTouch, yTouch)) {
+            if (joystickButton.getMovementCircle().contains(xTouch, yTouch)) {
                 if (abs(xDif) >= abs(yDif)) {
                     if (xDif >= 0) {
                         stateAccordingToTouch = CharacterState.StationaryRight;

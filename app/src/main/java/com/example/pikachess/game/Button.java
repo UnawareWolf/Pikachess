@@ -5,10 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.view.MotionEvent;
 
 import com.example.pikachess.R;
 
-public class Button {
+public abstract class Button {
 
     protected int width, height;
     protected Paint borderPaint;
@@ -54,5 +55,7 @@ public class Button {
         canvas.drawRoundRect(buttonRect, roundX, roundX, borderPaint);
         canvas.drawText(content, buttonLeft + (height / 5f), buttonBottom - (height / 3f), textPaint);
     }
+
+    public abstract void onTouchEvent(MotionEvent event, PikaGame pikaGame);
 
 }
