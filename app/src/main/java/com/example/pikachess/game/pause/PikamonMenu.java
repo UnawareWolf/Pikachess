@@ -21,7 +21,6 @@ import java.util.List;
 public class PikamonMenu {
 
     private static final int SCREEN_BORDER = 40;
-    private static final String[] BUTTON_NAMES = new String[] {"Pikamon", "Bag", "Save", "Options", "Back"};
 
     private Button[] buttons;
 
@@ -43,7 +42,7 @@ public class PikamonMenu {
         left = SCREEN_BORDER;
         right = canvasDims[0] - SCREEN_BORDER;
         top = SCREEN_BORDER;
-        bottom = top + pikamen.size() * buttonHeight + (pikamen.size() + 2) * containerBorder + backButtonHeight;
+        bottom = top + 3 * buttonHeight + (5) * containerBorder + backButtonHeight;
 
         containerRect = new RectF(left, top, right, bottom);
         containerPaint = new Paint();
@@ -56,27 +55,47 @@ public class PikamonMenu {
         containerBorderPaint.setStrokeWidth(4);
         containerBorderPaint.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
 
-        buttonX = (int) (left + (right - left) / 2);
-        buttonWidth = (int) (right - left - SCREEN_BORDER);
+
+        buttonWidth = (int) (right - left - SCREEN_BORDER) / 2 - SCREEN_BORDER / 4;
+        buttonX = (int) (left + (right - left) / 2) - buttonWidth / 2 - SCREEN_BORDER / 4;
         buttonY = (int) (top + buttonHeight / 2 + containerBorder);
 
         initialiseButtons(context);
     }
 
     private void initialiseButtons(Context context) {
-        buttons = new Button[pikamen.size() + 1];
+        buttons = new Button[7];
         int buttonCount = 0;
         int initialButtonX = buttonX;
         int initialButtonY = buttonY;
         for (Pikamon pikamon : pikamen) {
-            buttonX = initialButtonX + buttonCount * (buttonHeight + containerBorder);
-            buttonY = initialButtonY + buttonCount * (buttonHeight + containerBorder);
+//            buttonX = initialButtonX + buttonCount * (buttonHeight + containerBorder);
+//            buttonY = initialButtonY + buttonCount * (buttonHeight + containerBorder);
 
             buttons[buttonCount] = new PikamonButton(context, pikamon, new int[] {buttonX, buttonY}, buttonWidth, buttonHeight);
-
+            changeButtonPosition(buttonCount);
             buttonCount++;
         }
-        buttons[buttonCount] = new BackButton(context, new int[]{(int) (right - SCREEN_BORDER / 2 - buttonWidth / 12), (int) (bottom - SCREEN_BORDER / 2 - backButtonHeight / 2)}, buttonWidth / 6, backButtonHeight);
+        while (buttonCount < 6) {
+            buttons[buttonCount] = new Button(context, "", new int[]{buttonX, buttonY}, buttonWidth, buttonHeight) {
+                @Override
+                public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
+                }
+            };
+            changeButtonPosition(buttonCount);
+            buttonCount++;
+        }
+        buttons[buttonCount] = new BackButton(context, new int[]{(int) (right - SCREEN_BORDER / 2 - buttonWidth / 6), (int) (bottom - SCREEN_BORDER / 2 - backButtonHeight / 2)}, buttonWidth / 3, backButtonHeight);
+    }
+
+    private void changeButtonPosition(int buttonCount) {
+        if (buttonCount % 2 == 0) {
+            buttonX += buttonWidth + SCREEN_BORDER / 2;
+        }
+        else {
+            buttonX -= buttonWidth + SCREEN_BORDER / 2;
+            buttonY += buttonHeight + SCREEN_BORDER / 2;
+        }
     }
 
     public void draw(Canvas canvas) {

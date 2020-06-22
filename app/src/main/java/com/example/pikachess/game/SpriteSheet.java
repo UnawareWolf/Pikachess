@@ -61,4 +61,12 @@ public abstract class SpriteSheet {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(image, backgroundPos, framePos, filterPaint);
     }
+
+    public int getSectionWidth() {
+        return sectionWidth;
+    }
+
+    public int getSectionHeight() {
+        return sectionHeight;
+    }
 }

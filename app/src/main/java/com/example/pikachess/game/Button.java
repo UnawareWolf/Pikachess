@@ -19,7 +19,7 @@ public abstract class Button {
     protected int buttonLeft, buttonTop, buttonRight, buttonBottom;
     protected String content;
     protected int[] location;
-    private float roundX;
+    protected float roundX;
 
     public Button(Context context, int[] location, int width, int height) {
         this.location = location;

@@ -2,6 +2,7 @@ package com.example.pikachess.game.battle;
 
 import android.graphics.Canvas;
 
+import com.example.pikachess.game.PikaSprite;
 import com.example.pikachess.game.SpriteSheet;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public abstract class Pikamon {
     protected Map<String, Integer> ivs;
 
     protected Set<PikaType> types;
-    protected SpriteSheet image;
+    protected PikaSprite image;
     protected Random rand;
     protected AttackMove[] attacks;
 
@@ -63,6 +64,14 @@ public abstract class Pikamon {
 
     public void draw(Canvas canvas) {
         image.draw(canvas);
+    }
+
+    public void drawInMenu(Canvas canvas) {
+        image.drawInMenu(canvas);
+    }
+
+    public PikaSprite getPikaSprite() {
+        return image;
     }
 
     public int getImageID() {
