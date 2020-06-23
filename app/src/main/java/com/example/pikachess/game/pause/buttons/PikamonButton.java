@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import com.example.pikachess.game.Button;
 import com.example.pikachess.game.PikaGame;
 import com.example.pikachess.game.battle.Pikamon;
+import com.example.pikachess.game.pause.PauseState;
 
 public class PikamonButton extends Button {
 
@@ -18,8 +19,8 @@ public class PikamonButton extends Button {
         this.pikamon = pikamon;
         String[] classSegments = pikamon.getClass().getName().split("\\.");
         name = classSegments[classSegments.length - 1];
-        setText(name);
-        textPaint.setTextSize(height / 6f);
+        setText("Lv." + pikamon.getLevel() + " " + name);
+        textPaint.setTextSize(height / 8f);
         double scaleFactor;
         int sectionWidth = pikamon.getPikaSprite().getSectionWidth();
         int sectionHeight = pikamon.getPikaSprite().getSectionHeight();
@@ -39,7 +40,11 @@ public class PikamonButton extends Button {
 
     @Override
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
-
+        float xTouch = event.getX();
+        float yTouch = event.getY();
+        if (contains((int) xTouch, (int) yTouch)) {
+            pikaGame.getPikaPause().setPauseState(PauseState.PikamonStats);
+        }
     }
 
     @Override

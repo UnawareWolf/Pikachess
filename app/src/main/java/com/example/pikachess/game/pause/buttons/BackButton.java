@@ -25,14 +25,17 @@ public class BackButton extends Button {
 
             if (pikaGame.getPikaPause().getState() == PauseState.Menu) {
                 pikaGame.setGameState(PikaGameState.Roam);
+                for (NPC npc : pikaGame.getNPCs()) {
+                    npc.getSpriteSheet().setPause(false);
+                }
             }
-            else {
+            else if (pikaGame.getPikaPause().getState() == PauseState.Pikamon) {
                 pikaGame.getPikaPause().setPauseState(PauseState.Menu);
             }
-//            pikaGame.setGameState(PikaGameState.Roam);
-            for (NPC npc : pikaGame.getNPCs()) {
-                npc.getSpriteSheet().setPause(false);
+            else if (pikaGame.getPikaPause().getState() == PauseState.PikamonStats) {
+                pikaGame.getPikaPause().setPauseState(PauseState.Pikamon);
             }
+
         }
     }
 

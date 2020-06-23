@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 
 import com.example.pikachess.game.pause.PauseState;
 import com.example.pikachess.game.pause.PikamonMenu;
+import com.example.pikachess.game.pause.PikamonStatMenu;
 import com.example.pikachess.game.pause.StartMenu;
 
 public class PikaPause {
@@ -13,11 +14,13 @@ public class PikaPause {
     private StartMenu startMenu;
     private PauseState state;
     private PikamonMenu pikamonMenu;
+    private PikamonStatMenu statMenu;
 
     public PikaPause(Context context, int[] canvasDims, PlayerCharacter mainCharacter) {
         state = PauseState.Menu;
         startMenu = new StartMenu(context, canvasDims);
         pikamonMenu = new PikamonMenu(context, canvasDims, mainCharacter);
+        statMenu = new PikamonStatMenu(context, canvasDims, mainCharacter.getPikamen().get(0));
     }
 
     public void draw(Canvas canvas) {
@@ -27,6 +30,9 @@ public class PikaPause {
         else if (state == PauseState.Pikamon) {
             pikamonMenu.draw(canvas);
         }
+        else if (state == PauseState.PikamonStats) {
+            statMenu.draw(canvas);
+        }
     }
 
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
@@ -35,6 +41,9 @@ public class PikaPause {
         }
         else if (state == PauseState.Pikamon) {
             pikamonMenu.onTouchEvent(event, pikaGame);
+        }
+        else if (state == PauseState.PikamonStats) {
+            statMenu.onTouchEvent(event, pikaGame);
         }
 
     }
