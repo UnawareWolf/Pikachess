@@ -55,4 +55,8 @@ public class PikaPause {
     public PauseState getState() {
         return state;
     }
+
+    public void update() {
+        pikamonMenu.update();
+    }
 }

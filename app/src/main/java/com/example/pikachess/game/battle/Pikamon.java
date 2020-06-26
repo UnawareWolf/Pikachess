@@ -130,6 +130,10 @@ public abstract class Pikamon {
         }
     }
 
+    public void setMenuPos(int left, int top, int right, int bottom){
+        image.setMenuPos(left, top, right, bottom);
+    }
+
     private void increaseLevel() {
         level++;
         calculateStats();
@@ -183,6 +187,10 @@ public abstract class Pikamon {
 
     public int getTargetEXP() {
         return targetExp;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
 }

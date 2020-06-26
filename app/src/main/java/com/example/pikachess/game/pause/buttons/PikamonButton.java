@@ -8,34 +8,32 @@ import com.example.pikachess.game.Button;
 import com.example.pikachess.game.PikaGame;
 import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.pause.PauseState;
+import com.example.pikachess.game.pause.PikamonMenu;
 
 public class PikamonButton extends Button {
 
     private Pikamon pikamon;
     private String name;
+    private PikamonImageButton imageButton;
+    private boolean pikamonHeld;
 
     public PikamonButton(Context context, Pikamon pikamon, int[] location, int width, int height) {
         super(context, location, width, height);
+        pikamonHeld = false;
+        setPikamon(pikamon);
+//        this.pikamon = pikamon;
+//        String[] classSegments = pikamon.getClass().getName().split("\\.");
+//        name = classSegments[classSegments.length - 1];
+//        setText("Lv." + pikamon.getLevel() + " " + name);
+        textPaint.setTextSize(height / 8f);
+        imageButton = new PikamonImageButton(context, pikamon, new int[] {location[0], location[1] + PikamonMenu.SCREEN_BORDER / 2 - height / 4}, width / 2, height / 2, true);
+    }
+
+    public void setPikamon(Pikamon pikamon) {
         this.pikamon = pikamon;
         String[] classSegments = pikamon.getClass().getName().split("\\.");
         name = classSegments[classSegments.length - 1];
         setText("Lv." + pikamon.getLevel() + " " + name);
-        textPaint.setTextSize(height / 8f);
-        double scaleFactor;
-        int sectionWidth = pikamon.getPikaSprite().getSectionWidth();
-        int sectionHeight = pikamon.getPikaSprite().getSectionHeight();
-        int newHeight = height / 2;
-        int newWidth = width / 2;
-        if (sectionWidth > sectionHeight) {
-            scaleFactor = width / (float) sectionWidth;
-            newHeight = (int) (height / scaleFactor);
-        }
-        else {
-            scaleFactor = height / (float) sectionHeight;
-            newWidth = (int) (width / scaleFactor);
-        }
-        pikamon.getPikaSprite().setMenuPos(location[0] - newWidth / 2, location[1] - newHeight, location[0] + newWidth / 2, location[1]);
-
     }
 
     @Override
@@ -43,8 +41,11 @@ public class PikamonButton extends Button {
         float xTouch = event.getX();
         float yTouch = event.getY();
         if (contains((int) xTouch, (int) yTouch)) {
-            pikaGame.getPikaPause().setPauseState(PauseState.PikamonStats);
+            //pikaGame.getPikaPause().setPauseState(PauseState.PikamonStats);
         }
+        imageButton.onTouchEvent(event, pikaGame);
+        drawLast = imageButton.getDrawLast();
+        pikamonHeld = imageButton.isPikamonHeld();
     }
 
     @Override
@@ -52,6 +53,23 @@ public class PikamonButton extends Button {
         canvas.drawRoundRect(buttonRect, roundX, roundX, fillPaint);
         canvas.drawRoundRect(buttonRect, roundX, roundX, borderPaint);
         canvas.drawText(content, buttonLeft + (height / 5f), buttonBottom - (height / 3f), textPaint);
-        pikamon.drawInMenu(canvas);
+        imageButton.draw(canvas);
     }
+
+    public Pikamon getPikamon() {
+        return pikamon;
+    }
+
+    public boolean isPikamonHeld() {
+        return pikamonHeld;
+    }
+
+//    public void setPosition() {
+//
+//    }
+
+    public void update() {
+        setText("Lv." + pikamon.getLevel() + " " + name);
+    }
+
 }

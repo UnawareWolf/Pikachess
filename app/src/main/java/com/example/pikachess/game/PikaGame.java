@@ -90,6 +90,9 @@ public class PikaGame {
             //mainCharacter.updateCharacterState();
 //            mainCharacter.updateCurrentSquare();
         }
+        else if (gameState == PikaGameState.Menu) {
+            pikaPause.update();
+        }
     }
 
     private void updateEncounterGameState() {
@@ -151,7 +154,7 @@ public class PikaGame {
             mainCharacter.getPikamen().get(0).restoreHP();
             gameState = PikaGameState.Roam;
         }
-        else if (gameState == PikaGameState.Menu && event.getAction() == MotionEvent.ACTION_DOWN) {
+        else if (gameState == PikaGameState.Menu) {
             pikaPause.onTouchEvent(event, this);
 //            gameState = PikaGameState.Roam;
 //            for (NPC npc : npcList) {

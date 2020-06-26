@@ -20,6 +20,7 @@ public abstract class Button {
     protected String content;
     protected int[] location;
     protected float roundX;
+    protected boolean drawLast;
 
     public Button(Context context, int[] location, int width, int height) {
         this.location = location;
@@ -30,6 +31,7 @@ public abstract class Button {
         buttonRight = location[0] + width / 2;
         buttonBottom = location[1] + height /2;
         roundX = height / 4f;
+        drawLast = false;
 
         borderPaint = new Paint();
         borderPaint.setStyle(Paint.Style.STROKE);
@@ -66,6 +68,10 @@ public abstract class Button {
 
     public void setText(String content) {
         this.content = content;
+    }
+
+    public boolean getDrawLast() {
+        return drawLast;
     }
 
 }
