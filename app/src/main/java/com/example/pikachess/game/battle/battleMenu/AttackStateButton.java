@@ -18,8 +18,8 @@ public class AttackStateButton extends Button {
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
         float xTouch = event.getX();
         float yTouch = event.getY();
-        if (contains((int) xTouch, (int) yTouch)) {
-            pikaGame.getPikaBattle().getBattleMenu().setState(BattleMenuState.Attack);
+        if (contains((int) xTouch, (int) yTouch) && event.getAction() == MotionEvent.ACTION_DOWN) {
+            pikaGame.getPikaBattle().setBattleMenuState(BattleMenuState.Attack);
         }
     }
 

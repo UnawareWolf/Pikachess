@@ -43,7 +43,8 @@ public class PikaSprite extends SpriteSheet {
         createAnimationSections();
         setPositionAndOrientation();
 
-        framePos = new Rect(centreX - sectionWidth / 2, centreY  - sectionHeight + sectionWidth / 2, centreX + sectionWidth / 2, centreY + sectionWidth / 2);
+//        framePos = new Rect(centreX - sectionWidth / 2, centreY  - sectionHeight + sectionWidth / 2, centreX + sectionWidth / 2, centreY + sectionWidth / 2);
+        setFramePos();
 
         menuPos = new Rect();
     }
@@ -67,6 +68,17 @@ public class PikaSprite extends SpriteSheet {
 
     public void setMenuPos(int left, int top, int right, int bottom) {
         menuPos.set(left, top, right, bottom);
+    }
+
+    public void setPlayerPikamonAndUpdateSprite(boolean playerPikamon) {
+        this.playerPikamon = playerPikamon;
+        setPositionAndOrientation();
+        setFramePos();
+    }
+
+    private void setFramePos() {
+        framePos = new Rect(centreX - sectionWidth / 2, centreY  - sectionHeight + sectionWidth / 2, centreX + sectionWidth / 2, centreY + sectionWidth / 2);
+
     }
 
 }

@@ -7,6 +7,7 @@ import com.example.pikachess.game.Button;
 import com.example.pikachess.game.NPC;
 import com.example.pikachess.game.PikaGame;
 import com.example.pikachess.game.PikaGameState;
+import com.example.pikachess.game.battle.BattleMenuState;
 import com.example.pikachess.game.pause.PauseState;
 
 public class BackButton extends Button {

@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.example.pikachess.R;
+import com.example.pikachess.game.BasicButton;
 import com.example.pikachess.game.Button;
 import com.example.pikachess.game.PikaGame;
 import com.example.pikachess.game.pause.buttons.BackButton;
@@ -65,12 +66,7 @@ public class StartMenu {
                     buttons[buttonCount] = new BackButton(context, new int[]{buttonX + buttonWidth / 4, buttonY}, buttonWidth / 2, buttonHeight);
                     break;
                 default:
-                    buttons[buttonCount] = new Button(context, buttonName, new int[]{buttonX, buttonY}, buttonWidth, buttonHeight) {
-                        @Override
-                        public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
-                            // Just a placeholder. Will create new button subclass.
-                        }
-                    };
+                    buttons[buttonCount] = new BasicButton(context, buttonName, new int[]{buttonX, buttonY}, buttonWidth, buttonHeight);
             }
             buttonCount++;
         }

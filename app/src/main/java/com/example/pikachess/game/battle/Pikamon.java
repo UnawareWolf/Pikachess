@@ -194,7 +194,8 @@ public abstract class Pikamon {
 //        calculateStats();
 //    }
 
-    public void setPlayerPikamon(boolean playerPikamon) {
+    public void setPlayerPikamonAndUpdateSprite(boolean playerPikamon) {
         this.playerPikamon = playerPikamon;
+        image.setPlayerPikamonAndUpdateSprite(playerPikamon);
     }
 }

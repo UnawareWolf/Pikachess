@@ -12,7 +12,7 @@ import com.example.pikachess.game.battle.Pikamon;
 
 public class CatchButton extends Button {
 
-    Pikamon opponentPikamon;
+    private Pikamon opponentPikamon;
 
     public CatchButton(Context context, int[] location, int width, int height, Pikamon opponentPikamon) {
         super(context, "Catch", location, width, height);
@@ -23,11 +23,10 @@ public class CatchButton extends Button {
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
         float xTouch = event.getX();
         float yTouch = event.getY();
-        if (contains((int) xTouch, (int) yTouch)) {
+        if (contains((int) xTouch, (int) yTouch) && event.getAction() == MotionEvent.ACTION_DOWN) {
             if (pikaGame.getMainCharacter().getPikamen().size() < 6) {
                 pikaGame.getMainCharacter().getPikamen().add(opponentPikamon);
-                opponentPikamon.setPlayerPikamon(true);
-                opponentPikamon.getPikaSprite().setPositionAndOrientation();
+                opponentPikamon.setPlayerPikamonAndUpdateSprite(true);
                 pikaGame.setGameState(PikaGameState.Roam);
             }
         }

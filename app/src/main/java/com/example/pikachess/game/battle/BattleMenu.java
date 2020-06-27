@@ -27,14 +27,14 @@ public class BattleMenu {
     private int buttonHeight, buttonWidth, buttonX, buttonY, containerBorder;
     private RectF containerRect;
     private Paint containerPaint, containerBorderPaint;
-    private BattleMenuState state;
+//    private BattleMenuState state;
     private PikaBattle pikaBattle;
 
     public BattleMenu(Context context, int[] canvasDims, PikaBattle pikaBattle) {
         containerBorder = SCREEN_BORDER / 2;
 
         this.pikaBattle = pikaBattle;
-        state = BattleMenuState.Menu;
+//        state = BattleMenuState.Menu;
 
         left = SCREEN_BORDER;
         right = canvasDims[0] - SCREEN_BORDER;
@@ -109,7 +109,7 @@ public class BattleMenu {
         }
     }
 
-    public void setState(BattleMenuState state) {
-        this.state = state;
-    }
+//    public void setState(BattleMenuState state) {
+//        this.state = state;
+//    }
 }

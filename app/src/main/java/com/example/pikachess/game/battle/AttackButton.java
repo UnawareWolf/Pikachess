@@ -11,25 +11,25 @@ import com.example.pikachess.R;
 import com.example.pikachess.game.Button;
 import com.example.pikachess.game.PikaGame;
 import com.example.pikachess.game.battle.AttackMove;
+import com.example.pikachess.game.battle.battleMenu.AttackMenu;
 
 public class AttackButton extends Button {
 
-    private static final int HEIGHT = 120;
-    public static final int WIDTH = 300;
-
     private AttackMove attack;
+    private AttackMenu attackMenu;
 
-    public AttackButton(Context context, AttackMove attack, int[] location) {
-        super(context, attack.getName(), location, WIDTH, HEIGHT);
+    public AttackButton(Context context, AttackMenu attackMenu, AttackMove attack, int[] location, int width, int height) {
+        super(context, attack.getName(), location, width, height);
+        this.attackMenu = attackMenu;
         this.attack = attack;
-    }
-
-    public AttackMove getAttack() {
-        return attack;
     }
 
     @Override
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
-        // Use this rather than handling in pikaBattle.
+        float xTouch = event.getX();
+        float yTouch = event.getY();
+        if (contains((int) xTouch, (int) yTouch) && event.getAction() == MotionEvent.ACTION_DOWN) {
+            attackMenu.executeTurnAndUpdate(attack);
+        }
     }
 }
