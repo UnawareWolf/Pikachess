@@ -30,7 +30,8 @@ public abstract class Button {
         buttonTop = location[1] - height / 2;
         buttonRight = location[0] + width / 2;
         buttonBottom = location[1] + height /2;
-        roundX = height / 4f;
+//        roundX = height / 4f;
+        roundX = 30f;
         drawLast = false;
 
         borderPaint = new Paint();
@@ -72,6 +73,10 @@ public abstract class Button {
 
     public boolean getDrawLast() {
         return drawLast;
+    }
+
+    public int[] getLocation() {
+        return location;
     }
 
 }

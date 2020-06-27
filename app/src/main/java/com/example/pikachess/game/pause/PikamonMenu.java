@@ -33,13 +33,17 @@ public class PikamonMenu {
     private Paint containerPaint, containerBorderPaint;
 
     private List<Pikamon> pikamen;
+    private PlayerCharacter mainCharacter;
+    private Context context;
 
     public PikamonMenu(Context context, int[] canvasDims, PlayerCharacter mainCharacter) {
+        this.context = context;
         containerBorder = SCREEN_BORDER / 2;
         buttonHeight = canvasDims[1] / 5;
         backButtonHeight = buttonHeight / 4;
 
         pikamen = mainCharacter.getPikamen();
+        this.mainCharacter = mainCharacter;
 
         left = SCREEN_BORDER;
         right = canvasDims[0] - SCREEN_BORDER;
@@ -66,28 +70,15 @@ public class PikamonMenu {
     }
 
     private void initialiseButtons(Context context) {
-//        buttons = new Button[7];
         pikamonButtons = new ArrayList<>();
         otherButtons = new ArrayList<>();
         int buttonCount = 0;
-        int initialButtonX = buttonX;
-        int initialButtonY = buttonY;
         for (Pikamon pikamon : pikamen) {
-//            buttonX = initialButtonX + buttonCount * (buttonHeight + containerBorder);
-//            buttonY = initialButtonY + buttonCount * (buttonHeight + containerBorder);
-
-            pikamonButtons.add(new PikamonButton(context, pikamon, new int[] {buttonX, buttonY}, buttonWidth, buttonHeight));
-
-//            buttons[buttonCount] = new PikamonButton(context, pikamon, new int[] {buttonX, buttonY}, buttonWidth, buttonHeight);
+            pikamonButtons.add(new PikamonButton(context, pikamon, new int[] {buttonX, buttonY}, buttonWidth, buttonHeight, buttonCount));
             changeButtonPosition(buttonCount);
             buttonCount++;
         }
         while (buttonCount < 6) {
-//            buttons[buttonCount] = new Button(context, "", new int[]{buttonX, buttonY}, buttonWidth, buttonHeight) {
-//                @Override
-//                public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
-//                }
-//            };
             otherButtons.add(new Button(context, "", new int[]{buttonX, buttonY}, buttonWidth, buttonHeight) {
                 @Override
                 public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
@@ -97,7 +88,6 @@ public class PikamonMenu {
             buttonCount++;
         }
         otherButtons.add(new BackButton(context, new int[]{(int) (right - SCREEN_BORDER / 2 - buttonWidth / 6), (int) (bottom - SCREEN_BORDER / 2 - backButtonHeight / 2)}, buttonWidth / 3, backButtonHeight));
-//        buttons[buttonCount] = new BackButton(context, new int[]{(int) (right - SCREEN_BORDER / 2 - buttonWidth / 6), (int) (bottom - SCREEN_BORDER / 2 - backButtonHeight / 2)}, buttonWidth / 3, backButtonHeight);
     }
 
     private void changeButtonPosition(int buttonCount) {
@@ -129,15 +119,6 @@ public class PikamonMenu {
     }
 
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
-//        for (Button button : buttons) {
-//            button.onTouchEvent(event, pikaGame);
-//            if (button.getClass().getName().equals(PikamonButton.class.getName())) {
-//                if (((PikamonButton) button).isPikamonHeld()) {
-//                    // pikamonHeld = (PikamonButton) button).getPikamon();
-//                    // Check if button has been released and
-//                }
-//            }
-//        }
         float xTouch = event.getX();
         float yTouch = event.getY();
         PikamonButton pikamonHeld = null;
@@ -150,9 +131,13 @@ public class PikamonMenu {
         if (pikamonHeld != null) {
             for (PikamonButton pikamonButton : pikamonButtons) {
                 if (event.getAction() == MotionEvent.ACTION_UP && pikamonButton.contains((int) xTouch, (int) yTouch) && pikamonButton != pikamonHeld) {
+
                     Pikamon tempPikamon = pikamonButton.getPikamon();
                     pikamonButton.setPikamon(pikamonHeld.getPikamon());
                     pikamonHeld.setPikamon(tempPikamon);
+
+                    mainCharacter.getPikamen().set(pikamonHeld.getButtonID(), pikamonHeld.getPikamon());
+                    mainCharacter.getPikamen().set(pikamonButton.getButtonID(), pikamonButton.getPikamon());
                 }
             }
         }
@@ -162,6 +147,14 @@ public class PikamonMenu {
     }
 
     public void update() {
+
+        while (pikamonButtons.size() < pikamen.size()) {
+            int buttonCount = pikamonButtons.size();
+            int[] location = otherButtons.get(0).getLocation();
+            pikamonButtons.add(new PikamonButton(context, pikamen.get(buttonCount), location, buttonWidth, buttonHeight, buttonCount));
+            otherButtons.remove(0);
+        }
+
         for (PikamonButton pikamonButton : pikamonButtons) {
             pikamonButton.update();
         }

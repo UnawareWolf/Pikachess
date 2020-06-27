@@ -48,7 +48,7 @@ public class PikaSprite extends SpriteSheet {
         menuPos = new Rect();
     }
 
-    private void setPositionAndOrientation() {
+    public void setPositionAndOrientation() {
         if (playerPikamon) {
             centreX = (int) (canvasWidth / 4f);
             centreY = (int) (canvasHeight / 4f);

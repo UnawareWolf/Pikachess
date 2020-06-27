@@ -33,8 +33,8 @@ public class PlayerCharacter extends GameCharacter{
 
         updateCurrentSquare();
         addPikamon();
-        addPikamon();
-        pikamen.get(1).setLevel(2);
+//        addPikamon();
+//        pikamen.get(1).setLevel(2);
     }
 
     public void setCharacterState(CharacterState characterState) {

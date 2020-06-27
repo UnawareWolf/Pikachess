@@ -148,10 +148,12 @@ public class PikaGame {
             gamePad.onTouchEvent(event, this, mainCharacter, pixelMap);
         }
         else if (gameState == PikaGameState.Battle && event.getAction() == MotionEvent.ACTION_DOWN) {
-            pikaBattle.onTouch(event);
+            pikaBattle.onTouch(event, this);
         }
         else if (gameState == PikaGameState.Talk && event.getAction() == MotionEvent.ACTION_DOWN) {
-            mainCharacter.getPikamen().get(0).restoreHP();
+            for (Pikamon pikamon : mainCharacter.getPikamen()) {
+                pikamon.restoreHP();
+            }
             gameState = PikaGameState.Roam;
         }
         else if (gameState == PikaGameState.Menu) {
@@ -209,5 +211,9 @@ public class PikaGame {
 
     public PikaPause getPikaPause() {
         return pikaPause;
+    }
+
+    public PikaBattle getPikaBattle() {
+        return pikaBattle;
     }
 }

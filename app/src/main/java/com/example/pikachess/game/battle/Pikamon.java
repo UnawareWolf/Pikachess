@@ -189,8 +189,12 @@ public abstract class Pikamon {
         return targetExp;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
+//    public void setLevel(int level) { // Only for debugging. Remove this.
+//        this.level = level;
+//        calculateStats();
+//    }
 
+    public void setPlayerPikamon(boolean playerPikamon) {
+        this.playerPikamon = playerPikamon;
+    }
 }

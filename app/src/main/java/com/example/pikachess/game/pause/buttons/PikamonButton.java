@@ -16,15 +16,14 @@ public class PikamonButton extends Button {
     private String name;
     private PikamonImageButton imageButton;
     private boolean pikamonHeld;
+    private int buttonID;
 
-    public PikamonButton(Context context, Pikamon pikamon, int[] location, int width, int height) {
+    public PikamonButton(Context context, Pikamon pikamon, int[] location, int width, int height, int buttonID) {
         super(context, location, width, height);
+        this.buttonID = buttonID;
         pikamonHeld = false;
         setPikamon(pikamon);
-//        this.pikamon = pikamon;
-//        String[] classSegments = pikamon.getClass().getName().split("\\.");
-//        name = classSegments[classSegments.length - 1];
-//        setText("Lv." + pikamon.getLevel() + " " + name);
+
         textPaint.setTextSize(height / 8f);
         imageButton = new PikamonImageButton(context, pikamon, new int[] {location[0], location[1] + PikamonMenu.SCREEN_BORDER / 2 - height / 4}, width / 2, height / 2, true);
     }
@@ -70,6 +69,10 @@ public class PikamonButton extends Button {
 
     public void update() {
         setText("Lv." + pikamon.getLevel() + " " + name);
+    }
+
+    public int getButtonID() {
+        return buttonID;
     }
 
 }

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.view.MotionEvent;
 
 import com.example.pikachess.game.BattleBackground;
+import com.example.pikachess.game.PikaGame;
 
 public class PikaBattle {
 
@@ -13,7 +14,7 @@ public class PikaBattle {
     private Pikamon opponentPikamon;
     private HealthBar playerHealthBar;
     private HealthBar opponentHealthBar;
-//    private BattleMenu battleMenu;
+    private BattleMenu battleMenu;
     private BattleBackground grassBattleBackground;
     private BattleState battleState;
 //    private Button attackButton;
@@ -36,7 +37,7 @@ public class PikaBattle {
         this.canvasDims = canvasDims;
         bothAttacksDone = false;
         displayedFinalAttack = false;
-        //battleMenu = new BattleMenu();
+        battleMenu = new BattleMenu(context, canvasDims, this);
         battleState = BattleState.Action;
         playerTurn = playerPikamon.getSpeed() > opponentPikamon.getSpeed();
         battleOver = false;
@@ -48,7 +49,7 @@ public class PikaBattle {
         battleText = new BattleText(context, new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
     }
 
-    public void onTouch(MotionEvent event) {
+    public void onTouch(MotionEvent event, PikaGame pikaGame) {
         if (battleState == BattleState.Action) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 for (AttackButton attackButton : attackButtons) {
@@ -74,14 +75,9 @@ public class PikaBattle {
                 bothAttacksDone = !bothAttacksDone;
                 executeTurn();
             }
-
-
-
             if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
                 setBattleStateOver();
             }
-
-
         }
         else if (battleState == BattleState.BattleOver) {
             if (displayedFinalAttack) {
@@ -91,6 +87,9 @@ public class PikaBattle {
                 displayedFinalAttack = true;
             }
         }
+
+        battleMenu.onTouchEvent(event, pikaGame);
+
     }
 
     public void draw(Canvas canvas) {
@@ -99,6 +98,7 @@ public class PikaBattle {
         opponentPikamon.draw(canvas);
         drawStateDependentContent(canvas);
         drawHealthBars(canvas);
+        battleMenu.draw(canvas);
     }
 
     public boolean getBattleOver() {
@@ -191,4 +191,11 @@ public class PikaBattle {
         }
     }
 
+    public BattleMenu getBattleMenu() {
+        return battleMenu;
+    }
+
+    public Pikamon getOpponentPikamon() {
+        return opponentPikamon;
+    }
 }
