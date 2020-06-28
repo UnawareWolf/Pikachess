@@ -34,7 +34,6 @@ public class BattleMenu {
         containerBorder = SCREEN_BORDER / 2;
 
         this.pikaBattle = pikaBattle;
-//        state = BattleMenuState.Menu;
 
         left = SCREEN_BORDER;
         right = canvasDims[0] - SCREEN_BORDER;
@@ -108,8 +107,4 @@ public class BattleMenu {
             button.onTouchEvent(event, pikaGame);
         }
     }
-
-//    public void setState(BattleMenuState state) {
-//        this.state = state;
-//    }
 }

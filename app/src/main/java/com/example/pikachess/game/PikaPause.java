@@ -59,4 +59,8 @@ public class PikaPause {
     public void update() {
         pikamonMenu.update();
     }
+
+    public PikamonMenu getPikamonMenu() {
+        return pikamonMenu;
+    }
 }

@@ -61,7 +61,6 @@ public class PikamonMenu {
         containerBorderPaint.setStrokeWidth(4);
         containerBorderPaint.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
 
-
         buttonWidth = (int) (right - left - SCREEN_BORDER) / 2 - SCREEN_BORDER / 4;
         buttonX = (int) (left + (right - left) / 2) - buttonWidth / 2 - SCREEN_BORDER / 4;
         buttonY = (int) (top + buttonHeight / 2 + containerBorder);
@@ -131,13 +130,14 @@ public class PikamonMenu {
         if (pikamonHeld != null) {
             for (PikamonButton pikamonButton : pikamonButtons) {
                 if (event.getAction() == MotionEvent.ACTION_UP && pikamonButton.contains((int) xTouch, (int) yTouch) && pikamonButton != pikamonHeld) {
-
                     Pikamon tempPikamon = pikamonButton.getPikamon();
-                    pikamonButton.setPikamon(pikamonHeld.getPikamon());
-                    pikamonHeld.setPikamon(tempPikamon);
-
+                    pikamonButton.setNewPikamon(pikamonHeld.getPikamon());
+                    pikamonHeld.setNewPikamon(tempPikamon);
                     mainCharacter.getPikamen().set(pikamonHeld.getButtonID(), pikamonHeld.getPikamon());
                     mainCharacter.getPikamen().set(pikamonButton.getButtonID(), pikamonButton.getPikamon());
+                }
+                else if (event.getAction() == MotionEvent.ACTION_UP && pikamonButton.contains((int) xTouch, (int) yTouch) && pikamonButton == pikamonHeld) {
+                    pikaGame.getPikaPause().setPauseState(PauseState.PikamonStats);
                 }
             }
         }
@@ -146,7 +146,7 @@ public class PikamonMenu {
         }
     }
 
-    public void update() {
+    public void refresh() {
 
         while (pikamonButtons.size() < pikamen.size()) {
             int buttonCount = pikamonButtons.size();
@@ -158,6 +158,9 @@ public class PikamonMenu {
         for (PikamonButton pikamonButton : pikamonButtons) {
             pikamonButton.update();
         }
+    }
+
+    public void update() {
     }
 
 }

@@ -85,5 +85,4 @@ public class StartMenu {
             button.onTouchEvent(event, pikaGame);
         }
     }
-
 }

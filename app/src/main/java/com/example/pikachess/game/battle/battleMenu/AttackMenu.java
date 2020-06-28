@@ -12,15 +12,14 @@ import com.example.pikachess.game.Button;
 import com.example.pikachess.game.PikaGame;
 import com.example.pikachess.game.battle.AttackButton;
 import com.example.pikachess.game.battle.AttackMove;
-import com.example.pikachess.game.battle.BattleMenuState;
 import com.example.pikachess.game.battle.BattleState;
 import com.example.pikachess.game.battle.BattleText;
 import com.example.pikachess.game.battle.PikaBattle;
 import com.example.pikachess.game.battle.Pikamon;
-import com.example.pikachess.game.pause.buttons.BackButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class AttackMenu {
 
@@ -31,7 +30,7 @@ public class AttackMenu {
     private RectF containerRect;
     private Paint containerPaint, containerBorderPaint;
     private BattleState battleState;
-//    private AttackButton[] attackButtons;
+
     private AttackMove playerAttack;
     private List<Button> buttons;
     private Pikamon playerPikamon;
@@ -41,6 +40,8 @@ public class AttackMenu {
     private String currentAttackName;
     private PikaBattle pikaBattle;
     private BattleText battleText;
+    private Random rand;
+    private boolean speedTie;
 
     private int[] canvasDims;
 
@@ -51,10 +52,10 @@ public class AttackMenu {
         opponentPikamon = pikaBattle.getOpponentPikamon();
         bothAttacksDone = false;
         displayedFinalAttack = false;
-//        battleOver = false;
         containerBorder = SCREEN_BORDER / 2;
+        rand = new Random();
 
-        playerTurn = playerPikamon.getSpeed() > opponentPikamon.getSpeed();
+        playerTurn = doesPlayerMoveFirst();
 
         battleState = BattleState.Action;
 
@@ -74,7 +75,6 @@ public class AttackMenu {
         containerBorderPaint.setStrokeWidth(4);
         containerBorderPaint.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
 
-
         buttonWidth = (int) (right - left - SCREEN_BORDER) / 2 - SCREEN_BORDER / 4;
         buttonHeight = (int) ((bottom - top) - SCREEN_BORDER * 2) / 3;
         buttonX = (int) (left + (right - left) / 2) - buttonWidth / 2 - SCREEN_BORDER / 4;
@@ -85,7 +85,6 @@ public class AttackMenu {
     }
 
     private void initialiseButtons(Context context) {
-//        buttons = new Button[4];
         buttons = new ArrayList<>();
         int buttonCount = 0;
         for (AttackMove attack : playerPikamon.getAttacks()) {
@@ -152,6 +151,22 @@ public class AttackMenu {
         }
     }
 
+    private boolean doesPlayerMoveFirst() {
+        boolean playerMovesFirst;
+        speedTie = false;
+        if (playerPikamon.getSpeed() > opponentPikamon.getSpeed()) {
+            playerMovesFirst = true;
+        }
+        else if (playerPikamon.getSpeed() == opponentPikamon.getSpeed()) {
+            playerMovesFirst = rand.nextBoolean();
+            speedTie = true;
+        }
+        else {
+            playerMovesFirst = false;
+        }
+        return playerMovesFirst;
+    }
+
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
         if (battleState == BattleState.Action) {
             for (Button button : buttons) {
@@ -161,12 +176,11 @@ public class AttackMenu {
         else if (battleState == BattleState.DisplayText) {
             if (bothAttacksDone) {
                 battleState = BattleState.Action;
-                bothAttacksDone = !bothAttacksDone;
             }
             else  {
-                bothAttacksDone = !bothAttacksDone;
                 executeTurn();
             }
+            bothAttacksDone = !bothAttacksDone;
             if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
                 setBattleStateOver();
             }
@@ -179,22 +193,23 @@ public class AttackMenu {
                 displayedFinalAttack = true;
             }
         }
-//        for (Button button : buttons) {
-//            button.onTouchEvent(event, pikaGame);
-//        }
     }
 
     public void executeTurnAndUpdate(AttackMove attackMove) {
+        if (speedTie) {
+            playerTurn = rand.nextBoolean();
+        }
         playerAttack = attackMove;
         executeTurn();
         if (playerPikamon.getHp() <= 0 || opponentPikamon.getHp() <= 0) {
             setBattleStateOver();
-        } else {
+        }
+        else {
             battleState = BattleState.DisplayText;
         }
     }
 
-    public void executeTurn() {
+    private void executeTurn() {
         if (playerTurn) {
             executePlayerTurn();
         }
@@ -209,9 +224,7 @@ public class AttackMenu {
         if (opponentPikamon.getHp() <= 0 && playerPikamon.getHp() > 0) {
             playerPikamon.updateExp(opponentPikamon.getExpGain());
         }
-
         battleState = BattleState.BattleOver;
-
     }
 
     private void executePlayerTurn() {

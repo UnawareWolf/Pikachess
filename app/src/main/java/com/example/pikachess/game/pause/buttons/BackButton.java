@@ -22,7 +22,7 @@ public class BackButton extends Button {
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
         float xTouch = event.getX();
         float yTouch = event.getY();
-        if (contains((int) xTouch, (int) yTouch)) {
+        if (contains((int) xTouch, (int) yTouch) && event.getAction() == MotionEvent.ACTION_DOWN) {
 
             if (pikaGame.getPikaPause().getState() == PauseState.Menu) {
                 pikaGame.setGameState(PikaGameState.Roam);
