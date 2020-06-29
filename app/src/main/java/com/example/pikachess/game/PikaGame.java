@@ -19,10 +19,9 @@ import java.util.Random;
 
 public class PikaGame {
 
-    private static final int CONTROL_PANEL_HEIGHT = 480;
     public static final int GRID_SQUARE_SIZE = 16;
     public static final int SQUARES_ACROSS_SCREEN = 15;
-    public static final int ENCOUNTER_CHANCE = 8; // 1 / ENCOUNTER_CHANCE = chance of an encounter.
+    public static final int ENCOUNTER_CHANCE = 10; // 1 / ENCOUNTER_CHANCE = chance of an encounter.
     private PikaGameState gameState;
     private PlayerCharacter mainCharacter;
     private List<NPC> npcList;
@@ -40,9 +39,10 @@ public class PikaGame {
     private double bitmapResizeFactor;
     private double[] startingShift;
     private Context context;
-    private TextBox fattyHealTextBox;
+//    private TextBox fattyHealTextBox;
     private GamePad gamePad;
     private PikaPause pikaPause;
+    private TextButton healText;
 
     public PikaGame(Context context, GameView gameView) {
         this.context = context;
@@ -57,7 +57,9 @@ public class PikaGame {
         pixelMap = new PixelMap(context);
 
         rand = new Random();
-        fattyHealTextBox = new TextBox(context, new int[]{canvasDims[0] / 4, 2 * canvasDims[1] / 3}, "Sure, I can heal your Pokes.");
+//        fattyHealTextBox = new TextBox(context, new int[]{canvasDims[0] / 4, 2 * canvasDims[1] / 3}, "Sure, I can heal your Pokes.");
+        healText = new TextButton(context, canvasDims);
+        healText.setText("Sure, I can heal your Pokes.");
 
         gamePad = new GamePad(context, canvasDims);
 
@@ -129,7 +131,8 @@ public class PikaGame {
         }
         else if (gameState == PikaGameState.Talk) {
             drawRoamContent(canvas);
-            fattyHealTextBox.draw(canvas);
+            healText.draw(canvas);
+//            fattyHealTextBox.draw(canvas);
         }
         else if (gameState == PikaGameState.Menu) {
             drawRoamContent(canvas);

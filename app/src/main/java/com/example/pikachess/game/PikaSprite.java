@@ -18,7 +18,7 @@ public class PikaSprite extends SpriteSheet {
     private static final int NUMBER_OF_ANIMATIONS = 14;
     private int centreX, centreY;
     private boolean playerPikamon;
-    private Rect menuPos;
+//    private Rect menuPos;
 
 
     public PikaSprite(Context context, Pikamon pikamon) {
@@ -46,7 +46,7 @@ public class PikaSprite extends SpriteSheet {
 //        framePos = new Rect(centreX - sectionWidth / 2, centreY  - sectionHeight + sectionWidth / 2, centreX + sectionWidth / 2, centreY + sectionWidth / 2);
         setFramePos();
 
-        menuPos = new Rect();
+//        menuPos = new Rect();
     }
 
     public void setPositionAndOrientation() {
@@ -62,13 +62,13 @@ public class PikaSprite extends SpriteSheet {
         }
     }
 
-    public void drawInMenu(Canvas canvas) {
+    public void drawInMenu(Canvas canvas, Rect menuPos) {
         canvas.drawBitmap(image, animationSections.get(0), menuPos, filterPaint);
     }
 
-    public void setMenuPos(int left, int top, int right, int bottom) {
-        menuPos.set(left, top, right, bottom);
-    }
+//    public void setMenuPos(int left, int top, int right, int bottom) {
+//        menuPos.set(left, top, right, bottom);
+//    }
 
     public void setPlayerPikamonAndUpdateSprite(boolean playerPikamon) {
         this.playerPikamon = playerPikamon;

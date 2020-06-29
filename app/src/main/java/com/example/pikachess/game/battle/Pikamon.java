@@ -1,6 +1,7 @@
 package com.example.pikachess.game.battle;
 
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 import com.example.pikachess.game.PikaSprite;
 import com.example.pikachess.game.SpriteSheet;
@@ -66,8 +67,8 @@ public abstract class Pikamon {
         image.draw(canvas);
     }
 
-    public void drawInMenu(Canvas canvas) {
-        image.drawInMenu(canvas);
+    public void drawInMenu(Canvas canvas, Rect menuPos) {
+        image.drawInMenu(canvas, menuPos);
     }
 
     public PikaSprite getPikaSprite() {
@@ -130,9 +131,9 @@ public abstract class Pikamon {
         }
     }
 
-    public void setMenuPos(int left, int top, int right, int bottom){
-        image.setMenuPos(left, top, right, bottom);
-    }
+//    public void setMenuPos(int left, int top, int right, int bottom){
+//        image.setMenuPos(left, top, right, bottom);
+//    }
 
     private void increaseLevel() {
         level++;

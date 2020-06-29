@@ -2,6 +2,7 @@ package com.example.pikachess.game.pause.buttons;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 
 import com.example.pikachess.R;
@@ -16,6 +17,7 @@ public class PikamonImageButton extends Button {
     private boolean initialTouchWithinButton;
     private int newWidth, newHeight;
     private boolean pikamonHeld;
+    private Rect menuPos;
 
     public PikamonImageButton(Context context, Pikamon pikamon, int[] location, int width, int height, boolean moveOnTouch) {
         super(context, location, width, height);
@@ -35,8 +37,13 @@ public class PikamonImageButton extends Button {
         else {
             newWidth = sectionWidth * newHeight / sectionHeight;
         }
-        setPikamonImageLocation(location[0], location[1]);
+        menuPos = new Rect(location[0] - newWidth / 2, location[1] - newHeight / 2, location[0] + newWidth / 2, location[1] + newHeight / 2);
+//        setPikamonImageLocation(location[0], location[1]);
     }
+
+//    public void setMenuPos(int left, int top, int right, int bottom) {
+//        menuPos.set(left, top, right, bottom);
+//    }
 
     @Override
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
@@ -71,11 +78,11 @@ public class PikamonImageButton extends Button {
     public void draw(Canvas canvas) {
         canvas.drawRoundRect(buttonRect, roundX, roundX, fillPaint);
         canvas.drawRoundRect(buttonRect, roundX, roundX, borderPaint);
-        pikamon.drawInMenu(canvas);
+        pikamon.drawInMenu(canvas, menuPos);
     }
 
     private void setPikamonImageLocation(int x, int y) {
-        pikamon.setMenuPos(x - newWidth / 2, y - newHeight / 2, x + newWidth / 2, y + newHeight / 2);
+        menuPos.set(x - newWidth / 2, y - newHeight / 2, x + newWidth / 2, y + newHeight / 2);
     }
 
     public boolean isPikamonHeld() {

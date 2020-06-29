@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import com.example.pikachess.R;
+import com.example.pikachess.game.BasicButton;
 import com.example.pikachess.game.Button;
 import com.example.pikachess.game.PikaGame;
 import com.example.pikachess.game.PlayerCharacter;
@@ -78,11 +79,7 @@ public class PikamonMenu {
             buttonCount++;
         }
         while (buttonCount < 6) {
-            otherButtons.add(new Button(context, "", new int[]{buttonX, buttonY}, buttonWidth, buttonHeight) {
-                @Override
-                public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {
-                }
-            });
+            otherButtons.add(new BasicButton(context, "", new int[]{buttonX, buttonY}, buttonWidth, buttonHeight));
             changeButtonPosition(buttonCount);
             buttonCount++;
         }
@@ -156,11 +153,10 @@ public class PikamonMenu {
         }
 
         for (PikamonButton pikamonButton : pikamonButtons) {
-            pikamonButton.update();
+            pikamonButton.refresh();
         }
     }
 
     public void update() {
     }
-
 }

@@ -13,6 +13,7 @@ import com.example.pikachess.game.PlayerCharacter;
 import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.pause.buttons.BackButton;
 import com.example.pikachess.game.pause.buttons.PikamonButton;
+import com.example.pikachess.game.pause.buttons.PikamonImageButton;
 
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class PikamonStatMenu {
 
     private Pikamon pikamon;
     private BackButton backButton;
+    private PikamonImageButton imageButton;
+    private int[] imageLocation;
+    private int imageWidth, imageHeight;
 
     public PikamonStatMenu(Context context, int[] canvasDims, Pikamon pikamon) {
         containerBorder = SCREEN_BORDER / 2;
@@ -59,12 +63,26 @@ public class PikamonStatMenu {
 
         backButton = new BackButton(context, new int[]{(int) (right - SCREEN_BORDER / 2 - buttonWidth / 6), (int) (bottom - SCREEN_BORDER / 2 - backButtonHeight / 2)}, buttonWidth / 3, backButtonHeight);
 //        pikamon.getPikaSprite().setMenuPos(left, top, right, bottom);
+
+        calculateImagePosition();
+        imageButton = new PikamonImageButton(context, pikamon, imageLocation, imageWidth, imageWidth, false);
+
+    }
+
+    private void calculateImagePosition() {
+        float imageLeft = left + SCREEN_BORDER;
+        float imageRight = imageLeft + (right - left) / 3;
+        float imageTop = top + SCREEN_BORDER;
+        float imageBottom = imageTop + imageRight - imageLeft;
+        imageLocation = new int[] {(int) ((imageRight + imageLeft) / 2), (int) ((imageTop + imageBottom) / 2)};
+        imageWidth = (int) (imageRight - imageLeft);
     }
 
     public void draw(Canvas canvas) {
         canvas.drawRoundRect(containerRect, 30, 30, containerPaint);
         canvas.drawRoundRect(containerRect, 30, 30, containerBorderPaint);
         backButton.draw(canvas);
+        imageButton.draw(canvas);
     }
 
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {

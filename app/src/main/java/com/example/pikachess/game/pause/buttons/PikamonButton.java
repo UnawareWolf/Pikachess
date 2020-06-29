@@ -76,7 +76,7 @@ public class PikamonButton extends Button {
 //
 //    }
 
-    public void update() {
+    public void refresh() {
         setText("Lv." + pikamon.getLevel() + " " + name);
         healthBar.update();
 //        healthBar.setNewPikamon(pikamon);
