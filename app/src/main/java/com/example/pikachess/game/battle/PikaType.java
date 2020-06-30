@@ -1,9 +1,6 @@
 package com.example.pikachess.game.battle;
 
-import com.example.pikachess.game.battle.pikamen.Pikamuno;
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public abstract class PikaType {

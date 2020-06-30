@@ -7,6 +7,8 @@ import com.example.pikachess.game.PikaSprite;
 import com.example.pikachess.game.battle.AttackMove;
 import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.battle.attackMoves.FatPat;
+import com.example.pikachess.game.battle.attackMoves.Pound;
+import com.example.pikachess.game.battle.attackMoves.Scratch;
 import com.example.pikachess.game.battle.attackMoves.TreadmillTrod;
 import com.example.pikachess.game.battle.types.Normal;
 
@@ -38,7 +40,7 @@ public class Wurmple extends Pikamon {
     @Override
     protected void assignAttacks() {
         attacks = new AttackMove[2];
-        attacks[0] = new FatPat();
-        attacks[1] = new TreadmillTrod();
+        attacks[0] = new Scratch();
+        attacks[1] = new Pound();
     }
 }

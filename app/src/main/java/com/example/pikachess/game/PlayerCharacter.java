@@ -3,7 +3,7 @@ package com.example.pikachess.game;
 import android.content.Context;
 
 import com.example.pikachess.game.battle.Pikamon;
-import com.example.pikachess.game.battle.pikamen.Pikamuno;
+import com.example.pikachess.game.battle.pikamen.Fatty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,8 +152,8 @@ public class PlayerCharacter extends GameCharacter{
     }
 
     public void addPikamon() {
-        Pikamuno pikamuno = new Pikamuno(context, true, new int[]{canvasWidth, canvasHeight}, 5);
-        pikamen.add(pikamuno);
+        Fatty fatty = new Fatty(context, true, new int[]{canvasWidth, canvasHeight}, 5);
+        pikamen.add(fatty);
     }
 
     public List<Pikamon> getPikamen() {

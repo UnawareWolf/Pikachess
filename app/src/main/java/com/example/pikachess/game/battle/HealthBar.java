@@ -105,6 +105,8 @@ public class HealthBar {
     }
 
     public void update() {
+        targetEXP = pikamon.getTargetEXP();
+        maxHp = pikamon.getMaxHP();
         currentHp = pikamon.getHp();
         level = pikamon.getLevel();
         currentEXP = pikamon.getExp();

@@ -4,20 +4,15 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
-import com.example.pikachess.R;
 import com.example.pikachess.game.battle.GamePad;
 import com.example.pikachess.game.battle.PikaBattle;
 import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.battle.pikamen.Charmander;
 import com.example.pikachess.game.battle.pikamen.Lotad;
-import com.example.pikachess.game.battle.pikamen.Pikamuno;
 import com.example.pikachess.game.battle.pikamen.Wurmple;
-import com.example.pikachess.game.pause.StartMenu;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class PikaGame {
