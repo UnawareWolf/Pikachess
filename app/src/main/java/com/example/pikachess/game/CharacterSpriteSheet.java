@@ -2,9 +2,7 @@ package com.example.pikachess.game;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.example.pikachess.R;
@@ -35,12 +33,12 @@ public class CharacterSpriteSheet extends SpriteSheet {
         super();
         pause = false;
         canvasWidth = gameCharacter.getCanvasWidth();
-        numberOfAnimations = NUMBER_OF_ANIMATIONS;
+        numberOfSprites = NUMBER_OF_ANIMATIONS;
 
         image = BitmapFactory.decodeResource(context.getResources(), R.drawable.pokemon_fatty_not_resized, options);
         resizeBitmap((float) gameCharacter.getBitmapResizeFactor(), (float) gameCharacter.getBitmapResizeFactor());
 
-        sectionWidth = image.getWidth() / numberOfAnimations;
+        sectionWidth = image.getWidth() / numberOfSprites;
         sectionHeight = image.getHeight();
         moveWithBackground = gameCharacter.getClass() != PlayerCharacter.class;
 

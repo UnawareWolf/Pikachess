@@ -8,7 +8,10 @@ import com.example.pikachess.R;
 import com.example.pikachess.game.battle.GamePad;
 import com.example.pikachess.game.battle.PikaBattle;
 import com.example.pikachess.game.battle.Pikamon;
+import com.example.pikachess.game.battle.pikamen.Charmander;
+import com.example.pikachess.game.battle.pikamen.Lotad;
 import com.example.pikachess.game.battle.pikamen.Pikamuno;
+import com.example.pikachess.game.battle.pikamen.Wurmple;
 import com.example.pikachess.game.pause.StartMenu;
 
 import java.util.ArrayList;
@@ -101,8 +104,24 @@ public class PikaGame {
         if (mainCharacter.isEncounterAllowed()) {
             gameState = PikaGameState.Battle;
             gamePad.release(mainCharacter);
-            pikaBattle = new PikaBattle(context, mainCharacter.getPikamen().get(0), new Pikamuno(context, false, canvasDims, 2), canvasDims);
+//            pikaBattle = new PikaBattle(context, mainCharacter.getPikamen().get(0), new Charmander(context, false, canvasDims, 2), canvasDims);
+            pikaBattle = new PikaBattle(context, mainCharacter.getPikamen().get(0), getNewRandomPikamon(), canvasDims);
         }
+    }
+
+    private Pikamon getNewRandomPikamon() {
+        Pikamon pikamon;
+        switch (rand.nextInt(10)) {
+            case 1:
+                pikamon = new Charmander(context, false, canvasDims, 2);
+                break;
+            case 2:
+                pikamon = new Lotad(context, false, canvasDims, 2);
+                break;
+            default:
+                pikamon = new Wurmple(context, false, canvasDims, 2);
+        }
+        return pikamon;
     }
 
     public int getPixelsAcrossSquare() {

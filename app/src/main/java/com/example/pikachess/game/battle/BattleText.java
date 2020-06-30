@@ -25,9 +25,13 @@ public class BattleText {
     private int[] canvasDims;
     private int[] location;
     private float left, top, right, bottom;
+    private Pikamon playerPikamon, opponentPikamon;
 
-    public BattleText(Context context, int[] canvasDims) {
+    public BattleText(Context context, int[] canvasDims, Pikamon playerPikamon, Pikamon opponentPikamon) {
         this.canvasDims = canvasDims;
+        this.playerPikamon = playerPikamon;
+        this.opponentPikamon = opponentPikamon;
+
         top = SCREEN_BORDER * 2 + canvasDims[1] * 5 / 6f;
         bottom = canvasDims[1] - SCREEN_BORDER;
         left = SCREEN_BORDER;
@@ -64,14 +68,14 @@ public class BattleText {
 
     private void setText(TextType textType, boolean isPlayer, String attackName) {
         if (textType == TextType.AttackTurn) {
-            body = "Fatty used " + attackName + "!";
+            body = " used " + attackName + "!";
         }
         setText(textType, isPlayer);
     }
 
     private void setText(TextType textType, boolean isPlayer) {
         if (textType == TextType.Faint) {
-            body = "Fatty fainted!";
+            body = " fainted!";
         }
         setPlayerText(isPlayer);
         textString = focus + body;
@@ -80,10 +84,10 @@ public class BattleText {
 
     private void setPlayerText(boolean isPlayer) {
         if (isPlayer) {
-            focus = "Cletus' ";
+            focus = "Cletus' " + playerPikamon.getName();
         }
         else {
-            focus = "Wild ";
+            focus = "Wild " + opponentPikamon.getName();
         }
     }
 

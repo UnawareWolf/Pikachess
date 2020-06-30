@@ -37,13 +37,24 @@ public class PikamonImageButton extends Button {
         else {
             newWidth = sectionWidth * newHeight / sectionHeight;
         }
-        menuPos = new Rect(location[0] - newWidth / 2, location[1] - newHeight / 2, location[0] + newWidth / 2, location[1] + newHeight / 2);
-//        setPikamonImageLocation(location[0], location[1]);
+        menuPos = new Rect();
+        setPikamonImageLocation(location[0], location[1]);
     }
 
-//    public void setMenuPos(int left, int top, int right, int bottom) {
-//        menuPos.set(left, top, right, bottom);
-//    }
+    public void setNewPikamon(Pikamon pikamon) {
+        this.pikamon = pikamon;
+        int sectionWidth = pikamon.getPikaSprite().getSectionWidth();
+        int sectionHeight = pikamon.getPikaSprite().getSectionHeight();
+        newHeight = height;
+        newWidth = width;
+        if (sectionWidth > sectionHeight) {
+            newHeight = sectionHeight * newWidth / sectionWidth;
+        }
+        else {
+            newWidth = sectionWidth * newHeight / sectionHeight;
+        }
+        setPikamonImageLocation(location[0], location[1]);
+    }
 
     @Override
     public void onTouchEvent(MotionEvent event, PikaGame pikaGame) {

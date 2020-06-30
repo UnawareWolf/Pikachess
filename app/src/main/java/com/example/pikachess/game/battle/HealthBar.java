@@ -21,7 +21,7 @@ public class HealthBar {
     private int level;
     //private int currentHp;
     private boolean isPlayer;
-    private boolean writeLevel;
+    private boolean writeLevel, writeHPText;
     private int left, right, yTop;
     private int healthTop, healthBottom, expTop, expBottom;
     private float xHp, xEXP;
@@ -50,6 +50,7 @@ public class HealthBar {
         this.context = context;
         canvasWidth = pikamon.getCanvasDims()[0];
         this.writeLevel = writeLevel;
+        writeHPText = true;
 
         left = location[0] - WIDTH / 2;
         right = left + WIDTH;
@@ -91,7 +92,9 @@ public class HealthBar {
         if (isPlayer) {
             canvas.drawRect(expRect, expPaint);
             canvas.drawRect(expBorderRect, borderPaint);
-            canvas.drawText(hpText, right + BORDER_WIDTH * 2, healthBottom, hpTextPaint);
+            if (writeHPText) {
+                canvas.drawText(hpText, right + BORDER_WIDTH * 2, healthBottom, hpTextPaint);
+            }
         }
         canvas.drawRect(borderRect, borderPaint);
         //canvas.drawRect(greyRect, greyPaint);
@@ -134,6 +137,10 @@ public class HealthBar {
         maxHp = pikamon.getMaxHP();
         targetEXP = pikamon.getTargetEXP();
         update();
+    }
+
+    public void setWriteHPText(boolean writeHPText) {
+        this.writeHPText = writeHPText;
     }
 
 //    private void setPositionValues() {

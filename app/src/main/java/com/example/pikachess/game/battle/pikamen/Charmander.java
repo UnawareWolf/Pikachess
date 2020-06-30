@@ -5,21 +5,20 @@ import android.content.Context;
 import com.example.pikachess.R;
 import com.example.pikachess.game.PikaSprite;
 import com.example.pikachess.game.battle.AttackMove;
+import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.battle.attackMoves.FatPat;
 import com.example.pikachess.game.battle.attackMoves.TreadmillTrod;
-import com.example.pikachess.game.battle.PikaTypeID;
-import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.battle.types.Normal;
 
-public class Pikamuno extends Pikamon {
+public class Charmander extends Pikamon {
 
-    private static final int HP = 60;
-    private static final int ATTACK = 30;
-    private static final int DEFENSE = 30;
-    private static final int SPEED = 30;
+    private static final int HP = 39;
+    private static final int ATTACK = 52;
+    private static final int DEFENSE = 43;
+    private static final int SPEED = 65;
     private static final int EXP = 60;
 
-    public Pikamuno(Context context, boolean playerPikamon, int[] canvasDims, int level) {
+    public Charmander(Context context, boolean playerPikamon, int[] canvasDims, int level) {
         super(playerPikamon, canvasDims);
         this.level = level;
         baseEXP = EXP;
@@ -28,9 +27,10 @@ public class Pikamuno extends Pikamon {
         baseDefense = DEFENSE;
         baseSpeed = SPEED;
         exp = 0;
+
         types.add(new Normal());
-        imageID = R.drawable.pokemon_fatty_not_resized;
-        image = new PikaSprite(context, this, 14);
+        imageID = R.drawable.charmander;
+        image = new PikaSprite(context, this, 2);
 
         calculateStats();
         assignAttacks();
@@ -42,5 +42,4 @@ public class Pikamuno extends Pikamon {
         attacks[0] = new FatPat();
         attacks[1] = new TreadmillTrod();
     }
-
 }

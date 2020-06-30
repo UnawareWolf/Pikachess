@@ -41,6 +41,7 @@ public class PikamonButton extends Button {
     public void setNewPikamon(Pikamon pikamon) {
         setPikamon(pikamon);
         healthBar.setNewPikamon(pikamon);
+        imageButton.setNewPikamon(pikamon);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class PikamonButton extends Button {
         float xTouch = event.getX();
         float yTouch = event.getY();
         if (contains((int) xTouch, (int) yTouch) && !imageButton.contains((int) xTouch, (int) yTouch) && event.getAction() == MotionEvent.ACTION_DOWN) {
-            pikaGame.getPikaPause().setPauseState(PauseState.PikamonStats);
+            pikaGame.getPikaPause().setStatState(pikamon);
         }
         imageButton.onTouchEvent(event, pikaGame);
         drawLast = imageButton.getDrawLast();

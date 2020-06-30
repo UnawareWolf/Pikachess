@@ -81,7 +81,7 @@ public class AttackMenu {
         buttonY = (int) (top + buttonHeight / 2 + containerBorder);
 //        battleText = new BattleText(context, new int[]{canvasDims[0] / 4, 5 * canvasDims[1] / 8});
 //        battleText = new BattleText(context, new int[] {canvasDims[0], (int) (bottom + (canvasDims[1] - bottom) / 2)}, canvasDims[0] - SCREEN_BORDER * 2, (int) (canvasDims[1] - bottom - SCREEN_BORDER * 2));
-        battleText = new BattleText(context, canvasDims);
+        battleText = new BattleText(context, canvasDims, playerPikamon, opponentPikamon);
         initialiseButtons(context);
     }
 

@@ -24,6 +24,7 @@ public class PikamonMenuButton extends Button {
         if (contains((int) xTouch, (int) yTouch) && event.getAction() == MotionEvent.ACTION_DOWN) {
             pikaGame.getPikaPause().setPauseState(PauseState.Pikamon);
             pikaGame.getPikaPause().getPikamonMenu().refresh();
+            pikaGame.getPikaPause().getPikamonStatMenu().refresh();
         }
     }
 }

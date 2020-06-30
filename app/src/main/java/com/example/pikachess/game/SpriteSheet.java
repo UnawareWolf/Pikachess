@@ -1,7 +1,6 @@
 package com.example.pikachess.game;
 
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
@@ -14,7 +13,7 @@ import java.util.List;
 
 public abstract class SpriteSheet {
 
-    protected int numberOfAnimations;
+    protected int numberOfSprites;
     protected int sectionWidth, sectionHeight;
     protected int canvasWidth, canvasHeight;
 
@@ -37,7 +36,7 @@ public abstract class SpriteSheet {
     protected void createAnimationSections() {
         animationSections = new ArrayList<>();
 
-        for (int i = 0; i < numberOfAnimations; i++) {
+        for (int i = 0; i < numberOfSprites; i++) {
             int topLeftX = i*sectionWidth;
             int topLeftY = 0;
             int bottomRightX = (i + 1)*sectionWidth;

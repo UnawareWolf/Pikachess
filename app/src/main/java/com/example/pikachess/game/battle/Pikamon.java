@@ -131,10 +131,6 @@ public abstract class Pikamon {
         }
     }
 
-//    public void setMenuPos(int left, int top, int right, int bottom){
-//        image.setMenuPos(left, top, right, bottom);
-//    }
-
     private void increaseLevel() {
         level++;
         calculateStats();
@@ -198,5 +194,14 @@ public abstract class Pikamon {
     public void setPlayerPikamonAndUpdateSprite(boolean playerPikamon) {
         this.playerPikamon = playerPikamon;
         image.setPlayerPikamonAndUpdateSprite(playerPikamon);
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public String getName() {
+        String[] classNameArray = getClass().getName().split("\\.");
+        return classNameArray[classNameArray.length - 1];
     }
 }

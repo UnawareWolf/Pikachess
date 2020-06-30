@@ -134,7 +134,7 @@ public class PikamonMenu {
                     mainCharacter.getPikamen().set(pikamonButton.getButtonID(), pikamonButton.getPikamon());
                 }
                 else if (event.getAction() == MotionEvent.ACTION_UP && pikamonButton.contains((int) xTouch, (int) yTouch) && pikamonButton == pikamonHeld) {
-                    pikaGame.getPikaPause().setPauseState(PauseState.PikamonStats);
+                    pikaGame.getPikaPause().setStatState(pikamonButton.getPikamon());
                 }
             }
         }
