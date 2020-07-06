@@ -8,6 +8,7 @@ import com.example.pikachess.game.battle.Pikamon;
 import com.example.pikachess.game.pause.PauseState;
 import com.example.pikachess.game.pause.PikamonMenu;
 import com.example.pikachess.game.pause.PikamonStatMenu;
+import com.example.pikachess.game.pause.SaveMenu;
 import com.example.pikachess.game.pause.StartMenu;
 import com.example.pikachess.game.pause.buttons.PikamonButton;
 
@@ -20,6 +21,7 @@ public class PikaPause {
     private PauseState state;
     private PikamonMenu pikamonMenu;
     private PikamonStatMenu statMenu;
+    private SaveMenu saveMenu;
     private List<PikamonStatMenu> statMenus;
     private PlayerCharacter mainCharacter;
     private Context context;
@@ -30,9 +32,10 @@ public class PikaPause {
         this.canvasDims = canvasDims;
         this.mainCharacter = mainCharacter;
         state = PauseState.Menu;
-        startMenu = new StartMenu(context, canvasDims);
+        startMenu = new StartMenu(context, this, canvasDims);
         pikamonMenu = new PikamonMenu(context, canvasDims, mainCharacter);
         statMenu = new PikamonStatMenu(context, canvasDims, mainCharacter.getPikamen().get(0));
+        saveMenu = new SaveMenu(context, this, canvasDims);
     }
 
 //    private void initialiseStatMenus() {
@@ -43,15 +46,29 @@ public class PikaPause {
 //    }
 
     public void draw(Canvas canvas) {
-        if (state == PauseState.Menu) {
-            startMenu.draw(canvas);
+        switch (state) {
+            case Menu:
+                startMenu.draw(canvas);
+                break;
+            case Pikamon:
+                pikamonMenu.draw(canvas);
+                break;
+            case PikamonStats:
+                statMenu.draw(canvas);
+                break;
+            case Save:
+                saveMenu.draw(canvas);
+                break;
         }
-        else if (state == PauseState.Pikamon) {
-            pikamonMenu.draw(canvas);
-        }
-        else if (state == PauseState.PikamonStats) {
-            statMenu.draw(canvas);
-        }
+//        if (state == PauseState.Menu) {
+//            startMenu.draw(canvas);
+//        }
+//        else if (state == PauseState.Pikamon) {
+//            pikamonMenu.draw(canvas);
+//        }
+//        else if (state == PauseState.PikamonStats) {
+//            statMenu.draw(canvas);
+//        }
     }
 
     public void setStatMenu(Pikamon pikamon) {
@@ -67,6 +84,9 @@ public class PikaPause {
         }
         else if (state == PauseState.PikamonStats) {
             statMenu.onTouchEvent(event, pikaGame);
+        }
+        else if (state == PauseState.Save) {
+            saveMenu.onTouchEvent(event, pikaGame);
         }
 
     }
@@ -89,6 +109,10 @@ public class PikaPause {
 
     public PikamonStatMenu getPikamonStatMenu() {
         return statMenu;
+    }
+
+    public SaveMenu getSaveMenu() {
+        return saveMenu;
     }
 
     public void setStatState(Pikamon pikamon) {

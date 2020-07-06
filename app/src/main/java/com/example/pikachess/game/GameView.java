@@ -20,9 +20,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        pikaGame = new PikaGame(this.getContext(), this);
-        thread.setRunning(true);
-        thread.start();
+        if (pikaGame == null) {
+            pikaGame = new PikaGame(this.getContext(), this);
+            thread.setRunning(true);
+            thread.start();
+        }
     }
 
     @Override
@@ -32,17 +34,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        boolean retry = true;
-        while (retry) {
-            try {
-                thread.setRunning(false);
-                thread.join();
-            }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            retry = false;
-        }
+//        stopThread();
+//        thread = null;
     }
 
     public void update() {
@@ -61,5 +54,32 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event) {
         pikaGame.onTouchEvent(event);
         return true;
+    }
+
+    private void stopThread() {
+        boolean retry = true;
+        while (retry) {
+            try {
+                thread.setRunning(false);
+                thread.join();
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            retry = false;
+        }
+    }
+
+    public void pause() {
+        stopThread();
+        thread = null;
+    }
+
+    public void resume() {
+        if (thread == null) {
+            thread = new MainThread(getHolder(),this);
+            thread.setRunning(true);
+            thread.start();
+        }
     }
 }

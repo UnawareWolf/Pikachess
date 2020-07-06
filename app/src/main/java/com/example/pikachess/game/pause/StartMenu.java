@@ -10,8 +10,11 @@ import com.example.pikachess.R;
 import com.example.pikachess.game.BasicButton;
 import com.example.pikachess.game.Button;
 import com.example.pikachess.game.PikaGame;
+import com.example.pikachess.game.PikaPause;
 import com.example.pikachess.game.pause.buttons.BackButton;
 import com.example.pikachess.game.pause.buttons.PikamonMenuButton;
+import com.example.pikachess.game.pause.buttons.SaveButton;
+import com.example.pikachess.game.pause.buttons.SaveMenuButton;
 
 public class StartMenu {
 
@@ -24,8 +27,10 @@ public class StartMenu {
     private int buttonHeight, buttonWidth, buttonX, buttonY, containerBorder;
     private RectF containerRect;
     private Paint containerPaint, containerBorderPaint;
+    private PikaPause pikaPause;
 
-    public StartMenu(Context context, int[] canvasDims) {
+    public StartMenu(Context context, PikaPause pikaPause, int[] canvasDims) {
+        this.pikaPause = pikaPause;
         containerBorder = SCREEN_BORDER / 2;
         buttonHeight = canvasDims[1] / 20;
 
@@ -61,12 +66,19 @@ public class StartMenu {
             switch(buttonName) {
                 case "Pikamon":
                     buttons[buttonCount] = new PikamonMenuButton(context, new int[]{buttonX, buttonY}, buttonWidth, buttonHeight);
+                    buttons[buttonCount].setTextSize(40);
                     break;
                 case "Back":
                     buttons[buttonCount] = new BackButton(context, new int[]{buttonX + buttonWidth / 4, buttonY}, buttonWidth / 2, buttonHeight);
+                    buttons[buttonCount].setTextSize(30);
+                    break;
+                case "Save":
+                    buttons[buttonCount] = new SaveMenuButton(context, pikaPause, new int[]{buttonX, buttonY}, buttonWidth, buttonHeight);
+                    buttons[buttonCount].setTextSize(40);
                     break;
                 default:
                     buttons[buttonCount] = new BasicButton(context, buttonName, new int[]{buttonX, buttonY}, buttonWidth, buttonHeight);
+                    buttons[buttonCount].setTextSize(40);
             }
             buttonCount++;
         }

@@ -27,7 +27,8 @@ public class PikamonButton extends Button {
         setPikamon(pikamon);
         healthBar = new HealthBar(context, pikamon, new int[] {location[0] - width / 10, location[1] + height / 3}, false);
 
-        textPaint.setTextSize(height / 8f);
+//        textPaint.setTextSize(height / 8f);
+        textPaint.setTextSize(40);
         imageButton = new PikamonImageButton(context, pikamon, new int[] {location[0], location[1] + PikamonMenu.SCREEN_BORDER / 2 - height / 4}, width / 2, height / 2, true);
     }
 

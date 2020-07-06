@@ -66,10 +66,10 @@ public class MainThread extends Thread {
             totalTime += System.nanoTime() - startTime;
             frameCount ++;
             if (frameCount == TARGET_FPS) {
-                averageFPS = 1000 / ((totalTime / frameCount) / 1000000);
+                averageFPS = 1000 / ((totalTime /(double) frameCount) / 1000000d);
                 frameCount = 0;
                 totalTime = 0;
-                System.out.println(averageFPS);
+                System.out.println((int) averageFPS);
             }
 
         }

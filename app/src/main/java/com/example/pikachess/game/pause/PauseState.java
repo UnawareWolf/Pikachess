@@ -4,6 +4,7 @@ public enum PauseState {
 
     Menu(),
     Pikamon(),
-    PikamonStats();
+    PikamonStats(),
+    Save();
 
 }

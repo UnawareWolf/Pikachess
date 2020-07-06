@@ -36,6 +36,9 @@ public class BackButton extends Button {
             else if (pikaGame.getPikaPause().getState() == PauseState.PikamonStats) {
                 pikaGame.getPikaPause().setPauseState(PauseState.Pikamon);
             }
+            else if (pikaGame.getPikaPause().getState() == PauseState.Save) {
+                pikaGame.getPikaPause().setPauseState(PauseState.Menu);
+            }
 
         }
     }

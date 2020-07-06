@@ -45,7 +45,8 @@ public abstract class Button {
 
         textPaint = new Paint();
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(height / 3f);
+//        textPaint.setTextSize(height / 3f);
+        textPaint.setTextSize(50);
 
         buttonRect = new RectF(buttonLeft, buttonTop, buttonRight, buttonBottom);
     }
@@ -77,6 +78,18 @@ public abstract class Button {
 
     public int[] getLocation() {
         return location;
+    }
+
+    public void setTextSize(float size) {
+        textPaint.setTextSize(size);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
 }

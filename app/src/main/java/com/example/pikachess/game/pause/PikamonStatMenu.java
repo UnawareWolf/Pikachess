@@ -123,8 +123,8 @@ public class PikamonStatMenu {
         String[] nameSplit = pikamon.getClass().getName().split("\\.");
         stats[0] = nameSplit[nameSplit.length - 1];
         stats[1] = "Lvl: " + pikamon.getLevel();
-        stats[2] = "HP: " + pikamon.getHp() + "/" + pikamon.getMaxHP();
-        stats[3] = "Exp: " + pikamon.getExp() + "/" + pikamon.getTargetEXP();
+        stats[2] = "Exp: " + pikamon.getExp() + "/" + pikamon.getTargetEXP();
+        stats[3] = "HP: " + pikamon.getHp() + "/" + pikamon.getMaxHP();
         stats[4] = "Attack: " + pikamon.getAttackStat();
         stats[5] = "Defense: " + pikamon.getDefense();
         stats[6] = "Speed: " + pikamon.getSpeed();
